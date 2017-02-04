@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3b2d280dda3359152beac9cd378d2972",
-    "content-hash": "5964bd104328ed730cb0e4dedae9b007",
+    "hash": "df38e590a3948ddfdc9f17dc39522b85",
+    "content-hash": "a4f69db071dc347d50910f0eeff8fdb9",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -757,6 +757,52 @@
                 "mailer"
             ],
             "time": "2016-12-29 10:02:40"
+        },
+        {
+            "name": "workerman/workerman",
+            "version": "v3.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Workerman.git",
+                "reference": "d466c0f4b37c6cfb4f27c69b158175c7e7ccc24c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Workerman/zipball/d466c0f4b37c6cfb4f27c69b158175c7e7ccc24c",
+                "reference": "d466c0f4b37c6cfb4f27c69b158175c7e7ccc24c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "suggest": {
+                "ext-event": "For better performance."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2017-02-02 02:52:58"
         },
         {
             "name": "yiisoft/yii2",

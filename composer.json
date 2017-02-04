@@ -21,7 +21,8 @@
         "dmstr/yii2-adminlte-asset": "2.3.2",
         "samdark/yii2-webshell": "^2.0",
         "digitalnature/php-ref": "^1.2",
-        "php-amqplib/php-amqplib": "^2.6"
+        "php-amqplib/php-amqplib": "^2.6",
+        "workerman/workerman": "^3.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

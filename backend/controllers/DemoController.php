@@ -14,14 +14,14 @@ class DemoController extends Controller
         set_time_limit(0);
         $connection = new AMQPStreamConnection('localhost', 5672, 'kitral', 'philips');
         $channel = $connection->channel();
-        $channel->queue_declare('email-job', false, false, false, false);
+        $channel->queue_declare('email-job', false, true, false, false);
 
 
 
-        $msgBody = 'hello world';
+        $msgBody = 'hello world'."\n";
         $i  = 1;
-        while($i < 100000){
-            $msg = new AMQPMessage($msgBody);
+        while($i < 100){
+            $msg = new AMQPMessage($msgBody, ['delivery_mode' => 2]);
             $channel->basic_publish($msg, '', 'email-job');
             $i++;
         }
