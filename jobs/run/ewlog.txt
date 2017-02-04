@@ -25,3 +25,6 @@
 2017-02-04 15:25:54 pid:8115 Workerman[email.php] start in DEBUG mode
 2017-02-04 15:26:07 pid:8115 Workerman[email.php] Stopping ...
 2017-02-04 15:26:07 pid:8115 Workerman[email.php] has been stopped
+2017-02-04 21:24:47 pid:7422 Workerman[email.php] start in DEBUG mode
+2017-02-04 21:51:31 pid:7422 Workerman[email.php] Stopping ...
+2017-02-04 21:51:31 pid:7422 Workerman[email.php] has been stopped

@@ -20,6 +20,14 @@ $worker->onWorkerStart = function($worker)
     $transport->setUsername('784248377@qq.com');
     $transport->setPassword('qicai5619484');
 
+    $data = [
+        'subject' => null,
+        'from' => null,
+        'to' => null,
+        'body' => null,
+        'img' => [],
+        'attatch' => []
+    ];
 
 
     $connection = new AMQPStreamConnection('localhost', 5672, 'kitral', 'philips');
@@ -28,7 +36,14 @@ $worker->onWorkerStart = function($worker)
     $channel->queue_declare('email-job', false, true, false, false);
 
     $callback = function($msg) use($transport, $worker){
-        echo $msg->body;
+        // 1. 得到数据
+        // 2. 检查格式
+        // 3. 构造对象
+        // 4. 异常包括，发送
+        // 5. 计数
+        // 6. confirm ack
+        // 7. finish
+
         // $mailer = \Swift_Mailer::newInstance($transport);
         // $emailMsg = \Swift_Message::newInstance('Wonderful Subject')
         //             ->setFrom(array('784248377@qq.com' => 'kz'))
@@ -42,7 +57,7 @@ $worker->onWorkerStart = function($worker)
         //                     '  Rest of message' .
         //                     ' </body>' .
         //                     '</html>', 'text/html');
-        // $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         // $mailer->send($emailMsg);
         // echo "1\n";
     };
