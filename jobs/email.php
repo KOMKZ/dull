@@ -17,7 +17,6 @@ use \common\models\email\EmailWorker;
  *
  */
 
-
 $worker = new Worker("tcp://127.0.0.1:2345");
 $worker::$logFile = (__DIR__) . '/run/ewlog.txt';
 $worker::$pidFile = (__DIR__) . '/run/ewpid.txt';

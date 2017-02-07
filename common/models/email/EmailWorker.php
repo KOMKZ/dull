@@ -8,7 +8,7 @@ class EmailWorker
 {
     CONST SEN_FIELD = 'worker:email:succ_email_num';
 
-    static public $emailWorkerCount = 5;
+    static public $emailWorkerCount = 50;
     public $defaultSender = 'kitral.zhong@trainor.cn';
     public $defaultSenderPwd = 'TDSZ2016kz';
     static private $mailer;
@@ -22,8 +22,8 @@ class EmailWorker
     private $img = [];
     private $attatch = [];
 
-    private $redis;
-    private $db;
+    private static $redis;
+    private static $db;
 
 
 
@@ -33,7 +33,7 @@ class EmailWorker
         $r = $ew->loadData($msg);
         if(!$r){
             $ew->insertFailedEmail($msg->body, $e->getCode(), $e->getMessage());
-            return $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag']);
+            return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         }
         try {
             // 2. 构造对象
@@ -41,8 +41,9 @@ class EmailWorker
             // 3. 异常包括，发送
             $ew->send();
         } catch (\Exception $e) {
+            echo $e->getMessage()."\n";
             $ew->insertFailedEmail($msg->body, $e->getCode(), $e->getMessage());
-            return $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag']);
+            return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         }
         // 4. 计数等成功处理
         $ew->handleSendSucc();
@@ -50,7 +51,9 @@ class EmailWorker
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     }
     private function send(){
-        self::$mailer->send($this->msg);
+        if(!self::$mailer->send()){
+            throw new \Exception(self::$mailer->ErrorInfo);
+        }
     }
 
     private function insertFailedEmail($data, $code = null, $message = null){
@@ -81,40 +84,58 @@ class EmailWorker
     }
     private function buildMsg(){
         $this->from = $this->from ? $this->from : $this->defaultSender;
-        $this->from = is_array($this->from) ? $this->from : [$this->from];
-        $this->to = is_array($this->to) ? $this->to : [$this->to];
-        // message instance
-        $msg = \Swift_Message::newInstance($this->subject)
-                    ->setFrom($this->from)
-                    ->setTo($this->to);
-        // build img attachment
+        // $this->from = is_array($this->from) ? $this->from : [$this->from];
+        // $this->to = is_array($this->to) ? $this->to : [$this->to];
+        self::$mailer->setFrom($this->from);
+        self::$mailer->addAddress($this->to);
+        self::$mailer->Subject = $this->subject;
+        self::$mailer->isHTML(true);
         list($msgBody, $contentType) = $this->body;
         if(!empty($this->img) && 'text/html' == $contentType){
             $imgMap = [];
             foreach($this->img as $key => $imgPath){
                 $id = '';
                 if(file_exists($imgPath)){
-                    $id = $msg->embed(\Swift_Image::fromPath($imgPath));
+                    $id = self::$mailer->AddEmbeddedImage($imgPath, $key);
                 }else{
                     // log
                     $id = '#';
                 }
                 $imgMap[$key] = $id;
             }
-            $msgBody = strtr($msgBody, $imgMap);
         }
-        // set msg body
-        $msg->setBody($msgBody, $contentType);
-        $this->msg = $msg;
+        self::$mailer->Body = $msgBody;
+
+        // // message instance
+        // $msg = \Swift_Message::newInstance($this->subject)
+        //             ->setFrom($this->from)
+        //             ->setTo($this->to);
+        // // build img attachment
+        // list($msgBody, $contentType) = $this->body;
+        // // set msg body
+        // $msg->setBody($msgBody, $contentType);
+        // $this->msg = $msg;
     }
     private function buildMailer($sender, $pwd){
         if(self::$mailer){
             return self::$mailer;
         }
-        $transport  = new \Swift_SmtpTransport('smtp.qq.com', 465, 'ssl');
-        $transport->setUsername($sender);
-        $transport->setPassword($pwd);
-        return self::$mailer = \Swift_Mailer::newInstance($transport);
+        // swiftmailer
+        // $transport  = new \Swift_SmtpTransport('smtp.qq.com', 465, 'ssl');
+        // $transport->setUsername($sender);
+        // $transport->setPassword($pwd);
+        // return self::$mailer = \Swift_Mailer::newInstance($transport);
+
+        // php mailer
+        $mail = new \PHPMailer;
+        $mail->isSMTP();
+        $mail->Host = 'smtp.qq.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = $sender;
+        $mail->Password = $pwd;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
+        return self::$mailer = $mail;
     }
     private function loadData($msg){
         $this->source = $msg;
@@ -137,10 +158,10 @@ class EmailWorker
         return true;
     }
     private function getRedis(){
-        if($this->redis){
-            return $this->redis;
+        if(self::$redis){
+            return self::$redis;
         }
-        return $this->redis = $this->newRedis();
+        return self::$redis = $this->newRedis();
     }
 
     private function newRedis(){
@@ -158,10 +179,10 @@ class EmailWorker
     }
 
     private function getDb(){
-        if($this->db){
-            return $this->db;
+        if(self::$db){
+            return self::$db;
         }
-        return $this->db = $this->newDb();
+        return self::$db = $this->newDb();
     }
 
     private function newDb(){

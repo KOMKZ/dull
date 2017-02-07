@@ -16,23 +16,23 @@ class DemoController extends Controller
         $emailModel = new EmailModel();
         $msgBody = [
             'subject' => '测试邮件',
-            'to' => '2957176853@qq.com',
+            'to' => '784248377@qq.com',
             'body' => [
                       '<html>' .
                       ' <head></head>' .
                       ' <body>' .
-                      '  Here is an image <img src="%1%" alt="Image" />' .
+                      '  Here is an image <img src="cid:%img1%" alt="Image" />' .
                       '  Rest of message' .
                       ' </body>' .
                       '</html>',
                       'text/html'
             ],
             'img' => [
-                '%1%' => '/home/kitral/Pictures/Wallpapers/1.jpg',
+                '%img1%' => '/home/kitral/Pictures/Wallpapers/1.jpg',
             ],
         ];
         $i  = 1;
-        while($i < 2000){
+        while($i < 200){
             $emailModel->sendEmail($msgBody);
             $i++;
         }

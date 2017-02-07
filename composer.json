@@ -23,7 +23,8 @@
         "digitalnature/php-ref": "^1.2",
         "php-amqplib/php-amqplib": "^2.6",
         "workerman/workerman": "^3.3",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "phpmailer/phpmailer": "^5.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
