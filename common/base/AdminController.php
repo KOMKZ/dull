@@ -6,5 +6,5 @@ use common\base\Controller;
 
 class AdminController extends Controller
 {
-
+    public $enableCsrfValidation = false;
 }

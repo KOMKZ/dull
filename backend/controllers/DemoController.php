@@ -11,6 +11,9 @@ use common\models\email\EmailModel;
  */
 class DemoController extends Controller
 {
+    public function actionLog(){
+        Yii::error(mt_rand(111111111111,99999999999999999999));
+    }
     public function actionAddEmail(){
         set_time_limit(0);
         $emailModel = new EmailModel();

@@ -13,10 +13,17 @@ return [
     'controllerNamespace' => 'console\controllers',
     'components' => [
         'log' => [
+            'traceLevel' => 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class' => 'yii\log\DbTarget',
+                    'logTable' => 'log_console',
                     'levels' => ['error', 'warning'],
+                    'categories' => [
+                        'application',
+                        'yii\db\*',
+                    ],
+                    'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
                 ],
             ],
         ],

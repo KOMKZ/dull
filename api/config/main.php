@@ -16,11 +16,17 @@ return [
             'csrfParam' => '_csrf-api',
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class' => 'yii\log\DbTarget',
+                    'logTable' => 'log_api',
                     'levels' => ['error', 'warning'],
+                    'categories' => [
+                        'application',
+                        'yii\db\*',
+                    ],
+                    'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
                 ],
             ],
         ],

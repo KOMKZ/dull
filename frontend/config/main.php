@@ -24,17 +24,23 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
-        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'log' => [
+            'traceLevel' => 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\DbTarget',
+                    'logTable' => 'log_frontend',
+                    'levels' => ['error', 'warning'],
+                    'categories' => [
+                        'application',
+                        'yii\db\*',
+                    ],
+                    'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
+                ],
+            ],
         ],
         /*
         'urlManager' => [
