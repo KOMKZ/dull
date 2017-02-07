@@ -14,11 +14,8 @@ $levelMap = [
 ];
 $url = Url::to(['log/one']);
 $js = <<<JS
-    $('#table').val("{$tableName}");
     $('.view-log-btn').click(function(){
-        $.get($(this).attr('href'), {
-            'table_name' : $('#table').val()
-        },function(res){
+        $.get($(this).attr('href'), {}, function(res){
             $('#log-detail').html(res);
         });
         return false;
@@ -39,61 +36,8 @@ $this->registerJs($js);
     </pre>
 </div>
 
-<div class="box">
-    <ul>
-        <?php foreach ($levelMap as $key => $value): ?>
-            <li><?= $key?> : <?= $value?></li>
-        <?php endforeach; ?>
-    </ul>
-</div>
 
-<form class="" method="post" id="search-form">
-    <div class="box">
-        <div class="box-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">table_name</label>
-                        <select class="form-control" name="table_name" id="table">
-                            <option value="log_backend">后台应用</option>
-                            <option value="log_frontend">前台应用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">level</label>
-                        <input type="text" name="level" class="form-control" value="">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">category</label>
-                        <input type="text" name="category" class="form-control" value="">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">category[like]</label>
-                        <input type="text" name="category[like]" class="form-control" value="">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">prefix[like]</label>
-                        <input type="text" name="prefix[like]" class="form-control" value="">
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <input type="submit" name="" value="提交" class="btn btn-default">
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
 
 
 <div class="box">
