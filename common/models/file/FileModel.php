@@ -13,14 +13,10 @@ class FileModel extends Model
     CONST DR_DISK = 'disk';
 
     public function saveFile(File $file){
-        // 数据验证
-        if(!$file->validate()){
-            $this->addErrors($file->getErrors());
-            return false;
-        }
+
         $driver = $this->instanceDriver($file->driverType);
         $file = $driver->saveFile($file);
-        
+
     }
 
     public function newFile(){
