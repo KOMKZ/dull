@@ -14445,3 +14445,10 @@ Stack trace:
 2017-02-07 11:38:07 pid:18224 Workerman[email.php] start in DEBUG mode
 2017-02-07 11:45:35 pid:18224 Workerman[email.php] Stopping ...
 2017-02-07 11:45:35 pid:18224 Workerman[email.php] has been stopped
+2017-02-07 20:59:18 pid:18843 Workerman[email.php] start in DEBUG mode
+2017-02-07 20:59:20 pid:18843 Workerman[email.php] Stopping ...
+2017-02-07 20:59:20 pid:18843 Workerman[email.php] has been stopped
+2017-02-07 20:59:36 pid:18917 Workerman[email.php] start in DEBUG mode
+2017-02-07 20:59:38 pid:18917 Workerman[email.php] Stopping ...
+2017-02-07 20:59:38 pid:18917 Workerman[email.php] has been stopped
+2017-02-07 20:59:40 pid:18926 Workerman[email.php] start in DAEMON mode

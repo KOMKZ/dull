@@ -14,7 +14,6 @@ use yii\data\ArrayDataProvider;
  */
 class LogModel extends Model
 {
-    private $dbTargets = [];
 
     public function getOne($condition, $table){
         $one = (new Query())
@@ -23,7 +22,9 @@ class LogModel extends Model
                 ->one();
         return $one;
     }
-
+    public function isLogTableExists($tableName){
+        return Yii::$app->db->getTableSchema($tableName, true) ? true : false;
+    }
     public function getProvider($condition = [], $sortData = [], $table, $withPage = true){
         $query = (new Query())
                 ->from($table);
@@ -39,6 +40,8 @@ class LogModel extends Model
         $pageConfig = [];
         if(!$withPage){
             $pageConfig['pageSize'] = 0;
+        }else{
+            $pageConfig['pageSize'] = 10;
         }
         $provider = new ArrayDataProvider([
             'allModels' => $query->all(),
@@ -67,20 +70,19 @@ class LogModel extends Model
         }
         $query = $query->where($condition);
         foreach($arrayCondition as $name => $item){
-            if(array_key_exists('start', $item) ){
+            if(array_key_exists('start', $item) && !empty($item['start'])){
                 $query->andWhere(['>=', $name, $item['start']]);
             }
-            if(array_key_exists('end', $item) ){
+            if(array_key_exists('end', $item) && !empty($item['end'])){
                 $query->andWhere(['<=', $name, $item['end']]);
             }
-            if(array_key_exists('in', $item) ){
+            if(array_key_exists('in', $item) && !empty($item['in'])){
                 $query->andWhere(['in', $name, $item['in']]);
             }
-            if(array_key_exists('like', $item) ){
+            if(array_key_exists('like', $item) && !empty($item['like'])){
                 $query->andWhere(['like', $name, $item['like']]);
             }
         }
-
         return $query;
     }
 
@@ -113,7 +115,7 @@ class LogModel extends Model
         return $sortData;
     }
 
-    public function getArAttributes(){
+    protected function getArAttributes(){
         return [
             'id', 'message', 'prefix', 'category', 'log_time', 'level'
         ];

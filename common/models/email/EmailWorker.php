@@ -8,7 +8,7 @@ class EmailWorker
 {
     CONST SEN_FIELD = 'worker:email:succ_email_num';
 
-    static public $emailWorkerCount = 50;
+    static public $emailWorkerCount = 5;
     public $defaultSender = 'kitral.zhong@trainor.cn';
     public $defaultSenderPwd = 'TDSZ2016kz';
     static private $mailer;

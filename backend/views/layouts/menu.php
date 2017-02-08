@@ -80,6 +80,19 @@ return [
         ],
 
         [
+            'label' => '文件管理',
+            'icon' => 'fa fa-share',
+            'url' => '#',
+            'items' => [
+                [
+                    'label' => '文件查询',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/file/search']
+                ],
+            ],
+        ],
+
+        [
             'label' => '消息管理',
             'icon' => 'fa fa-share',
             'url' => '#',
