@@ -12,6 +12,30 @@ return [
             'port' => '6379',
             'database' => 0
         ],
+
+        'diskfile' => [
+            'class' => 'common\models\file\DiskDriver',
+            'base' => null,
+            'host' => null,
+        ],
+
+        'ossfile' => [
+            'class' => 'common\models\file\OssDriver',
+            'bucket' => '',
+            'access_key_id' => '',
+            'access_secret_key' => '',
+            'is_cname' => '',
+            'endpoint' => '',
+            'inner_endpoint' => '',
+            'base' => ''
+        ],
+
+        'urlbuilder' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+        ],
+
         // 'log' => [
         //     'traceLevel' => YII_DEBUG ? 3 : 0,
         //     'targets' => [

@@ -6,5 +6,5 @@ use common\base\Controller;
 
 class ApiController extends Controller
 {
-
+    
 }

@@ -6,5 +6,6 @@ use common\base\Controller;
 
 class FrController extends Controller
 {
+    public $enableCsrfValidation = false;
 
 }
