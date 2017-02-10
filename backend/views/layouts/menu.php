@@ -76,6 +76,11 @@ return [
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/email/send']
                 ],
+                [
+                    'label' => '失败列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/email/fail-email-list']
+                ],
             ],
         ],
 

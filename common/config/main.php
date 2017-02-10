@@ -15,8 +15,8 @@ return [
 
         'diskfile' => [
             'class' => 'common\models\file\DiskDriver',
-            'base' => null,
-            'host' => null,
+            'base' => '/home/kitral/shuguang/files',
+            'host' => '',
         ],
 
         'ossfile' => [

@@ -21,6 +21,7 @@ class File extends ActiveRecord
 
     const STATUS_UPLOADED = 's_uploaded';
     const STATUS_IN_QUEUE = 's_in_queue';
+    const STATU_UPLOAD_FAIL = 's_upload_failed';
 
     static public $constMap = [];
 

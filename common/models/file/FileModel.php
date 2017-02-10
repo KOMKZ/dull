@@ -60,6 +60,16 @@ class FileModel extends Model
         }
         return $file;
     }
+
+    public function setFileFailed($file){
+        $file->f_status = File::STATU_UPLOAD_FAIL;
+        if(false === $file->update(false)){
+            $this->addError('', Yii::t('app', '数据库更新失败'));
+            return false;
+        }
+        return $file;
+    }
+
     public function saveFile($data){
         $file = new File;
         $file->scenario = 'create';

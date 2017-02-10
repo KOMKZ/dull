@@ -31,16 +31,16 @@ return [
             'name' => 'advanced-backend',
         ],
         'log' => [
-            'traceLevel' => 0,
+            'traceLevel' => 6,
             'targets' => [
                 [
                     'class' => 'yii\log\DbTarget',
                     'logTable' => 'log_backend',
-                    'levels' => ['error', 'warning'],
-                    'categories' => [
-                        'application',
-                        'yii\db\*',
-                    ],
+                    'levels' => ['error'],
+                    // 'categories' => [
+                    //     'application',
+                    //     'yii\db\*',
+                    // ],
                     'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
                 ],
             ],

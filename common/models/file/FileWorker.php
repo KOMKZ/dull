@@ -14,28 +14,34 @@ class FileWorker
 
 
     public static function handleFile($msg){
-        $data = json_decode($msg->body);
-        if(!$data){
-            return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-        }
-        $file = File::findOne($data->f_id);
-        if(!$file){
-            return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-        }
-        if($file->isUploaded){
-            return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-        }
-        $file->source_path = $data->source_path;
-        $file->source_path_type = $data->source_path_type;
-        $model = self::getModel();
-        $result = $model->uploadFileToTps($file);
-        if(!$result){
-            // todo 上传失败
-        }else{
-            // 保存成功
-            $model->setFileUploaded($file);
+        try {
+            $data = json_decode($msg->body);
+            if(!$data){
+                return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            }
+            $file = File::findOne($data->f_id);
+            if(!$file){
+                return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            }
+            if($file->isUploaded){
+                return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            }
+            $file->source_path = $data->source_path;
+            $file->source_path_type = $data->source_path_type;
+            $model = self::getModel();
+            $result = $model->uploadFileToTps($file);
+            if(!$result){
+                $model->setFileFailed($file);
+            }else{
+                // 保存成功
+                $model->setFileUploaded($file);
+            }
+        } catch (\Exception $e) {
+            Yii::error($e);
+            echo $e->getMessage();
         }
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+
     }
 
     protected static function getModel(){

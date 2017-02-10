@@ -15,9 +15,9 @@ class LogController extends AdminController
         return $this->render('index');
     }
 
-    public function actionOne($id, $table_name = 'log_backend'){
+    public function actionOne($id, $table_name = ''){
         $logModel = new LogModel();
-        $one = $logModel->getOne(['id' => $id], $table_name);
+        $one = $logModel->getOne(['id' => $id], $table_name ? $table_name : 'log_backend');
         echo VarDumper::dumpAsString($one);
         exit();
     }
@@ -39,7 +39,7 @@ class LogController extends AdminController
                 }
             }
             $condition = $logModel->parseQueryCondtion($get);
-            list($provider, $pagination) = $logModel->getProvider($condition, [], $table_name, true);
+            list($provider, $pagination) = $logModel->getProvider($condition, [], true, $table_name);
         }
         return $this->render('search', [
             'provider' => $provider

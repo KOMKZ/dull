@@ -35,7 +35,9 @@ $js = <<<JS
         return target;
     };
     $('.view-log-btn').click(function(){
-        $.get($(this).attr('href'), {}, function(res){
+        $.get($(this).attr('href'), {
+            table_name : $('#table_search').val()
+        }, function(res){
             $('#log-detail').html(res);
         });
         return false;
@@ -163,9 +165,7 @@ $this->registerJs($js);
                             <option value="log_backend">后台应用</option>
                             <option value="log_frontend">前台应用</option>
                             <option value="log_api">Api应用</option>
-                            <option value="log_jobs">Jobs应用</option>
                             <option value="log_console">console应用</option>
-
                         </select>
                     </div>
                     <div class="form-group">

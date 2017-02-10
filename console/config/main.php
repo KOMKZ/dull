@@ -18,11 +18,7 @@ return [
                 [
                     'class' => 'yii\log\DbTarget',
                     'logTable' => 'log_console',
-                    'levels' => ['error', 'warning'],
-                    'categories' => [
-                        'application',
-                        'yii\db\*',
-                    ],
+                    'levels' => ['error'],
                     'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
                 ],
             ],
