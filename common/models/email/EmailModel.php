@@ -14,7 +14,8 @@ use PhpAmqpLib\Message\AMQPMessage;
 class EmailModel extends Model
 {
     static private $amqpConn;
-    static private $emailChannel;
+    static private $Channel;
+    
     public function sendEmail($data, $asyc = true){
         if($asyc && $this->isAsycSendOk()){
             return $this->sendEmailAsyc($data);
@@ -27,7 +28,7 @@ class EmailModel extends Model
     }
     protected function sendEmailAsyc($data){
         $connection = $this->getAmqpConn();
-        $channel = $this->getEmailChannel();
+        $channel = $this->getChannel();
         $msg = new AMQPMessage(json_encode($data), ['delivery_mode' => 2]);
         $channel->basic_publish($msg, '', 'email-job');
     }
@@ -40,14 +41,14 @@ class EmailModel extends Model
     protected function sendEmailSyc($data){
 
     }
-    private function getEmailChannel(){
-        if(self::$emailChannel){
-            return self::$emailChannel;
+    private function getChannel(){
+        if(self::$Channel){
+            return self::$Channel;
         }
         $conn = $this->getAmqpConn();
         $channel = $conn->channel();
         $channel->queue_declare('email-job', false, true, false, false);
-        return self::$emailChannel = $channel;
+        return self::$Channel = $channel;
     }
 
     private function getAmqpConn(){

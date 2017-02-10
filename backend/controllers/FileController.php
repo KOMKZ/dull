@@ -17,15 +17,15 @@ class FileController extends AdminController
     public function actionSave(){
         $fileModel = new FileModel();
         $data = [
-            'source_path' => '/home/kitral/Documents/abc.pdf',
+            'source_path' => '/home/kitral/Documents/07.pps',
             'source_path_type' => File::SP_LOCAL,
             'f_storage_type' => File::DR_OSS,
-            'f_name' => 'english-action-tutorial',
+            'f_name' => '07',
             'f_prefix' => 'user/documents',
             'f_ext' => 'pdf',
             'f_acl_type' => File::FILE_ACL_PRI,
             'f_category' => 'no_category',
-            'save_asyc' => false
+            'save_asyc' => true
         ];
 
         $result = $fileModel->saveFile($data);

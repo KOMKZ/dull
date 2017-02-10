@@ -41,7 +41,9 @@ class m170209_030141_file extends Migration
             // 文件创建时间
             'f_created_at' => $this->integer()->notNull(),
             // 文件更新时间
-            'f_updated_at' => $this->integer()->notNull()
+            'f_updated_at' => $this->integer()->notNull(),
+            // 文件状态
+            'f_status' => $this->char(20)->notNull()
         ], $tableOptions);
         // todo 索引的建立
     }
@@ -49,8 +51,8 @@ class m170209_030141_file extends Migration
     public function down()
     {
         $this->dropTable("{{%file}}");
+        return true;
     }
-
     /*
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()

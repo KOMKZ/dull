@@ -72,6 +72,7 @@ class m141106_185632_log_init extends Migration
             $this->createIndex('idx_log_level', $target->logTable, 'level');
             $this->createIndex('idx_log_category', $target->logTable, 'category');
         }
+        return true;
     }
 
     public function down()
@@ -82,5 +83,6 @@ class m141106_185632_log_init extends Migration
 
             $this->dropTable($target->logTable);
         }
+        return true;
     }
 }

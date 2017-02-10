@@ -6,12 +6,18 @@ use common\base\Model;
 use common\models\file\File;
 use common\models\file\DiskDriver;
 use yii\web\HttpException;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
 
 /**
  *
  */
 class FileModel extends Model
 {
+    static private $amqpConn;
+    static private $Channel;
+
     public function getOne($condition){
         if(!empty($condition)){
             return File::find()->where($condition)->one();
@@ -46,7 +52,14 @@ class FileModel extends Model
         $driver = $this->instanceDriver($file->f_storage_type);
         $driver->output($file);
     }
-
+    public function setFileUploaded($file){
+        $file->f_status = File::STATUS_UPLOADED;
+        if(false === $file->update(false)){
+            $this->addError('', Yii::t('app', '数据库更新失败'));
+            return false;
+        }
+        return $file;
+    }
     public function saveFile($data){
         $file = new File;
         $file->scenario = 'create';
@@ -54,6 +67,22 @@ class FileModel extends Model
             $this->addErrors($file->getErrors());
             return false;
         }
+        if(!$file->save_asyc){
+            $file = $this->uploadFileToTps($file);
+            $file->f_status = File::STATUS_UPLOADED;
+        }else{
+            // todo异步保存需要保存本地文件
+            $file->f_status = File::STATUS_IN_QUEUE;
+        }
+        // insert record in db
+        $file = $this->saveFileInfoInDb($file);
+        if($file->save_asyc){
+            $this->sendFileDataAsyc($file);
+        }
+        return $file;
+    }
+
+    public function uploadFileToTps($file){
         $driver = $this->instanceDriver($file->f_storage_type);
         // save in storage media
         $file = $driver->save($file);
@@ -61,9 +90,18 @@ class FileModel extends Model
             $this->addErrors($driver->getErrors());
             return false;
         }
-        // insert record in db
-        $file = $this->saveFileInfoInDb($file);
         return $file;
+    }
+
+    protected function sendFileDataAsyc($file){
+        $connection = $this->getAmqpConn();
+        $channel = $this->getChannel();
+        $msg = new AMQPMessage(json_encode([
+            'f_id' => $file->f_id,
+            'source_path' => $file->source_path,
+            'source_path_type' => $file->source_path_type
+        ]), ['delivery_mode' => 2]);
+        $channel->basic_publish($msg, '', 'file-job');
     }
 
     protected function saveFileInfoInDb($file){
@@ -73,7 +111,11 @@ class FileModel extends Model
         $file->f_created_at = time();
         $file->f_updated_at = time();
         $file->f_depostion_name = $file->buildTotalName();
-        return $file->insert(false);
+        if($file->insert(false)){
+            return $file;
+        }else{
+            return false;
+        }
     }
 
     protected function instanceDriver($type){
@@ -86,5 +128,23 @@ class FileModel extends Model
                 throw new \Exception("zh:不支持存储类型{$type}");
                 break;
         }
+    }
+
+
+    private function getChannel(){
+        if(self::$Channel){
+            return self::$Channel;
+        }
+        $conn = $this->getAmqpConn();
+        $channel = $conn->channel();
+        $channel->queue_declare('file-job', false, true, false, false);
+        return self::$Channel = $channel;
+    }
+
+    private function getAmqpConn(){
+        if(self::$amqpConn){
+            return self::$amqpConn;
+        }
+        return self::$amqpConn = new AMQPStreamConnection('localhost', 5672, 'kitral', 'philips');
     }
 }

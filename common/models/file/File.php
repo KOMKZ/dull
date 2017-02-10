@@ -19,10 +19,15 @@ class File extends ActiveRecord
 
     const SP_LOCAL = 'local';
 
+    const STATUS_UPLOADED = 's_uploaded';
+    const STATUS_IN_QUEUE = 's_in_queue';
+
     static public $constMap = [];
 
     private $_host = null;
     private $_saveDir = null;
+
+
 
     /**
      * 源文件地址
@@ -117,7 +122,7 @@ class File extends ActiveRecord
     public function getFileSavePath(){
         return implode(DIRECTORY_SEPARATOR, [$this->_saveDir, $this->buildTotalName()]);
     }
-    
+
     public function getSaveDir(){
         return $this->_saveDir;
     }
@@ -153,6 +158,13 @@ class File extends ActiveRecord
         return self::FILE_ACL_PRI == $this->f_acl_type;
     }
 
+    public function getIsInQueue(){
+        return self::STATUS_IN_QUEUE == $this->f_status;
+    }
+
+    public function getIsUploaded(){
+        return self::STATUS_UPLOADED == $this->f_status;
+    }
 
 
     public function rules(){
