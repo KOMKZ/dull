@@ -5,20 +5,47 @@ use Yii;
 use common\base\Model;
 use common\models\user\tables\User;
 use common\models\email\EmailModel;
+use yii\data\ActiveDataProvider;
 
 /**
  *
  */
 class UserModel extends Model
 {
+    public function getProvider($condition = [], $sortData = [], $withPage = true){
+        $query = User::find();
+        // $query = $this->buildQueryWithCondition($query, $condition);
 
+        $defaultOrder = [
+            'u_created_at' => SORT_DESC
+        ];
 
+        if(!empty($sortData)){
+            $defaultOrder = $sortData;
+        }
+        $pageConfig = [];
+        if(!$withPage){
+            $pageConfig['pageSize'] = 0;
+        }else{
+            $pageConfig['pageSize'] = 10;
+        }
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => $pageConfig,
+            'sort' => [
+                'attributes' => ['u_created_at'],
+                'defaultOrder' => $defaultOrder
+            ]
+        ]);
+        $pagination = $provider->getPagination();
+        return [$provider, $pagination];
+    }
 
     public function getOne($condition){
         if(is_object($condition)){
             return $condition;
         }
-        if(!$condition){
+        if($condition){
             return User::find()->where($condition)->one();
         }else{
             return null;
@@ -138,12 +165,9 @@ class UserModel extends Model
                 'auth_url' => $authUrl,
             ]
         ];
-        if(!$emailModel->sendEmail($mail, true)){
-            Yii::error([
-                'title' => '发送同步邮件失败',
-                'errors' => $emailModel->getErrors(),
-                'mail' => $mail
-            ]);
+        if(!$emailModel->sendEmail($mail, false)){
+            // 12 todo
+            $emailModel::insertFailedEmail($mail, 12, $emailModel->getErrors());
         }
     }
 

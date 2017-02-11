@@ -50,6 +50,13 @@ return [
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/user/add']
                 ],
+                [
+                    'label' => '用户查看',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/user/view'],
+                    'visible' => Yii::$app->requestedRoute == 'user/view',
+                ],
+
             ],
         ],
 

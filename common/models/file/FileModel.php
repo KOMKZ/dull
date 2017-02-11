@@ -47,7 +47,7 @@ class FileModel extends Model
             $file = $id;
         }
         if(!$file){
-            throw new HttpException(404, Yii::t('app', '文件不存在'));
+            throw new HttpException(404, Yii::t('app', '数据不存在'));
         }
         $driver = $this->instanceDriver($file->f_storage_type);
         $driver->output($file);

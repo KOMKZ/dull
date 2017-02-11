@@ -15,13 +15,27 @@ class UserController extends AdminController
     }
 
     public function actionList(){
-        return $this->render('list');
+        $userModel = new UserModel();
+        list($provider, $pagination) = $userModel->getProvider();
+
+        return $this->render('list', [
+            'provider' => $provider,
+            'userAuthStatusMap' => User::getValidConsts('u_auth_status')
+        ]);
     }
 
-    public function actionGetOne($id){
+
+    public function actionView($u_id){
         $userModel = new UserModel();
-        $one = $userModel->getOne(['id' => $id]);
-        return $this->render('add');
+        $one = $userModel->getOne(['u_id' => $u_id]);
+        if(!$one){
+            return $this->error(Yii::t('app', '数据不存在'));
+        }
+        return $this->render('view', [
+            'model' => $one,
+            'userStatusMap' => User::getValidConsts('u_status'),
+            'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+        ]);
     }
 
     public function actionAdd(){

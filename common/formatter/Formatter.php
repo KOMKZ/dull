@@ -18,4 +18,7 @@ class Formatter extends BaseFormatter
         }
         return VarDumper::dumpAsString($data, 100, true);
     }
+    public function asMap($value, $map){
+        return array_key_exists($value, $map) ? $map[$value] : $value;
+    }
 }
