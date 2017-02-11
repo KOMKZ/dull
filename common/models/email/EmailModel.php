@@ -4,6 +4,7 @@ namespace common\models\email;
 use Yii;
 use common\base\Model;
 use common\models\email\tables\EmailFailed;
+use common\models\email\Mail;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use yii\data\ActiveDataProvider;
@@ -16,6 +17,14 @@ class EmailModel extends Model
 {
     static private $amqpConn;
     static private $Channel;
+
+    public function getOneFailEmail($condition){
+        if(!empty($condition)){
+            return EmailFailed::find()->where($condition)->one();
+        }else{
+            return null;
+        }
+    }
 
     public function getFailedEmailProvider($condition = [], $sortData = [], $withPage = true, $table = null){
         $query = EmailFailed::find();
@@ -70,7 +79,9 @@ class EmailModel extends Model
      * @return [type]       [description]
      */
     protected function sendEmailSyc($data){
-
+        $data['class'] = Mail::className();
+        $mail = Yii::createObject($data);
+        console($mail);
     }
     private function getChannel(){
         if(self::$Channel){

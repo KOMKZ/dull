@@ -31,7 +31,7 @@ return [
             'name' => 'advanced-backend',
         ],
         'log' => [
-            'traceLevel' => 6,
+            'traceLevel' => 3,
             'targets' => [
                 [
                     'class' => 'yii\log\DbTarget',

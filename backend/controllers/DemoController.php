@@ -17,26 +17,22 @@ class DemoController extends Controller
     public function actionAddEmail(){
         set_time_limit(0);
         $emailModel = new EmailModel();
-        $msgBody = [
+        $mail = [
             'subject' => '测试邮件',
             'to' => '784248377@qq.com',
-            'body' => [
-                      '<html>' .
-                      ' <head></head>' .
-                      ' <body>' .
-                      '  Here is an image <img src="cid:%img1%" alt="Image" />' .
-                      '  Rest of message' .
-                      ' </body>' .
-                      '</html>',
-                      'text/html'
-            ],
+            'template' => 'signup-user-auth-email',
+            'body' => ['','text/html'],
             'img' => [
-                '%img1%' => '/home/kitral/Pictures/Wallpapers/1.jpg',
+                'img01' => '/home/kitral/Pictures/04.png',
             ],
+            'params' => [
+                'username' => '784248377@qq.com',
+                'auth_url' => 'http://localhost/helloworld'
+            ]
         ];
         $i  = 1;
-        while($i < 200){
-            $emailModel->sendEmail($msgBody);
+        while($i < 2){
+            $emailModel->sendEmail($mail);
             $i++;
         }
     }

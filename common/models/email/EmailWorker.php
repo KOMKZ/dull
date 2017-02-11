@@ -16,6 +16,8 @@ class EmailWorker
     private $source;
 
     private $subject;
+    private $params;
+    private $template;
     private $from;
     private $to;
     private $body;
@@ -41,7 +43,6 @@ class EmailWorker
             // 3. 异常包括，发送
             $ew->send();
         } catch (\Exception $e) {
-            echo $e->getMessage()."\n";
             $ew->insertFailedEmail($msg->body, $e->getCode(), $e->getMessage());
             return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         }
@@ -91,6 +92,13 @@ class EmailWorker
         self::$mailer->Subject = $this->subject;
         self::$mailer->isHTML(true);
         list($msgBody, $contentType) = $this->body;
+        if(empty($msgBody) && $this->template){
+            $tpl = $this->getTpl($this->template);
+            $content = Yii::$app->view->renderFile($tpl['path'], $this->params);
+            $msgBody = Yii::$app->view->renderFile($tpl['layout'], ['content' => $content]);
+            $this->img = array_merge($this->img, $tpl['img']);
+        }
+        // 看看是不是需要嵌入图片
         if(!empty($this->img) && 'text/html' == $contentType){
             $imgMap = [];
             foreach($this->img as $key => $imgPath){
@@ -115,6 +123,19 @@ class EmailWorker
         // // set msg body
         // $msg->setBody($msgBody, $contentType);
         // $this->msg = $msg;
+    }
+
+    public static function getTpl($name = null){
+        $map = [
+            'signup-user-auth-email' => [
+                'path' => Yii::getAlias('@common/mail/signup-user-auth-email.php'),
+                'layout' => Yii::getAlias('@common/mail/layouts/html.php'),
+                'img' => [
+                    'tpl_img' => '/home/kitral/Pictures/2.jpg',
+                ]
+            ],
+        ];
+        return $name ? $map[$name] : $map;
     }
     private function buildMailer($sender, $pwd){
         if(self::$mailer){
@@ -143,7 +164,7 @@ class EmailWorker
         if(false == $data){
             return false;
         }
-        $safeNames = ['subject', 'from', 'to', 'body', 'img', 'attatch'];
+        $safeNames = ['subject', 'from', 'to', 'body', 'img', 'attatch', 'template', 'params'];
         foreach($safeNames as $name){
             if(!empty($data[$name])){
                 $this->$name = $data[$name];

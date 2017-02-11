@@ -6,6 +6,7 @@ use common\base\AdminController;
 use common\models\log\LogModel;
 use common\models\log\tables\LogBackend;
 use yii\helpers\VarDumper;
+use yii\i18n\Formatter;
 
 class LogController extends AdminController
 {
@@ -18,7 +19,7 @@ class LogController extends AdminController
     public function actionOne($id, $table_name = ''){
         $logModel = new LogModel();
         $one = $logModel->getOne(['id' => $id], $table_name ? $table_name : 'log_backend');
-        echo VarDumper::dumpAsString($one);
+        echo VarDumper::dumpAsString($one, 100, true);
         exit();
     }
 

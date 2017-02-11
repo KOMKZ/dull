@@ -25,4 +25,12 @@ class EmailController extends AdminController
         ]);
     }
 
+    public function actionFailEmailView($id){
+        $emailModel = new EmailModel();
+        $one = $emailModel->getOneFailEmail(['emf_id' => $id]);
+        return $this->render('fail-email-view', [
+            'model' => $one
+        ]);
+    }
+
 }
