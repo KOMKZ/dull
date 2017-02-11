@@ -55,6 +55,7 @@ class UserModel extends Model
                 if($user->isNoAuth){
                     $this->sendAuthEmailToUser($user);
                 }
+                $transaction->commit();
                 return $user;
             }else{
                 $this->addErrors($user->getErrors());
@@ -130,14 +131,20 @@ class UserModel extends Model
             'template' => 'signup-user-auth-email',
             'body' => ['','text/html'],
             'img' => [
-                'img01' => '/home/kitral/Pictures/04.png',
+                'img01' => '/home/kitral/Pictures/3.png',
             ],
             'params' => [
                 'username' => '784248377@qq.com',
                 'auth_url' => $authUrl,
             ]
         ];
-        $emailModel->sendEmail($mail, false);
+        if(!$emailModel->sendEmail($mail, true)){
+            Yii::error([
+                'title' => '发送同步邮件失败',
+                'errors' => $emailModel->getErrors(),
+                'mail' => $mail
+            ]);
+        }
     }
 
     protected function buildPasswordHash($password){

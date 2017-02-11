@@ -31,7 +31,7 @@ class UserController extends AdminController
             $post = Yii::$app->request->post();
             $result = $userModel->createUser($post, $user);
             if($result){
-                console($result->toArray());
+                // todo 提示
                 return $this->refresh();
             }
         }

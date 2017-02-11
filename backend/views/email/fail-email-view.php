@@ -5,8 +5,11 @@ use common\formatter\Formatter;
 echo DetailView::widget([
     'model' => $model,
     'attributes' => [
-        'emf_id',               // title attribute (in plain text)
-        'emf_message',
+        'emf_id',
+        [
+            'attribute' => 'emf_message',
+            'format' => 'json'
+        ],
         [
             'attribute' => 'emf_created_at',
             'format' => ['date', 'Y-MM-dd HH-mm-ss']
