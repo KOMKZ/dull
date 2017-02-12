@@ -46,6 +46,8 @@ class User extends ActiveRecord
             'u_status' => Yii::t('app', '用户状态'),
             'u_created_at' => Yii::t('app', '创建时间'),
             'u_updated_at' => Yii::t('app', '更新时间'),
+            'u_created_at_format' => Yii::t('app', '创建时间'),
+            'u_updated_at_format' => Yii::t('app', '更新时间'),
             'password' => Yii::t('app', '用户密码'),
             'password_confirm' => Yii::t('app', '用户确认密码'),
             'u_auth_status' => Yii::t('app', '验证状态')
@@ -88,11 +90,13 @@ class User extends ActiveRecord
             ['u_auth_status', 'default', 'value' => User::STATUS_NO_AUTH],
             ['u_auth_status', 'in', 'range' => self::getValidConsts('u_auth_status', true)],
 
-            ['password', 'required'],
+            ['password', 'required', 'on' => 'create'],
+            ['password', 'required', 'on' => 'update', 'skipOnEmpty' => true],
             ['password', 'string', 'min' => 6, 'max' =>  20],
 
-            ['password_confirm', 'required'],
-            ['password_confirm', 'compare', 'compareAttribute' => 'password_confirm'],
+            ['password_confirm', 'required', 'on' => 'create'],
+            ['password_confirm', 'required', 'on' => 'update', 'skipOnEmpty' => true],
+            ['password_confirm', 'compare', 'compareAttribute' => 'password'],
 
 
 
@@ -103,6 +107,12 @@ class User extends ActiveRecord
             'create' => [
                 'u_username',
                 'u_email',
+                'u_status',
+                'u_auth_status',
+                'password',
+                'password_confirm'
+            ],
+            'update' => [
                 'u_status',
                 'u_auth_status',
                 'password',
@@ -124,6 +134,14 @@ class User extends ActiveRecord
 
     public function getIsAuthed(){
         return self::STATUS_AUTHED == $this->u_auth_status;
+    }
+
+    public function getU_created_at_format(){
+        return date('Y-m-d H:i:s', $this->u_created_at);
+    }
+
+    public function getU_updated_at_format(){
+        return date('Y-m-d H:i:s', $this->u_updated_at);
     }
 
 

@@ -17,7 +17,7 @@ class UserController extends FrController
         if(!$isAuthed){
             console($userModel->getErrors());
         }
-        $reuslt = $userModel->updateUserAuthed([$id]);
+        $result = $userModel->updateUserAuthed(['u_id' => $id]);
         if(!$result){
             console($userModel->getErrors());
         }else{

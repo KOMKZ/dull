@@ -56,6 +56,12 @@ return [
                     'url' => ['/user/view'],
                     'visible' => Yii::$app->requestedRoute == 'user/view',
                 ],
+                [
+                    'label' => '用户修改',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/user/update'],
+                    'visible' => Yii::$app->requestedRoute == 'user/update',
+                ],
 
             ],
         ],

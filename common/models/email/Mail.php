@@ -37,8 +37,8 @@ class Mail extends Model
             $this->addError('', $e->getMessage());
             return false;
         }
-
     }
+    
     public function check(){
         $require = ['subject', 'to', 'body'];
         foreach($require as $name){

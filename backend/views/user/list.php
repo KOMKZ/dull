@@ -35,11 +35,13 @@ use yii\helpers\Url;
                             'class' => 'yii\grid\ActionColumn',
                             'header' => '操作',
                             'buttonOptions' => ['target' => '_blank'],
-                            'template' => '{view}',
+                            'template' => '{view} {update}',
                             'urlCreator' => function ($action, $model, $key, $index) {
                                 switch ($action) {
                                     case 'view':
-                                    return Url::to(['user/view', 'u_id' => $model['u_id']]);
+                                        return Url::to(['user/view', 'u_id' => $model['u_id']]);
+                                    case 'update':
+                                        return Url::to(['user/update', 'u_id' => $model['u_id']]);
                                 }
                             },
                         ]

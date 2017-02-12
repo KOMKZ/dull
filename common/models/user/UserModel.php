@@ -14,7 +14,7 @@ class UserModel extends Model
 {
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = User::find();
-        // $query = $this->buildQueryWithCondition($query, $condition);
+        $query = $this->buildQueryWithCondition($query, $condition);
 
         $defaultOrder = [
             'u_created_at' => SORT_DESC
@@ -54,7 +54,7 @@ class UserModel extends Model
     public function updateUserAuthed($data){
         $user = $this->getOne($data);
         if(!$user){
-            $this->addError('', Yii::t('app', '用户不存在'));
+            $this->addError('', Yii::t('app', '用户数据不存在'));
             return false;
         }
         $user->u_auth_status = User::STATUS_AUTHED;
@@ -63,6 +63,43 @@ class UserModel extends Model
             return $user;
         }
         return false;
+    }
+    public function updateUser($condition, $data){
+        $user = $this->getOne($condition);
+        if(!$user){
+            $this->addError('', Yii::t('app', '用户数据不存在'));
+            return false;
+        }
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user->scenario = 'update';
+            if($user->load($data) && $user->validate()){
+                if($user->isNoAuth){
+                    $user->u_auth_key = $this->generateAuthKey();
+                }
+                if(!empty($user->password)){
+                    $user->u_password_hash = $this->buildPasswordHash($user->password);
+                }
+                $result = $user->update(false);
+                if(false === $result){
+                    $this->addError('', Yii::t('app', '数据写入失败'));
+                    return false;
+                }
+                if($user->isNoAuth){
+                    $this->sendAuthEmailToUser($user);
+                }
+                $transaction->commit();
+                return $user;
+            }else{
+                $this->addErrors($user->getErrors());
+                return false;
+            }
+        } catch (\Exception $e) {
+            $transaction->rollback();
+            Yii::error($e);
+            $this->addError('', Yii::t('app', '发生异常'));
+            return false;
+        }
     }
     public function createUser($data, $user = null){
         $transaction = Yii::$app->db->beginTransaction();
@@ -131,11 +168,11 @@ class UserModel extends Model
         }
         $user = $this->getOne(['u_id' => $uid, 'u_auth_status' => User::STATUS_NO_AUTH]);
         if(!$user){
-            $this->addError('', Yii::t('app', '用户不存在或已经已经激活'));
+            $this->addError('', Yii::t('app', '用户数据不存在或已经已经激活'));
             return false;
         }
         if($token != $user->u_auth_key){
-            $this->addError('', Yii::t('app', '用户不存在token失效'));
+            $this->addError('', Yii::t('app', '用户数据不存在token失效'));
             return false;
         }
         return true;
@@ -165,7 +202,7 @@ class UserModel extends Model
                 'auth_url' => $authUrl,
             ]
         ];
-        if(!$emailModel->sendEmail($mail, false)){
+        if(!$emailModel->sendEmail($mail, true)){
             // 12 todo
             $emailModel::insertFailedEmail($mail, 12, $emailModel->getErrors());
         }
@@ -176,7 +213,7 @@ class UserModel extends Model
     }
 
     protected function generateAuthKey(){
-        return "abcefg:".Yii::$app->security->generateRandomString();
+        return Yii::$app->security->generateRandomString();
     }
 
 

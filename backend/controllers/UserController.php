@@ -24,6 +24,26 @@ class UserController extends AdminController
         ]);
     }
 
+    public function actionUpdate($u_id){
+        $userModel = new UserModel();
+        $one = $userModel->getOne(['u_id' => $u_id]);
+        if(!$one){
+            return $this->error(Yii::t('app', '数据不存在'));
+        }
+        if(Yii::$app->request->isPost){
+            $post = Yii::$app->request->post();
+            $result = $userModel->updateUser($one, $post);
+            if($result){
+                $this->succ(Yii::t('app', '操作成功'));
+                return $this->refresh();
+            }
+        }
+        return $this->render('update', [
+            'model' => $one,
+            'userStatusMap' => User::getValidConsts('u_status'),
+            'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+        ]);
+    }
 
     public function actionView($u_id){
         $userModel = new UserModel();
@@ -45,7 +65,7 @@ class UserController extends AdminController
             $post = Yii::$app->request->post();
             $result = $userModel->createUser($post, $user);
             if($result){
-                // todo 提示
+                $this->succ(Yii::t('app', '操作成功'));
                 return $this->refresh();
             }
         }
