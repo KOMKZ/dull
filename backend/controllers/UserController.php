@@ -20,7 +20,9 @@ class UserController extends AdminController
 
         return $this->render('list', [
             'provider' => $provider,
-            'userAuthStatusMap' => User::getValidConsts('u_auth_status')
+            'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+            'userStatusMap' => User::getValidConsts('u_status'),
+            'userSetStatusApi' => Yii::$app->apiurl->createAbsoluteUrl(['user/set-status'], 'http'),
         ]);
     }
 

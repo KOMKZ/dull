@@ -1,9 +1,12 @@
 <?php
-namespace frontend\controllers;
+namespace api\controllers;
 
-use common\base\FrController;
+use Yii;
+use common\base\ApiController;
+use yii\web\HttpException;
+use yii\web\UserException;
 
-class SiteController extends FrController
+class SiteController extends ApiController
 {
     public function actionError(){
         if (($exception = Yii::$app->getErrorHandler()->exception) === null) {
@@ -16,7 +19,7 @@ class SiteController extends FrController
         } else {
             $code = $exception->getCode();
         }
-        if ($exception instanceof Exception) {
+        if ($exception instanceof \Exception) {
             $name = $exception->getName();
         } else {
             $name = 'Error';
@@ -24,13 +27,12 @@ class SiteController extends FrController
         if ($code) {
             $name .= " (#$code)";
         }
-
         if ($exception instanceof UserException) {
             $message = $exception->getMessage();
         } else {
             $message = 'An internal server error occurred.';
         }
-        echo "";
+        return $this->error($code, $message);
     }
 
     public function actionIndex()

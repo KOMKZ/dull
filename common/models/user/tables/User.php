@@ -14,6 +14,8 @@ class User extends ActiveRecord
     private static $_constMap = [];
     const STATUS_ACTIVE = 'active';
     const STATUS_LOCKED = 'locked';
+    const STATUS_DELETE = 'delete';
+
     const STATUS_NO_AUTH = 0;
     const STATUS_AUTHED = 1;
 
@@ -60,6 +62,7 @@ class User extends ActiveRecord
                 'u_status' => [
                     self::STATUS_ACTIVE => Yii::t('app','可用'),
                     self::STATUS_LOCKED => Yii::t('app', '锁定'),
+                    self::STATUS_DELETE => Yii::t('app', '删除')
                 ],
                 'u_auth_status' => [
                     self::STATUS_NO_AUTH => Yii::t('app', '未验证'),

@@ -37,6 +37,14 @@ return [
             'hostInfo' => 'http://localhost:8055/index.php'
         ],
 
+        'apiurl' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => false,
+            'showScriptName' => false,
+            'hostInfo' => 'http://localhost:8053/index.php'
+        ],
+
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

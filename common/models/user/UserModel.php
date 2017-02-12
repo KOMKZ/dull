@@ -51,6 +51,7 @@ class UserModel extends Model
             return null;
         }
     }
+
     public function updateUserAuthed($data){
         $user = $this->getOne($data);
         if(!$user){
@@ -63,6 +64,18 @@ class UserModel extends Model
             return $user;
         }
         return false;
+    }
+    public function updateAllStatus($condition, $status){
+        if(!in_array($status, User::getValidConsts('u_status', true))){
+            $this->addError('', 'u_status值不合法');
+            return false;
+        }
+        $this->updateAllUser($condition, ['u_status' => $status]);
+        return true;
+    }
+    protected function updateAllUser($condition, $data, $parmas = []){
+        $data['u_updated_at'] = time();
+        User::updateAll($data, $condition, $parmas);
     }
     public function updateUser($condition, $data){
         $user = $this->getOne($condition);

@@ -102,6 +102,7 @@ class EmailModel extends Model
         $channel = $this->getChannel();
         $msg = new AMQPMessage(json_encode($data), ['delivery_mode' => 2]);
         $channel->basic_publish($msg, '', 'email-job');
+        return true;
     }
 
     /**
