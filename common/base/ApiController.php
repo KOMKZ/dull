@@ -12,7 +12,7 @@ class ApiController extends Controller
         return [
             'code' => null,
             'data' => null,
-            'messages' => null
+            'message' => null
         ];
     }
     private function asRes($data){
@@ -24,14 +24,14 @@ class ApiController extends Controller
         $res = $this->getRes();
         $res['data'] = $data;
         $res['code'] = 0;
-        $res['messages'] = [ ''=> ['成功'] ];
+        $res['message'] = '成功';
         return $this->asRes($res);
     }
     public function error($code, $message){
         $res = $this->getRes();
         $res['data'] = null;
         $res['code'] = empty($code) ? 1 : $code;
-        $res['messages'] = $message;
+        $res['message'] = $message;
         return $this->asRes($res);
     }
 

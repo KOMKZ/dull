@@ -103,9 +103,20 @@ return [
             'url' => '#',
             'items' => [
                 [
-                    'label' => '文件查询',
+                    'label' => '文件列表',
                     'icon' => 'fa fa-circle-o',
-                    'url' => ['/file/search']
+                    'url' => ['/file/list']
+                ],
+                [
+                    'label' => '增加文件',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/file/add']
+                ],
+                [
+                    'label' => '查看文件',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/file/file-view'],
+                    'visible' => Yii::$app->requestedRoute == 'file/file-view'
                 ],
             ],
         ],

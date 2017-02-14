@@ -24,7 +24,7 @@ $script = <<<JS
                 'u_status' : status
             }, function(res){
                 if(res.code > 0){
-                    showalert(res.messages[''], 'error');
+                    showalert(res.message[''], 'error');
                 }else{
                     location.href = location.href;
                 }
@@ -32,6 +32,7 @@ $script = <<<JS
         }
         return false;
     });
+    
 JS;
 $this->registerJs($script);
 ?>

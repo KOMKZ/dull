@@ -2,6 +2,7 @@
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'timeZone'=>'Asia/Shanghai',
+    'language' => "zh-CN",
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -30,7 +31,7 @@ return [
             'base' => ''
         ],
 
-        'urlbuilder' => [
+        'frurl' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -40,8 +41,8 @@ return [
         'apiurl' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => false,
-            'showScriptName' => false,
-            'hostInfo' => 'http://localhost:8053/index.php'
+            'showScriptName' => true,
+            'hostInfo' => 'http://localhost:8053'
         ],
 
 

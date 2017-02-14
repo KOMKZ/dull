@@ -33,7 +33,7 @@ class DiskDriver extends Model
     }
 
     public function setBase($value){
-        $this->_base = rtrim($value, DIRECTORY_SEPARATOR);
+        $this->_base = rtrim($value, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     public function getBase(){
         return $this->_base;
@@ -57,9 +57,9 @@ class DiskDriver extends Model
         return Yii::$app->response->sendFile($path, $file->f_depostion_name);
     }
     public function getFileUrl($file){
-        $urlbuilder = Yii::$app->urlbuilder;
-        $urlbuilder->hostInfo = $file->f_host;
-        return $urlbuilder->createAbsoluteUrl(['file/read', 'name' => $file->getFilePath()], 'http');
+        $frurl = Yii::$app->frurl;
+        $frurl->hostInfo = $file->f_host;
+        return $frurl->createAbsoluteUrl(['file/read', 'name' => $file->getFilePath()], 'http');
     }
     public function save(File $file){
         if($file->hasErrors()){

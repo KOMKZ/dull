@@ -201,7 +201,7 @@ class UserModel extends Model
         $signString = self::signData($query);
         $query['sign'] = $signString;
         array_unshift($query, 'user/signup-auth');
-        $authUrl = Yii::$app->urlbuilder->createAbsoluteUrl($query, 'http');
+        $authUrl = Yii::$app->frurl->createAbsoluteUrl($query, 'http');
         $mail = [
             'subject' => Yii::t('app', 'kitralzhong注册认证邮件'),
             'to' => $user->u_email,

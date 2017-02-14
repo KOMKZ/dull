@@ -8,6 +8,7 @@ use common\models\file\DiskDriver;
 use yii\web\HttpException;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use yii\data\ActiveDataProvider;
 
 
 /**
@@ -17,6 +18,35 @@ class FileModel extends Model
 {
     static private $amqpConn;
     static private $Channel;
+
+    public function getProvider($condition = [], $sortData = [], $withPage = true){
+        $query = File::find();
+        $query = $this->buildQueryWithCondition($query, $condition);
+
+        $defaultOrder = [
+            'f_created_at' => SORT_DESC
+        ];
+
+        if(!empty($sortData)){
+            $defaultOrder = $sortData;
+        }
+        $pageConfig = [];
+        if(!$withPage){
+            $pageConfig['pageSize'] = 0;
+        }else{
+            $pageConfig['pageSize'] = 10;
+        }
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => $pageConfig,
+            'sort' => [
+                'attributes' => ['f_created_at'],
+                'defaultOrder' => $defaultOrder
+            ]
+        ]);
+        $pagination = $provider->getPagination();
+        return [$provider, $pagination];
+    }
 
     public function getOne($condition){
         if(!empty($condition)){
@@ -52,6 +82,7 @@ class FileModel extends Model
         $driver = $this->instanceDriver($file->f_storage_type);
         $driver->output($file);
     }
+
     public function setFileUploaded($file){
         $file->f_status = File::STATUS_UPLOADED;
         if(false === $file->update(false)){
@@ -70,11 +101,13 @@ class FileModel extends Model
         return $file;
     }
 
-    public function saveFile($data){
-        $file = new File;
+    public function saveFile($data, $file = null){
+        if(!$file){
+            $file = new File();
+        }
         $file->scenario = 'create';
         if(!$file->load($data, '') || !$file->validate()){
-            $this->addErrors($file->getErrors());
+            $this->addError('', $this->getArErrMsg($file));
             return false;
         }
         if(!$file->save_asyc){

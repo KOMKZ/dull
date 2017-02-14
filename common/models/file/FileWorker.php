@@ -40,7 +40,7 @@ class FileWorker
             Yii::error($e);
             echo $e->getMessage();
         }
-        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        return $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
 
     }
 
