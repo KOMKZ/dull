@@ -71,13 +71,15 @@ class DiskDriver extends Model
         return $file;
     }
     protected function copyFile($source, $target){
+        // todo 解决权限的问题
         copy($source, $target);
     }
     protected function prepareDir($file){
-        $file->setSaveDir($this->base);
+        $file->setSaveDir($this->_base);
         $file->f_host = $this->_host;
         if(!is_dir($file->getSaveDir())){
             FileHelper::createDirectory($file->getSaveDir());
+            chmod($file->getSaveDir(), 0777);
         }
     }
 }

@@ -107,27 +107,14 @@ class File extends ActiveRecord
         return $this->_upload_file;
     }
     public function setSaveDir($base){
-        if($base && $this->f_category && $this->f_prefix){
-            $dir =  $this->_saveDir = rtrim(implode(DIRECTORY_SEPARATOR, [
-                $base,
-                md5(
-                    trim($this->f_category, DIRECTORY_SEPARATOR),
-                    trim($this->f_prefix  , DIRECTORY_SEPARATOR)
-                )
-            ]), DIRECTORY_SEPARATOR);
-        }elseif($base && $this->f_category){
-            $dir =  $this->_saveDir = rtrim(implode(DIRECTORY_SEPARATOR, [
-                $base,
-                md5(
-                    trim($this->f_category, DIRECTORY_SEPARATOR)
-                )
-            ]), DIRECTORY_SEPARATOR);
-        }elseif($base){
-            $dir = $base;
-        }else{
-            throw new \Exception(Yii::t('app', "base路径不能为空"));
+        $base = rtrim($base, DIRECTORY_SEPARATOR);
+        if(!$base){
+            throw new \Exception(Yii::t('app', 'base路径不能为空'));
         }
-        $this->_saveDir = $dir;
+        $category = trim($this->f_category, DIRECTORY_SEPARATOR);
+        $prefix = trim($this->f_prefix, DIRECTORY_SEPARATOR);
+        $path = $category . ($prefix ? (DIRECTORY_SEPARATOR . $prefix) : '');
+        $this->_saveDir = $base . DIRECTORY_SEPARATOR . md5($path);
     }
 
     public function getFilePath(){
@@ -141,11 +128,20 @@ class File extends ActiveRecord
     }
 
     public function getFileSavePath(){
-        return implode(DIRECTORY_SEPARATOR, [$this->_saveDir, $this->buildTotalName()]);
+        return implode(DIRECTORY_SEPARATOR, [
+            rtrim($this->_saveDir, DIRECTORY_SEPARATOR),
+            $this->buildTotalName()
+        ]);
     }
 
     public function getSaveDir(){
         return $this->_saveDir;
+    }
+
+    public function getMetaObj(){
+        $exif = new ExifTool();
+        $exif->setMetaData(json_decode($this->f_meta_data, true));
+        return $exif;
     }
 
     public function caculateSize(){
@@ -159,6 +155,8 @@ class File extends ActiveRecord
         $exiftool = new ExifTool($this->source_path);
         return $exiftool->getMetaData();
     }
+
+
 
     public function buildTotalName(){
         if(!$this->f_ext){
@@ -216,6 +214,9 @@ class File extends ActiveRecord
             ['f_category', 'filter', 'filter' => function($value){
                 return trim($value, '/');
             }],
+            ['f_prefix', 'filter', 'filter' => function($value){
+                return trim($value, '/');
+            }],
 
             ['upload_file', 'required', 'skipOnEmpty' => true]
         ];
@@ -255,6 +256,7 @@ class File extends ActiveRecord
                 'save_asyc',
                 'f_name',
                 'f_category',
+                'f_prefix',
                 'f_ext',
                 'f_storage_type',
                 'f_acl_type'

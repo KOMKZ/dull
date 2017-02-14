@@ -6,8 +6,10 @@ class ExifTool{
     private $metaData = [];
     private $source = "";
     private $bin = "/usr/bin/exiftool";
-    public function __construct($file){
-        $this->load($file);
+    public function __construct($file  = null){
+        if($file){
+            $this->load($file);
+        }
     }
     public function load($file){
         if(file_exists($file) && !is_dir($file)){
@@ -23,6 +25,9 @@ class ExifTool{
     }
     public function getMetaData(){
         return $this->metaData;
+    }
+    public function setMetaData($value){
+        $this->metaData = is_array($value) ? $value : [];
     }
     public function getValue($type){
         if(array_key_exists($type, $this->metaData)){

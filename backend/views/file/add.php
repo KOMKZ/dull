@@ -10,7 +10,7 @@ $fileUploaddOneCallBack = <<<JS
             return dull.new_alert('上传失败', 'error');
         }else{
             if(data.result.code > 0){
-                return dull.new_alert(data.result.message, 'error');
+                return dull.new_alert(data.result.code + ':' + data.result.message, 'error');
             }
         }
     }

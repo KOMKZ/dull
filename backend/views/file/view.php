@@ -1,5 +1,6 @@
 <?php
 use Yii;
+use yii\helpers\Html;
 use yii\widgets\DetailView;
 use common\formatter\Formatter;
 use branchonline\lightbox\Lightbox;
@@ -12,19 +13,23 @@ use branchonline\lightbox\Lightbox;
             </div>
             <div class="box-body">
                 <?php
-                echo Lightbox::widget([
-                    'files' => [
-                        [
-                            'thumb' => $fileUrl,
-                            'thumbOptions' => [
-                                'style' => "width:100px;",
-                                'class' => 'img-response'
+                if($fileMeta->isImage()){
+                    echo Lightbox::widget([
+                        'files' => [
+                            [
+                                'thumb' => $fileUrl,
+                                'thumbOptions' => [
+                                    'style' => "width:100px;",
+                                    'class' => 'img-response'
+                                ],
+                                'original' => $fileUrl,
+                                'title' => $model['f_name'],
                             ],
-                            'original' => $fileUrl,
-                            'title' => $model['f_name'],
-                        ],
-                    ]
-                ]);
+                        ]
+                    ]);
+                }else{
+                    echo Html::tag('p', '该文件暂时不支持预览');
+                }
                 ?>
             </div>
         </div>

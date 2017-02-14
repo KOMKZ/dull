@@ -31,7 +31,7 @@ class FileController extends ApiController
         $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
         $filePath = $tempDir . $fileTotalName;
         if (!$uploadFile->saveAs($filePath)) {
-            return $this->error($uploadFile->error);
+            return $this->error($uploadFile->error, Yii::t('app', '保存文件失败'));
         }
         // 实际存储 todo 数据结构需要改变
         $post = Yii::$app->request->post();

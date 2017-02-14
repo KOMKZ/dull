@@ -6,6 +6,7 @@ use common\base\AdminController;
 use common\models\file\FileModel;
 use common\models\file\File;
 use yii\web\UploadedFile;
+use common\helpers\ExifTool;
 
 /**
  *
@@ -34,7 +35,8 @@ class FileController extends AdminController
             'fileCategoryMap' => File::getValidConsts('f_category'),
             'fileStorageTypeMap' => File::getValidConsts('f_storage_type'),
             'fileAclTypeMap' => File::getValidConsts('f_acl_type'),
-            'fileUrl' => $fileModel->getFileUrl($file->f_id)
+            'fileUrl' => $fileModel->getFileUrl($file->f_id),
+            'fileMeta' => $file->getMetaObj(),
         ]);
     }
 
