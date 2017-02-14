@@ -3,10 +3,20 @@ namespace common\base;
 
 use Yii;
 use common\base\Controller;
-
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class AdminController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className()
+            ]
+        ];
+    }
+
     public $enableCsrfValidation = false;
 
     public function error($message){

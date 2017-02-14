@@ -5,9 +5,30 @@ use Yii;
 use common\base\AdminController;
 use common\models\user\UserModel;
 use common\models\user\tables\User;
+use yii\filters\AccessControl;
 
 class UserController extends AdminController
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ]
+                ],
+            ],
+        ];
+    }
+
+    public function actionLogin(){
+        return $this->render('login');
+    }
 
     public function actionIndex()
     {

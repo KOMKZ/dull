@@ -4,12 +4,14 @@ namespace common\models\user\tables;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use yii\web\IdentityInterface;
+use yii\base\NotSupportedException;
 
 
 /**
  *
  */
-class User extends ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
     private static $_constMap = [];
     const STATUS_ACTIVE = 'active';
@@ -22,6 +24,57 @@ class User extends ActiveRecord
     public $password;
     public $password_confirm;
 
+    public static function findIdentity($id)
+    {
+        return static::findOne(['u_id' => $id, 'u_status' => self::STATUS_ACTIVE]);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    public static function findByUsername($username)
+    {
+        return static::findOne(['u_username' => $username, 'u_status' => self::STATUS_ACTIVE]);
+    }
+
+    public static function findByPasswordResetToken($token)
+    {
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+        return static::findOne([
+            'u_password_reset_token' => $token,
+            'u_status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    public static function isPasswordResetTokenValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        return $timestamp + $expire >= time();
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        return $this->u_auth_key;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
 
     public function behaviors()
     {
