@@ -40,6 +40,35 @@ class UserModel extends Model
         $pagination = $provider->getPagination();
         return [$provider, $pagination];
     }
+    public function login($condition, $password, $remember = false){
+        $remember = (bool)$remember;
+        $condition['u_status'] = User::STATUS_ACTIVE;
+        $condition['u_auth_status'] = User::STATUS_AUTHED;
+        $user = $this->getOne($condition);
+        if(!$user){
+            $this->addError('', Yii::t('app', '用户不存在'));
+            return false;
+        }
+        $result = $this->validatePassword($user, $password);
+        if(!$result){
+            $this->addError('', Yii::t('app', '密码错误'));
+            return false;
+        }
+        Yii::$app->user->login($user, $remember ? 3600 * 24 * 30 : 0);
+        return true;
+    }
+
+    public function validatePassword($condition, $password)
+    {
+        $user = $this->getOne($condition);
+        if(!$user){
+            return false;
+        }
+        if(!Yii::$app->security->validatePassword($password, $user->u_password_hash)){
+            return false;
+        }
+        return $user;
+    }
 
     public function getOne($condition){
         if(is_object($condition)){
@@ -114,6 +143,7 @@ class UserModel extends Model
             return false;
         }
     }
+
     public function createUser($data, $user = null){
         $transaction = Yii::$app->db->beginTransaction();
         try {

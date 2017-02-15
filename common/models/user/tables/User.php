@@ -6,6 +6,7 @@ use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
+use common\models\user\UserModel;
 
 
 /**
@@ -23,6 +24,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public $password;
     public $password_confirm;
+    public $remember;
+    private $_login_id;
+
+
+    public function getLogin_id(){
+        return $this->_login_id;
+    }
+
+    public function setLogin_id($value){
+        $this->_login_id = $value;
+    }
 
     public static function findIdentity($id)
     {
@@ -76,6 +88,7 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getAuthKey() === $authKey;
     }
 
+
     public function behaviors()
     {
         return [
@@ -105,7 +118,8 @@ class User extends ActiveRecord implements IdentityInterface
             'u_updated_at_format' => Yii::t('app', '更新时间'),
             'password' => Yii::t('app', '用户密码'),
             'password_confirm' => Yii::t('app', '用户确认密码'),
-            'u_auth_status' => Yii::t('app', '验证状态')
+            'u_auth_status' => Yii::t('app', '验证状态'),
+            'login_id' => Yii::t('app', '登录名称')
         ];
     }
 
@@ -148,6 +162,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['password', 'required', 'on' => 'create'],
             ['password', 'required', 'on' => 'update', 'skipOnEmpty' => true],
+
             ['password', 'string', 'min' => 6, 'max' =>  20],
 
             ['password_confirm', 'required', 'on' => 'create'],
@@ -157,6 +172,15 @@ class User extends ActiveRecord implements IdentityInterface
 
 
         ];
+    }
+    public function validatePassword($attribute){
+        if(!$this->hasErrors()){
+            $userModel = new UserModel();
+            if(!$userModel->validatePassword(['u_username' => $this->_login_id], $this->password)){
+                list($code, $error) = $userModel->getOneError();
+                $this->addError($code, $error);
+            }
+        }
     }
     public function scenarios(){
         return [

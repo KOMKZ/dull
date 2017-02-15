@@ -12,7 +12,14 @@ class AdminController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className()
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ]
             ]
         ];
     }

@@ -23,6 +23,7 @@ class FileController extends AdminController
         ]);
     }
 
+
     public function actionFileView($id){
         $fileModel = new FileModel();
         $file = $fileModel->getOne(['f_id' => $id]);

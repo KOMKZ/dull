@@ -22,12 +22,12 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\user\User',
+            'identityClass' => 'common\models\user\tables\User',
             'loginUrl' => ['user/login']
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name' => 'app-backend',
         ],
         'log' => [
             'traceLevel' => 3,

@@ -72,9 +72,14 @@ return [
             'url' => '#',
             'items' => [
                 [
-                    'label' => '日志查询',
+                    'label' => '权限列表',
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/rbac/index']
+                ],
+                [
+                    'label' => '角色列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/rbac/roles']
                 ],
             ],
         ],

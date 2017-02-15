@@ -1,5 +1,7 @@
 <?php
 use yii\helpers\Html;
+$userCache = Yii::$app->user->identity;
+
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -230,7 +232,7 @@ use yii\helpers\Html;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs"><?= $userCache->u_username;?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -239,7 +241,7 @@ use yii\helpers\Html;
                                  alt="User Image"/>
 
                             <p>
-                                Alexander Pierce - Web Developer
+                                <?= $userCache->u_username;?> - Web Developer
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>
@@ -262,8 +264,8 @@ use yii\helpers\Html;
                             </div>
                             <div class="pull-right">
                                 <?= Html::a(
-                                    'Sign out',
-                                    ['/site/logout'],
+                                    Yii::t('app', 'Sign out'),
+                                    ['user/logout'],
                                     ['data-method' => 'post', 'class' => 'btn btn-default btn-flat']
                                 ) ?>
                             </div>

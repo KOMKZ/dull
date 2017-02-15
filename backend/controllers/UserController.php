@@ -19,15 +19,49 @@ class UserController extends AdminController
                     [
                         'actions' => ['login'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?']
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
                     ]
                 ],
             ],
         ];
     }
 
+
+
     public function actionLogin(){
-        return $this->render('login');
+        $user = new User();
+        $userModel = new UserModel();
+        if(Yii::$app->request->isPost){
+            $post = Yii::$app->request->post();
+            $condition = [];
+            if(!empty($post['login_id'])){
+                $condition['u_username'] = $post['login_id'];
+            }
+            $result = $userModel->login($condition, $post['password'], empty($post['remember']) ? false : $post['remember']);
+            if($result){
+
+                return $this->redirect(['site/index']);
+            }else{
+                list($code, $error) = $userModel->getOneError();
+                Yii::$app->session->setFlash('error', $error . ':' . $code);
+                return $this->refresh();
+            }
+        }
+        return $this->render('login', [
+            'model' => $user
+        ]);
+    }
+
+    public function actionLogout(){
+        if(Yii::$app->request->isPost && !Yii::$app->user->isGuest){
+            Yii::$app->user->logout();
+            return $this->refresh();
+        }
+        return $this->home();
     }
 
     public function actionIndex()

@@ -14,6 +14,10 @@ return [
             'database' => 0
         ],
 
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
+
         'diskfile' => [
             'class' => 'common\models\file\DiskDriver',
             'base' => '/home/kitral/shuguang/files',
