@@ -4,6 +4,9 @@ namespace console\controllers;
 use Yii;
 use yii\console\Controller;
 use common\models\user\tables\UserGroup;
+use common\models\user\UserModel;
+use common\models\user\tables\User;
+
 
 /**
  *
@@ -11,8 +14,14 @@ use common\models\user\tables\UserGroup;
 class InstallController extends Controller{
 
     public function actionIndex(){
-        $this->actionRbacData();
-        $this->actionUserData();
+        try {
+            $this->actionRbacData();
+            $this->actionUserData();
+            echo ":)\n";
+        } catch (\Exception $e) {
+            printf($e->getMessage() . "\n");
+        }
+
     }
     public function actionRbacData(){
         $this->installRbacData();
@@ -20,6 +29,7 @@ class InstallController extends Controller{
     public function actionUserData(){
         $this->installUserGroupData();
         $this->installUserAssign();
+        $this->installUserData();
     }
 
     private function installRbacData(){
@@ -103,5 +113,33 @@ class InstallController extends Controller{
                 printf("assign role `%s` to object id `%s`\n", $roleName, $name);
             }
         }
+    }
+
+    private function installUserData(){
+        printf("\nnow installing user data...\n");
+        // Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
+        Yii::$app->db->createCommand()->truncateTable('dull_user')->execute();
+        // Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
+        Yii::$app->db->createCommand()->truncateTable('dull_user_identity')->execute();
+        $userData = [
+            'User' => [
+                'u_username' => 'admin',
+                'password' => '123456',
+                'password_confirm' => '123456',
+                'u_status' => User::STATUS_ACTIVE,
+                'u_auth_status' => User::STATUS_AUTHED,
+                'u_email' => '784248377@qq.com'
+            ],
+            'UserIdentity' => [
+                'ui_g_name' => 'root_group'
+            ]
+        ];
+        $userModel = new UserModel();
+        $result = $userModel->createUser($userData);
+        if(!$result){
+            list($code, $error) = $userModel->getOneError();
+            throw new \Exception(sprintf("%s, %s", $code, $error));
+        }
+
     }
 }

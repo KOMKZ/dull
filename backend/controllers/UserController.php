@@ -119,6 +119,31 @@ class UserController extends AdminController
         ]);
     }
 
+    public function actionAdd(){
+        $userModel = new UserModel();
+        $user = new User();
+        $userIdentity = new UserIdentity();
+        if(Yii::$app->request->isPost){
+            $post = Yii::$app->request->post();
+            $result = $userModel->createUser($post);
+            if($result){
+                $this->succ(Yii::t('app', '操作成功'));
+                return $this->refresh();
+            }else{
+                list($code, $error) = $userModel->getOneError();
+                $this->error($code, $error);
+                return $this->refresh();
+            }
+        }
+        return $this->render('add', [
+            'baseModel' => $user,
+            'identityModel' => $userIdentity,
+            'userStatusMap' => User::getValidConsts('u_status'),
+            'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+            'userGroupMap' => GroupModel::getGroupsMap()
+        ]);
+    }
+
     public function actionUpdate($u_id){
         $userModel = new UserModel();
         $one = $userModel->getOne(['u_id' => $u_id]);
@@ -131,12 +156,18 @@ class UserController extends AdminController
             if($result){
                 $this->succ(Yii::t('app', '操作成功'));
                 return $this->refresh();
+            }else{
+                list($code, $error) = $userModel->getOneError();
+                $this->error($code, $error);
+                return $this->refresh();
             }
         }
         return $this->render('update', [
-            'model' => $one,
+            'baseModel' => $one,
+            'identityModel' => $one->getIdentity(),
             'userStatusMap' => User::getValidConsts('u_status'),
             'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+            'userGroupMap' => GroupModel::getGroupsMap()
         ]);
     }
 
@@ -153,30 +184,7 @@ class UserController extends AdminController
         ]);
     }
 
-    public function actionAdd(){
-        $userModel = new UserModel();
-        $user = new User();
-        $userIdentity = new UserIdentity();
-        if(Yii::$app->request->isPost){
-            $post = Yii::$app->request->post();
-            $result = $userModel->createUser($post);
-            if($result){
-                $this->succ(Yii::t('app', '操作成功'));
-                // return $this->refresh();
-            }else{
-                list($code, $error) = $userModel->getOneError();
-                $this->error($code, $error);
-                // return $this->refresh();
-            }
-        }
-        return $this->render('add', [
-            'baseModel' => $user,
-            'identityModel' => $userIdentity,
-            'userStatusMap' => User::getValidConsts('u_status'),
-            'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
-            'userGroupMap' => GroupModel::getGroupsMap()
-        ]);
-    }
+
 
 
 }

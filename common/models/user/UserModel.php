@@ -132,7 +132,7 @@ class UserModel extends Model
                 if($user->isNoAuth){
                     $this->sendAuthEmailToUser($user);
                 }
-                $transaction->commit();
+                // $transaction->commit();
                 return $user;
             }else{
                 $this->addErrors($user->getErrors());

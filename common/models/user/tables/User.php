@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
 use common\models\user\UserModel;
+use common\models\user\tables\UserIdentity;
+
 
 
 /**
@@ -27,6 +29,9 @@ class User extends ActiveRecord implements IdentityInterface
     public $remember;
     private $_login_id;
 
+    public function getIdentity(){
+        return $this->hasOne(UserIdentity::className(), ['ui_uid' => 'u_id'])->one();
+    }
 
     public function getLogin_id(){
         return $this->_login_id;
