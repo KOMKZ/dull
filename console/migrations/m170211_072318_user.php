@@ -24,11 +24,12 @@ class m170211_072318_user extends Migration
             'u_created_at' => $this->integer()->notNull(),
             'u_updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
-
+        return true;
     }
 
     public function down()
     {
         $this->dropTable('{{%user}}');
+        return true;
     }
 }

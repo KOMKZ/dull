@@ -20,7 +20,7 @@ $adSelectWidget = new AdSelectWidget([
     },
     'selectTitle' => '可选权限',
     'selectedTitle' => '已选权限',
-    // 'action' => $permissionAdminUrl
+    'action' => $permissionAdminUrl
 ]);
 $adSelectWidget->registerScript();
 $roleName = $model['name'];
@@ -34,11 +34,12 @@ var ads_config = {
             rm_items : rm_items,
             role_name : "$roleName"
         }, function(res){
-            if(res.status > 0){
-                ad_select.init()
-                $.fn.bubble.success('update successfully');
+            if(res.code > 0){
+                dull.new_alert(res.message, 'error');
+
             }else{
-                $.fn.bubble.error('something wrong', res.message);
+                ad_select.init()
+                dull.new_alert(res.message, 'success');
             }
         });
     }
@@ -57,7 +58,7 @@ $('#del-role-btn').click(function(){
         $.post("$deleteRoleUrl", {
             'name' : $(this).attr('data-name')
         }, function(res){
-            if(res.status > 0){
+            if(res.code > 0){
                 $.fn.bubble.success('delete role successfully');
             }else{
                 $.fn.bubble.error('something error', res.message);
@@ -68,7 +69,7 @@ $('#del-role-btn').click(function(){
 });
 $('#update-role-form').submit(function(){
     $.post($(this).attr('action'), $(this).serialize(), function(res){
-        if(res.status > 0){
+        if(res.code > 0){
             $.fn.bubble.success('update successfully', res.data);
         }else{
             $.fn.bubble.error('something wrong', res.message);
@@ -91,6 +92,9 @@ $this->registerJs($script);
                 'model' => $model,
                 'attributes' => [
                     'name',
+                    'description',
+                    'rule_name',
+                    'data',
                     [
                         'attribute' => 'type',
                         'format' => ['map', $itemTypeMap]

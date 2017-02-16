@@ -3,14 +3,23 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use common\models\user\tables\UserGroup;
 
 /**
  *
  */
 class InstallController extends Controller{
 
-    public function actionRbac(){
+    public function actionIndex(){
+        $this->actionRbacData();
+        $this->actionUserData();
+    }
+    public function actionRbacData(){
         $this->installRbacData();
+    }
+    public function actionUserData(){
+        $this->installUserGroupData();
+        $this->installUserAssign();
     }
 
     private function installRbacData(){
@@ -66,7 +75,33 @@ class InstallController extends Controller{
                 }
             }
         }
+    }
 
+    private function installUserGroupData(){
+        printf("\nnow installing user group data....\n\n");
+        $userGroupFile = Yii::getAlias('@app/initdata/user/user-group-data.php');
+        $userGroup = require($userGroupFile);
+        $tableName = UserGroup::tableName();
+        Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
+        Yii::$app->db->createCommand()->truncateTable($tableName)->execute();
+        $command = Yii::$app->db->createCommand()->batchInsert($tableName, ['ug_name', 'ug_description', 'ug_created_at', 'ug_updated_at'], $userGroup);
+        $result = $command->execute();
+        printf("installed {$result} user group item.\n");
+    }
 
+    private function installUserAssign(){
+        printf("\nnow installing role assign....\n\n");
+        Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
+        Yii::$app->db->createCommand()->truncateTable('dull_auth_assignment')->execute();
+        $assignFile = Yii::getAlias('@app/initdata/rbac/assign-data.php');
+        $assignData = require($assignFile);
+        $auth = Yii::$app->authManager;
+        foreach($assignData as $name => $roles){
+            foreach($roles as $roleName){
+                $role = $auth->getRole($roleName);
+                $auth->assign($role, $name);
+                printf("assign role `%s` to object id `%s`\n", $roleName, $name);
+            }
+        }
     }
 }

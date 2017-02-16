@@ -32,12 +32,13 @@ class RbacController extends AdminController
         if(!$role){
             return $this->error(null, Yii::t('app', '数据不存在'));
         }
+        $apiurl = Yii::$app->apiurl;
         return $this->render('role-view', [
             'model' => $role,
             'itemTypeMap' => AuthItem::getValidConsts('type'),
             'permissions' => $rbacModel->getPermissions(),
             'assignPermissions' => $rbacModel->getPermissionsByRole($role['name']),
-            'permissionAdminUrl' => '',
+            'permissionAdminUrl' => $apiurl->createAbsoluteUrl(['rbac/update-role-permission']),
             'deleteRoleUrl' => ''
         ]);
     }

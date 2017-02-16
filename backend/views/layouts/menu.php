@@ -46,6 +46,23 @@ return [
                     'url' => ['/user/list']
                 ],
                 [
+                    'label' => '用户组列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/user/group-list']
+                ],
+                [
+                    'label' => '用户组查看',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/user/group-view'],
+                    'visible' => Yii::$app->requestedRoute == 'user/group-view'
+                ],
+                [
+                    'label' => '用户组修改',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/user/group-update'],
+                    'visible' => Yii::$app->requestedRoute == 'user/group-update'
+                ],
+                [
                     'label' => '新增用户',
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/user/add']

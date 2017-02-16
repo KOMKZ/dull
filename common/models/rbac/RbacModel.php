@@ -12,6 +12,43 @@ use yii\helpers\ArrayHelper;
  */
 class RbacModel extends Model
 {
+    public function updateRolePermission($roleName, $new_items = [], $rm_items = []){
+        $role = Yii::$app->authManager->getRole($roleName);
+        if(!$role){
+            $this->addError('', Yii::t('app', '数据不存在'));
+            return false;
+        }
+        if($new_items){
+            foreach($new_items as $pmiName){
+                $permission = Yii::$app->authManager->getPermission($pmiName);
+                $result = Yii::$app->authManager->addChild($role, $permission);
+            }
+        }
+        if($rm_items){
+            foreach($rm_items as $pmiName){
+                $permission = Yii::$app->authManager->getPermission($pmiName);
+                $result = Yii::$app->authManager->removeChild($role, $permission);
+            }
+        }
+        return true;
+    }
+
+    public function updateAssignRole($ai, $newItems = [], $rmItems){
+        if($newItems){
+            foreach($newItems as $roleName){
+                $role = Yii::$app->authManager->getRole($roleName);
+                Yii::$app->authManager->assign($role, $ai);
+            }
+        }
+        if($rmItems){
+            foreach($rmItems as $roleName){
+                $role = Yii::$app->authManager->getRole($roleName);
+                Yii::$app->authManager->revoke($role, $ai);
+            }
+        }
+        return true;
+    }
+
     public function getRole($condition){
         if(is_object($condition)){
             return $condition;
@@ -23,6 +60,15 @@ class RbacModel extends Model
             return null;
         }
     }
+    public function getRoles(){
+        $result = Yii::$app->authManager->getRoles();
+        return ArrayHelper::toArray($result);
+    }
+    public function getRolesByAi($assignId){
+        $result = Yii::$app->authManager->getRolesByUser($assignId);
+        return ArrayHelper::toArray($result);
+    }
+
     public function getPermissionsByRole($name){
         $result = Yii::$app->authManager->getPermissionsByRole($name);
         return ArrayHelper::toArray($result);

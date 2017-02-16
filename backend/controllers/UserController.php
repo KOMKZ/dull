@@ -6,6 +6,8 @@ use common\base\AdminController;
 use common\models\user\UserModel;
 use common\models\user\tables\User;
 use yii\filters\AccessControl;
+use common\models\user\GroupModel;
+use common\models\rbac\RbacModel;
 
 class UserController extends AdminController
 {
@@ -67,6 +69,41 @@ class UserController extends AdminController
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    public function actionGroupList(){
+        $groupModel = new GroupModel();
+        list($provider, $pagination) = $groupModel->getProvider();
+        return $this->render('group-list', [
+            'provider' => $provider
+        ]);
+    }
+
+    public function actionGroupView($name){
+        $groupModel = new GroupModel();
+        $one = $groupModel->getOne(['ug_name' => $name]);
+        if(!$one){
+            return $this->error(Yii::t('app', '数据不存在'));
+        }
+        return $this->render('group-view', [
+            'model' => $one
+        ]);
+    }
+
+    public function actionGroupUpdate($name){
+        $groupModel = new GroupModel();
+        $rbacModel = new RbacModel();
+        $one = $groupModel->getOne(['ug_name' => $name]);
+        if(!$one){
+            return $this->error(Yii::t('app', '数据不存在'));
+        }
+        return $this->render('group-update', [
+            'model' => $one,
+            'validRoles' => $rbacModel->getRoles(),
+            'assignedRoles' => $rbacModel->getRolesByAi($one['ug_name']),
+            'groupPmiAdminUrl' => Yii::$app->apiurl->createAbsoluteUrl(['rbac/assign-admin']),
+            'delGroupUrl' => '#'
+        ]);
     }
 
     public function actionList(){
