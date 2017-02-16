@@ -6,6 +6,8 @@ use yii\console\Controller;
 use common\models\user\tables\UserGroup;
 use common\models\user\UserModel;
 use common\models\user\tables\User;
+use common\models\file\FileModel;
+use common\models\file\File;
 
 
 /**
@@ -17,6 +19,7 @@ class InstallController extends Controller{
         try {
             $this->actionRbacData();
             $this->actionUserData();
+            $this->actionFileData();
             echo ":)\n";
         } catch (\Exception $e) {
             printf($e->getMessage() . "\n");
@@ -30,6 +33,9 @@ class InstallController extends Controller{
         $this->installUserGroupData();
         $this->installUserAssign();
         $this->installUserData();
+    }
+    public function actionFileData(){
+        $this->installFileThumbData();
     }
 
     private function installRbacData(){
@@ -140,6 +146,33 @@ class InstallController extends Controller{
             list($code, $error) = $userModel->getOneError();
             throw new \Exception(sprintf("%s, %s", $code, $error));
         }
+    }
+
+
+    private function installFileThumbData(){
+        printf("\n now install file thumb data... \n");
+        $data = require(Yii::getAlias('@app/initdata/image/file-thumbs.php'));
+        $fileModel = new FileModel();
+        FileModel::deleteFiles(['f_category' => 'file_thumbs']);
+        $fileData = [
+            'source_path_type' => File::SP_LOCAL,
+            'f_storage_type' => File::DR_DISK,
+            'f_acl_type' => File::FILE_ACL_PUB_RW,
+            'f_category' => 'file_thumbs',
+            'save_asyc' => false
+        ];
+        foreach($data as $item){
+            $fileData['source_path'] = $item['source_path'];
+            $fileData['f_name'] = $item['f_name'];
+            $result = $fileModel->saveFile($fileData);
+            if(!$result){
+                list($code, $error) = $fileModel->getOneError();
+                throw new \Exception("{$code}:{$error}");
+            }else{
+                echo "installed file thumb image {$fileData['f_name']}\n";
+            }
+        }
 
     }
+
 }

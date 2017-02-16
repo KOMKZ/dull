@@ -101,6 +101,10 @@ class FileModel extends Model
         return $file;
     }
 
+    public static function deleteFiles($condition = []){
+        File::deleteAll($condition);
+    }
+
     public function saveFile($data, $file = null){
         if(!$file){
             $file = new File();
