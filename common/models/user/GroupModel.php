@@ -4,6 +4,7 @@ namespace common\models\user;
 use common\base\Model;
 use common\models\user\tables\UserGroup;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  *
@@ -20,7 +21,10 @@ class GroupModel extends Model
             return null;
         }
     }
-
+    public static function getGroupsMap(){
+        $result = UserGroup::find()->asArray()->all();
+        return ArrayHelper::map($result, 'ug_name', 'ug_description');
+    }
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = UserGroup::find();
         $query = $this->buildQueryWithCondition($query, $condition);

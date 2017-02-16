@@ -3,7 +3,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 ?>
 <div class="row">
-    <div class="col-lg-5">
+    <div class="col-lg-6">
         <div class="box">
             <div class="box-header with-border">
                 <h5>基础信息</h5>
@@ -33,4 +33,5 @@ use yii\helpers\Html;
             </div>
         </div>
     </div>
+    
 </div>

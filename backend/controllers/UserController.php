@@ -5,9 +5,11 @@ use Yii;
 use common\base\AdminController;
 use common\models\user\UserModel;
 use common\models\user\tables\User;
+use common\models\user\tables\UserIdentity;
 use yii\filters\AccessControl;
 use common\models\user\GroupModel;
 use common\models\rbac\RbacModel;
+
 
 class UserController extends AdminController
 {
@@ -109,7 +111,6 @@ class UserController extends AdminController
     public function actionList(){
         $userModel = new UserModel();
         list($provider, $pagination) = $userModel->getProvider();
-
         return $this->render('list', [
             'provider' => $provider,
             'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
@@ -155,18 +156,25 @@ class UserController extends AdminController
     public function actionAdd(){
         $userModel = new UserModel();
         $user = new User();
+        $userIdentity = new UserIdentity();
         if(Yii::$app->request->isPost){
             $post = Yii::$app->request->post();
-            $result = $userModel->createUser($post, $user);
+            $result = $userModel->createUser($post);
             if($result){
                 $this->succ(Yii::t('app', '操作成功'));
-                return $this->refresh();
+                // return $this->refresh();
+            }else{
+                list($code, $error) = $userModel->getOneError();
+                $this->error($code, $error);
+                // return $this->refresh();
             }
         }
         return $this->render('add', [
-            'model' => $user,
+            'baseModel' => $user,
+            'identityModel' => $userIdentity,
             'userStatusMap' => User::getValidConsts('u_status'),
             'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+            'userGroupMap' => GroupModel::getGroupsMap()
         ]);
     }
 

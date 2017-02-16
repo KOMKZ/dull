@@ -26,8 +26,8 @@ class AdminController extends Controller
 
     public $enableCsrfValidation = false;
 
-    public function error($message){
-        Yii::$app->session->setFlash('error', $message);
+    public function error($message, $code){
+        Yii::$app->session->setFlash('error', $message . ':' . $code);
     }
 
     public function notfound(){

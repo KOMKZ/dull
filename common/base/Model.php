@@ -20,7 +20,7 @@ class Model extends BaseModel
     }
 
     public function getArErrMsg($obj){
-        return ':' . implode(',', $obj->getFirstErrors());
+        return implode(',', $obj->getFirstErrors());
     }
 
     protected function buildQueryWithCondition($query, $condition){

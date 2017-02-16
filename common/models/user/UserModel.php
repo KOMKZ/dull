@@ -4,8 +4,10 @@ namespace common\models\user;
 use Yii;
 use common\base\Model;
 use common\models\user\tables\User;
+use common\models\user\tables\UserIdentity;
 use common\models\email\EmailModel;
 use yii\data\ActiveDataProvider;
+
 
 /**
  *
@@ -144,30 +146,43 @@ class UserModel extends Model
         }
     }
 
-    public function createUser($data, $user = null){
+    public function createUser($data){
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $user = !$user ? new User() : $user;
+            // 加入基础信息
+            $user = new User();
             $user->scenario = 'create';
-            if($user->load($data) && $user->validate()){
-                if($user->isNoAuth){
-                    $user->u_auth_key = $this->generateAuthKey();
-                }
-                $user->u_password_hash = $this->buildPasswordHash($user->password);
-                $result = $user->insert(false);
-                if(!$result){
-                    $this->addError('', Yii::t('app', '数据写入失败'));
-                    return false;
-                }
-                if($user->isNoAuth){
-                    $this->sendAuthEmailToUser($user);
-                }
-                $transaction->commit();
-                return $user;
-            }else{
-                $this->addErrors($user->getErrors());
+            if(!$user->load($data) || !$user->validate()){
+                $this->addError('', $this->getArErrMsg($user));
                 return false;
             }
+            if($user->isNoAuth){
+                $user->u_auth_key = $this->generateAuthKey();
+            }
+            $user->u_password_hash = $this->buildPasswordHash($user->password);
+            $result = $user->insert(false);
+            if(!$result){
+                $this->addError('', Yii::t('app', '数据写入失败'));
+                return false;
+            }
+            if($user->isNoAuth){
+                $this->sendAuthEmailToUser($user);
+            }
+            // 加入身份信息
+            $userIdentity = new UserIdentity();
+            $userIdentity->scenario = 'create';
+            if(!$userIdentity->load($data) || !$userIdentity->validate()){
+                $this->addError('', $this->getArErrMsg($userIdentity));
+                return false;
+            }
+            $userIdentity->ui_uid = $user->u_id;
+            $result = $userIdentity->insert(false);
+            if(!$result){
+                $this->addError('', Yii::t('app', '数据写入失败'));
+                return false;
+            }
+            $transaction->commit();
+            return $user;
         } catch (\Exception $e) {
             $transaction->rollback();
             Yii::error($e);
