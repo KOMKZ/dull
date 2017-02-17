@@ -56,10 +56,12 @@ class DiskDriver extends Model
         $headers = Yii::$app->response->headers;
         return Yii::$app->response->sendFile($path, $file->f_depostion_name);
     }
-    public function getFileUrl($file){
+    public function getFileUrl($filePath, $host = ''){
         $frurl = Yii::$app->frurl;
-        $frurl->hostInfo = $file->f_host;
-        return $frurl->createAbsoluteUrl(['file/read', 'name' => $file->getFilePath()], 'http');
+        if(!empty($host)){
+            $frurl->hostInfo = $host;
+        }
+        return $frurl->createAbsoluteUrl(['file/read', 'name' => $filePath], 'http');
     }
     public function save(File $file){
         if($file->hasErrors()){

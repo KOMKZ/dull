@@ -137,11 +137,11 @@ class InstallController extends Controller{
                 'u_email' => '784248377@qq.com'
             ],
             'UserIdentity' => [
-                'ui_g_name' => 'root_group'
+                'ui_g_name' => UserGroup::ROOT_GROUP,
             ]
         ];
         $userModel = new UserModel();
-        $result = $userModel->createUser($userData);
+        $result = $userModel->createUser($userData, true);
         if(!$result){
             list($code, $error) = $userModel->getOneError();
             throw new \Exception(sprintf("%s, %s", $code, $error));

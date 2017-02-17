@@ -22,6 +22,7 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
+            'class' => 'common\base\User',
             'identityClass' => 'common\models\user\tables\User',
             'loginUrl' => ['user/login']
         ],

@@ -1,10 +1,14 @@
 <?php
 use yii\widgets\DetailView;
 use common\formatter\Formatter;
+use common\models\user\tables\UserGroup;
 ?>
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6">
         <div class="box">
+            <div class="box-header with-border">
+                <h5>基本信息</h5>
+            </div>
             <div class="box-body">
                 <?php
                 echo DetailView::widget([
@@ -32,6 +36,28 @@ use common\formatter\Formatter;
                     ],
                     'formatter' => [
                         'class' => 'common\formatter\Formatter',
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h5>身份信息</h5>
+            </div>
+            <div class="box-body">
+                <?php
+                echo DetailView::widget([
+                    'model' => $model->identity,
+                    'attributes' => [
+                        [
+                            'attribute' => 'group_info.ug_description',
+                        ]
+                    ],
+                    'formatter' => [
+                        'class' => 'common\formatter\Formatter'
                     ]
                 ]);
                 ?>

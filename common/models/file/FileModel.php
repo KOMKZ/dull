@@ -19,6 +19,8 @@ class FileModel extends Model
     static private $amqpConn;
     static private $Channel;
 
+
+
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = File::find();
         $query = $this->buildQueryWithCondition($query, $condition);
@@ -34,7 +36,7 @@ class FileModel extends Model
         if(!$withPage){
             $pageConfig['pageSize'] = 0;
         }else{
-            $pageConfig['pageSize'] = 10;
+            $pageConfig['pageSize'] = 20;
         }
         $provider = new ActiveDataProvider([
             'query' => $query,
@@ -66,8 +68,13 @@ class FileModel extends Model
             return null;
         }
         $driver = $this->instanceDriver($file->f_storage_type);
-        $url = $driver->getFileUrl($file);
+        $url = $driver->getFileUrl($file->getFilePath(), $file->f_host);
         return $url;
+    }
+
+    public function getLocalFileUrl($name){
+        $driver = $this->instanceDriver(File::DR_DISK);
+        return $driver->getFileUrl($name);
     }
 
     public function output($id){
@@ -176,7 +183,38 @@ class FileModel extends Model
                 break;
         }
     }
-
+    public static function getExtImgMap(){
+        return [
+            'default' => 'txt_30x36.png',
+            'pdf' => 'pdf_30x36.png',
+            'zip' => 'zip_30x36.png',
+            'doc' => 'doc_30x36.png',
+            'etc' => 'etc_30x36.png',
+            'jpg' => 'jpg_30x36.png',
+            'ppt' => 'ppt_30x36.png',
+            'wav' => 'wav_30x36.png',
+            'video' => 'avi_30x36.png',
+            'audio' => 'avi_30x36.png'
+        ];
+    }
+    public function getExtImgUrl($file){
+        $exifTool = $file->getMetaObj();
+        $ext = $exifTool->getFileExt();
+        if(!array_key_exists($ext, self::getExtImgMap())){
+            if($exifTool->isVideo()){
+                $ext = 'video';
+            }elseif($exifTool->isAudio()){
+                $ext = 'audio';
+            }elseif($exifTool->isMSWord() || $exifTool->isWPSWord()){
+                $ext = 'doc';
+            }elseif($exifTool->isWPSPpt() || $exifTool->isMSPpt()){
+                $ext = 'ppt';
+            }else{
+                $ext = 'default';
+            }
+        }
+        return $this->getLocalFileUrl("file_thumbs/" . self::getExtImgMap()[$ext]);
+    }
 
     private function getChannel(){
         if(self::$Channel){

@@ -21,8 +21,8 @@ class UserController extends AdminController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login'],
                         'allow' => true,
+                        'actions' => ['login'],
                         'roles' => ['?']
                     ],
                     [

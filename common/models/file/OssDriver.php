@@ -21,14 +21,14 @@ class OssDriver extends Model
     public $endpoint = null;
     public $inner_endpoint = null;
 
-    public function getFileUrl($file){
+    public function getFileUrl($filePath, $host = ''){
         if($file->isPublic){
             $host = $this->getHostName();
-            $objectId = $this->buildFilePath($file->getFilePath());
+            $objectId = $this->buildFilePath($filePath);
             return "http://" . implode('/', [$host, $objectId]);
         }elseif($file->isPrivate){
 
-            $objectId = $this->buildFilePath($file->getFilePath());
+            $objectId = $this->buildFilePath($filePath);
             return $this->instanceOss()->signUrl($this->bucket, $objectId, 3600);
         }
     }

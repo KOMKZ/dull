@@ -2,11 +2,11 @@
 return [
     'backend_admin' => [
         'name' => 'backend_admin',
-        'description' => '后台管理显示权限',
+        'description' => '后台管理权限',
         'children' => [
-            'setting:index' => [
-                'name' => 'setting:index',
-                'description' => '系统设置模块显示权限',
+            'user/list' => [
+                'name' => 'user/list',
+                'description' => '获取用户列表权限',
             ],
         ],
     ],

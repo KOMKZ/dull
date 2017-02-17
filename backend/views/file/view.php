@@ -54,6 +54,10 @@ use branchonline\lightbox\Lightbox;
                         'f_prefix',
                         'f_host',
                         'f_hash',
+                        [
+                            'attribute' => 'ext_img_url',
+                            'format' => ['image']
+                        ],
                         'f_mime_type',
                         [
                             'attribute' => 'f_storage_type',

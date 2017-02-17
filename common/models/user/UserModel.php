@@ -108,7 +108,8 @@ class UserModel extends Model
         $data['u_updated_at'] = time();
         User::updateAll($data, $condition, $parmas);
     }
-    public function updateUser($condition, $data){
+
+    public function updateUser($condition, $data, $force = false){
         $user = $this->getOne($condition);
         if(!$user){
             $this->addError('', Yii::t('app', '用户数据不存在'));
@@ -116,28 +117,46 @@ class UserModel extends Model
         }
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            // 更新基本信息
             $user->scenario = 'update';
-            if($user->load($data) && $user->validate()){
-                if($user->isNoAuth){
-                    $user->u_auth_key = $this->generateAuthKey();
-                }
-                if(!empty($user->password)){
-                    $user->u_password_hash = $this->buildPasswordHash($user->password);
-                }
-                $result = $user->update(false);
-                if(false === $result){
-                    $this->addError('', Yii::t('app', '数据写入失败'));
-                    return false;
-                }
-                if($user->isNoAuth){
-                    $this->sendAuthEmailToUser($user);
-                }
-                // $transaction->commit();
-                return $user;
-            }else{
-                $this->addErrors($user->getErrors());
+            if(!$user->load($data) || !$user->validate()){
+                $this->addError('', $this->getArErrMsg($user));
                 return false;
             }
+            if($user->isNoAuth){
+                $user->u_auth_key = $this->generateAuthKey();
+            }
+            if(!empty($user->password)){
+                $user->u_password_hash = $this->buildPasswordHash($user->password);
+            }
+            $result = $user->update(false);
+            if(false === $result){
+                $this->addError('', Yii::t('app', '数据写入失败'));
+                return false;
+            }
+            // 更新身份信息
+            $userIdentity = $user->identity;
+            if(!$force && $userIdentity->isSuperRoot){
+                $this->addError('', Yii::t('app', '该用户禁止修改'));
+                return false;
+            }
+            if(!$userIdentity->load($data) || !$userIdentity->validate()){
+                $this->addError('', $this->getArErrMsg($userIdentity));
+                return false;
+            }
+
+            $result = $userIdentity->update(false);
+            if(false === $result){
+                $this->addError('', Yii::t('app', '数据写入失败'));
+                return false;
+            }
+
+            if($user->isNoAuth){
+                $this->sendAuthEmailToUser($user);
+            }
+
+            // $transaction->commit();
+            return $user;
         } catch (\Exception $e) {
             $transaction->rollback();
             Yii::error($e);
@@ -146,9 +165,21 @@ class UserModel extends Model
         }
     }
 
-    public function createUser($data){
+    public function createUser($data, $force = false){
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            // 验证
+            $userIdentity = new UserIdentity();
+            $userIdentity->scenario = 'create';
+            if(!$userIdentity->load($data) || !$userIdentity->validate()){
+                $this->addError('', $this->getArErrMsg($userIdentity));
+                return false;
+            }
+            if(!$force && $userIdentity->isSuperRoot){
+                $this->addError('', Yii::t('app', '禁止创建该保留组用户'));
+                return false;
+            }
+
             // 加入基础信息
             $user = new User();
             $user->scenario = 'create';
@@ -169,12 +200,6 @@ class UserModel extends Model
                 $this->sendAuthEmailToUser($user);
             }
             // 加入身份信息
-            $userIdentity = new UserIdentity();
-            $userIdentity->scenario = 'create';
-            if(!$userIdentity->load($data) || !$userIdentity->validate()){
-                $this->addError('', $this->getArErrMsg($userIdentity));
-                return false;
-            }
             $userIdentity->ui_uid = $user->u_id;
             $result = $userIdentity->insert(false);
             if(!$result){

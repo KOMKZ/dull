@@ -3,7 +3,7 @@ namespace common\models\file;
 
 use Yii;
 use common\helpers\ExifTool;
-use yii\db\ActiveRecord;
+use common\base\ActiveRecord;
 
 /**
  *
@@ -33,7 +33,6 @@ class File extends ActiveRecord
 
 
 
-
     /**
      * 源文件地址
      * @var [type]
@@ -57,6 +56,11 @@ class File extends ActiveRecord
     public static function tableName(){
         return "{{%file}}";
     }
+
+    public static function logicModelName(){
+        return FileModel::className();
+    }
+
     public static function getValidCategories($onlyValue = false){
         $data = require_once(Yii::getAlias('@common/models/file/categories.php'));
         return $onlyValue ? array_keys($data) : $data;
@@ -173,6 +177,10 @@ class File extends ActiveRecord
         ]);
     }
 
+    public function getExt_img_url(){
+        return $this->getLogicModel()->getExtImgUrl($this);
+    }
+
     public function getIsPrivate(){
         return self::FILE_ACL_PRI == $this->f_acl_type;
     }
@@ -243,7 +251,8 @@ class File extends ActiveRecord
             'source_path' => Yii::t('app', '文件路径'),
             'source_path_type' => Yii::t('app', '文件路径类型'),
             'save_asyc' => Yii::t('app', '是否异步保存'),
-            'upload_file' => Yii::t('app', '上传的文件')
+            'upload_file' => Yii::t('app', '上传的文件'),
+            'ext_img_url' => Yii::t('app', '文件类型所略图')
         ];
     }
 

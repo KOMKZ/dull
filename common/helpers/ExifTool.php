@@ -109,7 +109,11 @@ class ExifTool{
         }
     }
     public function isVideo(){
-        return true;
+        if(!empty($this->metaData)){
+            return 0 === substr_compare($this->metaData['MIMEType'], 'video', 0, 5);
+        }else{
+            return false;
+        }
     }
     public function isAudio(){
         if(!empty($this->metaData)){

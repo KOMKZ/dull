@@ -12,8 +12,15 @@ return [
         'description' => '普通管理员角色',
         'permissions' => [
             'backend_admin' => [
-                'setting:index'
+                'user/list'
             ],
+        ],
+    ],
+    [
+        'name' => 'vistor_role',
+        'description' => '游客角色',
+        'permissions' => [
+
         ],
     ],
 ];

@@ -14,6 +14,7 @@ use yii\helpers\Url;
                     'columns' => [
                         [ 'attribute' => 'f_id'],
                         [ 'attribute' => 'f_name'],
+                        [ 'attribute' => 'f_category'],
                         [ 'attribute' => 'f_ext'],
                         [ 'attribute' => 'f_size', 'format' => ['shortSize']],
                         [

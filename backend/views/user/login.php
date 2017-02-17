@@ -19,7 +19,7 @@ $this->registerJs($script);
         <p class="login-box-msg">Sign in to start your session</p>
         <form action="#" method="post">
             <div class="form-group has-feedback">
-                <input name="login_id" type="text" class="form-control" placeholder="username">
+                <input autofocus name="login_id" type="text" class="form-control" placeholder="username">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
