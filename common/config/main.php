@@ -39,14 +39,16 @@ return [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'hostInfo' => 'http://localhost:8055/index.php'
+            'hostInfo' => 'http://localhost:8055/index.php',
+            'baseUrl' => '/',
         ],
 
         'apiurl' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => false,
             'showScriptName' => true,
-            'hostInfo' => 'http://localhost:8053'
+            'hostInfo' => 'http://localhost:8053',
+            'baseUrl' => '/'
         ],
 
 
