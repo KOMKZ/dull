@@ -4,15 +4,15 @@ return [
         'name' => 'root_role',
         'description' => '超级管理员角色',
         'permissions' => [
-            'backend_admin' => ['*'],
+            'app-backend-user' => ['*'],
         ],
     ],
     [
         'name' => 'admin_role',
         'description' => '普通管理员角色',
         'permissions' => [
-            'backend_admin' => [
-                'user/list'
+            'app-backend-user' => [
+                'app-backend-user/login'
             ],
         ],
     ],

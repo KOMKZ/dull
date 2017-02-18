@@ -98,6 +98,12 @@ return [
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/rbac/roles']
                 ],
+                [
+                    'label' => '角色查看',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/rbac/role-view'],
+                    'visible' => Yii::$app->requestedRoute == 'rbac/role-view'
+                ],
             ],
         ],
 

@@ -1,4 +1,12 @@
-<?php $userCache = Yii::$app->user->identity;?>
+<?php
+$userCache = Yii::$app->user->identity;
+$userInfo = [
+    'u_username' => ''
+];
+if($userCache){
+    $userInfo['u_username'] = $userCache->u_username;
+}
+?>
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -9,7 +17,7 @@
                 <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p><?= $userCache->u_username;?></p>
+                <p><?= $userInfo['u_username'];?></p>
 
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>

@@ -16,7 +16,7 @@ class UserController extends AdminController
 
     public function behaviors()
     {
-        return [
+        return YII_ENV != 'dev' ? [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -27,11 +27,11 @@ class UserController extends AdminController
                     ],
                     [
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => [$this->route]
                     ]
                 ],
             ],
-        ];
+        ] : [];
     }
 
 
@@ -65,7 +65,7 @@ class UserController extends AdminController
             Yii::$app->user->logout();
             return $this->refresh();
         }
-        return $this->home();
+        return $this->goHome();
     }
 
     public function actionIndex()

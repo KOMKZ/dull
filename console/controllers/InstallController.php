@@ -28,14 +28,17 @@ class InstallController extends Controller{
     }
     public function actionRbacData(){
         $this->installRbacData();
+        echo ":)\n";
     }
     public function actionUserData(){
         $this->installUserGroupData();
         $this->installUserAssign();
         $this->installUserData();
+        echo ":)\n";
     }
     public function actionFileData(){
         $this->installFileThumbData();
+        echo ":)\n";
     }
 
     private function installRbacData(){
@@ -127,24 +130,15 @@ class InstallController extends Controller{
         Yii::$app->db->createCommand()->truncateTable('dull_user')->execute();
         // Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
         Yii::$app->db->createCommand()->truncateTable('dull_user_identity')->execute();
-        $userData = [
-            'User' => [
-                'u_username' => 'admin',
-                'password' => '123456',
-                'password_confirm' => '123456',
-                'u_status' => User::STATUS_ACTIVE,
-                'u_auth_status' => User::STATUS_AUTHED,
-                'u_email' => '784248377@qq.com'
-            ],
-            'UserIdentity' => [
-                'ui_g_name' => UserGroup::ROOT_GROUP,
-            ]
-        ];
+        $userData = require(Yii::getAlias('@app/initdata/user/user-data.php'));
         $userModel = new UserModel();
-        $result = $userModel->createUser($userData, true);
-        if(!$result){
-            list($code, $error) = $userModel->getOneError();
-            throw new \Exception(sprintf("%s, %s", $code, $error));
+        foreach($userData as $userItem){
+            printf("installed user -> {$userItem['User']['u_username']}\n");
+            $result = $userModel->createUser($userItem, true);
+            if(!$result){
+                list($code, $error) = $userModel->getOneError();
+                throw new \Exception(sprintf("error: %s, %s", $code, $error));
+            }
         }
     }
 

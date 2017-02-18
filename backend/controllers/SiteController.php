@@ -11,7 +11,7 @@ class SiteController extends AdminController
 {
     public function behaviors()
     {
-        return [
+        return YII_ENV != 'dev' ? [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -22,11 +22,11 @@ class SiteController extends AdminController
                     ],
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [$this->route],
                     ]
                 ],
             ],
-        ];
+        ] : [];
     }
 
     // public function actions()

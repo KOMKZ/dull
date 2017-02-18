@@ -1,6 +1,7 @@
 <?php
 namespace common\base;
 
+use Yii;
 use yii\web\User as BaseUser;
 
 /**
@@ -17,11 +18,15 @@ class User extends BaseUser
         if (($accessChecker = $this->getAccessChecker()) === null) {
             return false;
         }
-        $access = $accessChecker->checkAccess($this->identity->identity->ui_g_name, $permissionName, $params);
+        $assignId = null;
+        if($this->identity){
+            $assignId = $this->identity->identity->ui_g_name;
+        }
+        $permissionName = Yii::$app->id . '-' . $permissionName;
+        $access = $accessChecker->checkAccess($assignId, $permissionName, $params);
         if ($allowCaching && empty($params)) {
             $this->_access[$permissionName] = $access;
         }
-
         return $access;
     }
 }

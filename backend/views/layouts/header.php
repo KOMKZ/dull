@@ -1,6 +1,13 @@
 <?php
 use yii\helpers\Html;
 $userCache = Yii::$app->user->identity;
+$userInfo = [
+    'u_username' => ''
+];
+if($userCache){
+    $userInfo['u_username'] = $userCache->u_username;
+}
+
 
 
 /* @var $this \yii\web\View */
@@ -232,7 +239,7 @@ $userCache = Yii::$app->user->identity;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs"><?= $userCache->u_username;?></span>
+                        <span class="hidden-xs"><?= $userInfo['u_username'];?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -241,7 +248,7 @@ $userCache = Yii::$app->user->identity;
                                  alt="User Image"/>
 
                             <p>
-                                <?= $userCache->u_username;?> - Web Developer
+                                <?= $userInfo['u_username'];?> - Web Developer
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>

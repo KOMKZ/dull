@@ -10,17 +10,17 @@ class AdminController extends Controller
 {
     public function behaviors()
     {
-        return [
+        return YII_ENV != 'dev' ?[
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['root_role']
+                        'roles' => [$this->route]
                     ]
                 ]
             ]
-        ];
+        ] : [];
     }
 
     public $enableCsrfValidation = false;
