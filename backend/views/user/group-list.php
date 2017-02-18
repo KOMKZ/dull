@@ -28,7 +28,7 @@ use yii\helpers\Url;
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'header' => '操作',
-                            'buttonOptions' => ['target' => '_blank'],
+                            // 'buttonOptions' => ['target' => '_blank'],
                             'template' => '{view}{update}',
                             'urlCreator' => function ($action, $model, $key, $index) {
                                 switch ($action) {
