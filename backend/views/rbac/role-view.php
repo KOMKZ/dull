@@ -101,11 +101,11 @@ $this->registerJs($script);
                     ],
                     [
                         'attribute' => 'created_at',
-                        'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                        'format' => ['date', 'Y-MM-dd HH:mm:ss']
                     ],
                     [
                         'attribute' => 'updated_at',
-                        'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                        'format' => ['date', 'Y-MM-dd HH:mm:ss']
                     ],
                 ],
                 'formatter' => [

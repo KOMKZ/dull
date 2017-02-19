@@ -77,11 +77,11 @@ use branchonline\lightbox\Lightbox;
                         ],
                         [
                             'attribute' => 'f_created_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ],
                         [
                             'attribute' => 'f_updated_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ],
                         [
                             'attribute' => 'f_meta_data',

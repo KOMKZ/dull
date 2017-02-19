@@ -17,7 +17,7 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\DbTarget',
-                    'logTable' => 'log_console',
+                    'logTable' => "{{%log_console}}",
                     'levels' => ['error'],
                     'logVars' => ['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER'],
                 ],

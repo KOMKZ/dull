@@ -12,7 +12,7 @@ echo DetailView::widget([
         ],
         [
             'attribute' => 'emf_created_at',
-            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+            'format' => ['date', 'Y-MM-dd HH:mm:ss']
         ],
         [
             'attribute' => 'emf_data',

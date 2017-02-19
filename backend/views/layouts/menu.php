@@ -17,18 +17,63 @@ return [
             ],
         ],
         [
+            'label' => '商品管理',
+            'icon' => 'fa fa-share',
+            'url' => '#',
+            'items' => [
+                [
+                    'label' => '商品列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/goods/list']
+                ],
+                [
+                    'label' => '商品查看',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/goods/view']
+                ],
+                [
+                    'label' => '商品更新',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/goods/update']
+                ],
+                [
+                    'label' => '商品增加',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/goods/add']
+                ],
+            ],
+        ],
+
+        [
             'label' => '内容管理',
             'icon' => 'fa fa-share',
             'url' => '#',
             'items' => [
                 [
-                    'label' => '博文管理',
+                    'label' => '文章管理',
                     'icon' => 'fa fa-circle-o',
                     'items' => [
                         [
-                            'label' => '博文列表',
+                            'label' => '文章列表',
                             'icon' => 'fa fa-circle-o',
                             'url' => ['/post/list']
+                        ],
+                        [
+                            'label' => '文章查看',
+                            'icon' => 'fa fa-circle-o',
+                            'url' => ['/post/view'],
+                            'visible' => Yii::$app->requestedRoute == 'post/view'
+                        ],
+                        [
+                            'label' => '文章更新',
+                            'icon' => 'fa fa-circle-o',
+                            'url' => ['/post/update'],
+                            'visible' => Yii::$app->requestedRoute == 'post/update'
+                        ],
+                        [
+                            'label' => '文章增加',
+                            'icon' => 'fa fa-circle-o',
+                            'url' => ['/post/add']
                         ],
                     ],
                 ],

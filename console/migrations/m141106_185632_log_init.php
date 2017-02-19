@@ -21,38 +21,18 @@ use yii\log\DbTarget;
  */
 class m141106_185632_log_init extends Migration
 {
-    /**
-     * @var DbTarget[]
-     */
-    private $dbTargets = [];
 
-    /**
-     * @throws InvalidConfigException
-     * @return DbTarget[]
-     */
-    protected function getDbTargets()
-    {
-        if ($this->dbTargets === []) {
-            $log = Yii::$app->getLog();
 
-            foreach ($log->targets as $target) {
-                if ($target instanceof DbTarget) {
-                    $this->dbTargets[] = $target;
-                }
-            }
-
-            if ($this->dbTargets === []) {
-                throw new InvalidConfigException('You should configure "log" component to use one or more database targets before executing this migration.');
-            }
-        }
-        return $this->dbTargets;
-    }
 
     public function up()
     {
-        $targets = $this->getDbTargets();
-        foreach ($targets as $target) {
-            $this->db = $target->db;
+        $tables = [
+            "{{%log_backend}}",
+            "{{%log_frontend}}",
+            "{{%log_api}}",
+            "{{%log_console}}"
+        ];
+        foreach ($tables as $table) {
 
             $tableOptions = null;
             if ($this->db->driverName === 'mysql') {
@@ -60,7 +40,7 @@ class m141106_185632_log_init extends Migration
                 $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
             }
 
-            $this->createTable($target->logTable, [
+            $this->createTable($table, [
                 'id' => $this->bigPrimaryKey(),
                 'level' => $this->integer(),
                 'category' => $this->string(),
@@ -69,19 +49,23 @@ class m141106_185632_log_init extends Migration
                 'message' => $this->text(),
             ], $tableOptions);
 
-            $this->createIndex('idx_log_level', $target->logTable, 'level');
-            $this->createIndex('idx_log_category', $target->logTable, 'category');
+            $this->createIndex('idx_log_level', $table, 'level');
+            $this->createIndex('idx_log_category', $table, 'category');
         }
         return true;
     }
 
     public function down()
     {
-        $targets = $this->getDbTargets();
-        foreach ($targets as $target) {
-            $this->db = $target->db;
+        $tables = [
+            "{{%log_backend}}",
+            "{{%log_frontend}}",
+            "{{%log_api}}",
+            "{{%log_console}}"
+        ];
+        foreach ($tables as $table) {
 
-            $this->dropTable($target->logTable);
+            $this->dropTable($table);
         }
         return true;
     }

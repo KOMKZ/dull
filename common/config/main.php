@@ -49,33 +49,6 @@ return [
             'showScriptName' => true,
             'hostInfo' => 'http://localhost:8053',
             'baseUrl' => '/'
-        ],
-
-
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                // [
-                //     'class' => 'yii\log\DbTarget',
-                //     'logTable' => 'log_backend',
-                //     'levels' => ['error', 'warning'],
-                // ],
-                // [
-                //     'class' => 'yii\log\DbTarget',
-                //     'logTable' => 'log_frontend',
-                //     'levels' => ['error', 'warning'],
-                // ],
-                // [
-                //     'class' => 'yii\log\DbTarget',
-                //     'logTable' => 'log_api',
-                //     'levels' => ['error', 'warning'],
-                // ],
-                // [
-                //     'class' => 'yii\log\DbTarget',
-                //     'logTable' => 'log_console',
-                //     'levels' => ['error', 'warning'],
-                // ]
-            ],
-        ],
+        ]
     ],
 ];

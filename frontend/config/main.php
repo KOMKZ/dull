@@ -32,7 +32,7 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\DbTarget',
-                    'logTable' => 'log_frontend',
+                    'logTable' => "{{%log_frontend}}",
                     'levels' => ['error'],
                     // 'categories' => [
                     //     'application',

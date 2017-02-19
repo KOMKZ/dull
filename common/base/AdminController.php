@@ -5,6 +5,7 @@ use Yii;
 use common\base\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 class AdminController extends Controller
 {
@@ -25,16 +26,16 @@ class AdminController extends Controller
 
     public $enableCsrfValidation = false;
 
-    public function error($message, $code){
+    public function error($code, $message){
         Yii::$app->session->setFlash('error', $message . ':' . $code);
     }
 
     public function notfound(){
-        $this->error(Yii::t('app', '数据不存在'));
+        throw new NotFoundHttpException();
     }
 
-    public function succ($message){
-        Yii::$app->session->setFlash('success', $message);
+    public function succ($message = null){
+        Yii::$app->session->setFlash('success', $message ? $message : '成功');
     }
 
 

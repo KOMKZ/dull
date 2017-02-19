@@ -15,11 +15,11 @@ use common\formatter\Formatter;
                         'ug_description',
                         [
                             'attribute' => 'ug_created_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ],
                         [
                             'attribute' => 'ug_updated_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ]
                     ],
                     'formatter' => [

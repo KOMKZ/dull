@@ -27,11 +27,11 @@ use common\models\user\tables\UserGroup;
                         ],
                         [
                             'attribute' => 'u_created_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ],
                         [
                             'attribute' => 'u_updated_at',
-                            'format' => ['date', 'Y-MM-dd HH-mm-ss']
+                            'format' => ['date', 'Y-MM-dd HH:mm:ss']
                         ]
                     ],
                     'formatter' => [

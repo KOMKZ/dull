@@ -20,7 +20,7 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\DbTarget',
-                    'logTable' => 'log_api',
+                    'logTable' => "{{%log_api}}",
                     'levels' => ['error'],
                     // 'categories' => [
                     //     'application',
