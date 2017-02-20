@@ -68,7 +68,7 @@ class FileModel extends Model
             return null;
         }
         $driver = $this->instanceDriver($file->f_storage_type);
-        $url = $driver->getFileUrl($file->getFilePath(), $file->f_host);
+        $url = $driver->getFileUrl($file->getFilePath(), $file->f_host, $file->isPublic);
         return $url;
     }
 

@@ -30,6 +30,9 @@ class FileController extends AdminController
         if(!$file){
             return $this->notfound();
         }
+        $url = $fileModel->getFileUrl($file->f_id);
+        echo "<a href='{$url}'>go</a>";
+        exit();
         return $this->render('view', [
             'model' => $file,
             'fileStatusMap' => File::getValidConsts('f_status'),
