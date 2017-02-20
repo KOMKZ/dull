@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "19a2d483b4d3dd03c37cde7784fcb947",
-    "content-hash": "bdbfb8c94b599723ff02dcdeaff94418",
+    "hash": "2f6de69e0ce0357ea8ac08bc546b9057",
+    "content-hash": "7150cedef37c7cd682d7dd6975f2b9a9",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -871,6 +871,56 @@
                 "icon"
             ],
             "time": "2016-10-24 15:52:54"
+        },
+        {
+            "name": "fukuball/jieba-php",
+            "version": "0.25",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fukuball/jieba-php.git",
+                "reference": "21c0a4d4cfdb1f1f25b0aecc88ffb4146768908c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://packagist.phpcomposer.com/files/fukuball/jieba-php/21c0a4d4cfdb1f1f25b0aecc88ffb4146768908c.zip",
+                "reference": "21c0a4d4cfdb1f1f25b0aecc88ffb4146768908c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.4.1",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "1.5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/class/Jieba.php",
+                    "src/class/JiebaAnalyse.php",
+                    "src/class/Finalseg.php",
+                    "src/class/Posseg.php",
+                    "src/vendor/multi-array/MultiArray.php",
+                    "src/vendor/multi-array/Factory/MultiArrayFactory.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fukuball",
+                    "email": "fukuball@gmail.com"
+                }
+            ],
+            "description": "結巴中文分詞（PHP 版本）：做最好的 PHP 中文分詞、中文斷詞組件",
+            "keywords": [
+                "Jieba",
+                "php"
+            ],
+            "time": "2016-02-16 18:34:14"
         },
         {
             "name": "php-amqplib/php-amqplib",

@@ -26,7 +26,8 @@
         "yiisoft/yii2-redis": "^2.0",
         "phpmailer/phpmailer": "^5.2",
         "2amigos/yii2-file-upload-widget": "~1.0",
-        "branchonline/yii2-lightbox": "^1.2"
+        "branchonline/yii2-lightbox": "^1.2",
+        "fukuball/jieba-php": "^0.25.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
