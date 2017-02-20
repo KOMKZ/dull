@@ -1,6 +1,7 @@
 <?php
 use yii\widgets\DetailView;
 use common\formatter\Formatter;
+use yii\helpers\Html;
 
 
 ?>
@@ -54,7 +55,7 @@ use common\formatter\Formatter;
                 <h5>文章内容</h5>
             </div>
             <div class="box-body">
-
+                <?= Html::encode($model['p_content'])?>
             </div>
         </div>
     </div>

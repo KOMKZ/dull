@@ -95,6 +95,7 @@ class Post extends ActiveRecord
                 'p_title',
                 'p_content',
                 'p_thumb_img_url',
+                'p_status',
                 // 'p_created_uid',
                 'p_content_type'
             ]
