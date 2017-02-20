@@ -39,11 +39,7 @@ class DiskDriver extends Model
         return $this->_base;
     }
     public function outputByPath($filePath){
-        $dir = md5(dirname($filePath)) . DIRECTORY_SEPARATOR . basename($filePath);
-        $path = implode(DIRECTORY_SEPARATOR, [
-            $this->_base,
-            trim($dir, DIRECTORY_SEPARATOR.'.')
-        ]);
+        $path = $this->getFilePath($filePath);
         if(!file_exists($path)){
             throw new HttpException(404, Yii::t('app','文件不存在'));
         }
@@ -62,6 +58,14 @@ class DiskDriver extends Model
             $frurl->hostInfo = $host;
         }
         return $frurl->createAbsoluteUrl(['file/read', 'name' => $filePath], 'http');
+    }
+    public function getFilePath($name){
+        $dir = md5(dirname($name)) . DIRECTORY_SEPARATOR . basename($name);
+        $path = implode(DIRECTORY_SEPARATOR, [
+            rtrim($this->_base, DIRECTORY_SEPARATOR),
+            trim($dir, DIRECTORY_SEPARATOR.'.')
+        ]);
+        return $path;
     }
     public function save(File $file){
         if($file->hasErrors()){

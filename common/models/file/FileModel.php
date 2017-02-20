@@ -77,6 +77,11 @@ class FileModel extends Model
         return $driver->getFileUrl($name);
     }
 
+    public function getLocalFilePath($name){
+        $driver = $this->instanceDriver(File::DR_DISK);
+        return $driver->getFilePath($name);
+    }
+
     public function output($id){
         if(!($id instanceof File)){
             $file = $this->getOne(['f_id' => $id]);
@@ -112,7 +117,7 @@ class FileModel extends Model
         File::deleteAll($condition);
     }
 
-    public function saveFile($data, $file = null, $save = true){
+    public function saveFile($data, $file = null){
         if(!$file){
             $file = new File();
         }
@@ -145,6 +150,30 @@ class FileModel extends Model
         $path_parts = pathinfo($filePath);
         $file->f_name = $path_parts['filename'];
         return $this->uploadFileToTps($file);
+    }
+
+
+    public function uploadTmpFile($tmpName){
+        $path = $this->getLocalFilePath($tmpName);
+        if(!file_exists($path)){
+            $this->addError('', Yii::t('app', '文件不存在'.$path));
+            return false;
+        }
+        $file = new File();
+        $file->source_path = $path;
+        $file->source_path_type = File::SP_LOCAL;
+        $file->f_storage_type = File::DR_DISK;
+        $file->f_acl_type = File::FILE_ACL_PRI;
+        $file->f_category = 'post_thumb';
+        $file->save_asyc = true;
+        $path_parts = pathinfo($tmpName);
+        $file->f_name = $path_parts['filename'];
+
+        $result = $this->saveFile(['f_name' => $path_parts['filename']], $file);
+        if(!$result){
+            return false;
+        }
+        return $file;
     }
 
     public function uploadFileToTps($file){

@@ -5,6 +5,7 @@ use Yii;
 use common\base\Model;
 use common\models\post\tables\Post;
 use yii\data\ActiveDataProvider;
+use common\models\file\FileModel;
 
 /**
  *
@@ -60,6 +61,20 @@ class PostModel extends Model
             $this->addError('', $this->getArErrMsg($post));
             return false;
         }
+
+        // 保存图片
+        if(!empty($data['p_thumb_img'])){
+            $fileModel = new FileModel();
+            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
+            if(!$file){
+                list($code, $error) = $fileModel->getOneError();
+                $this->addError($code, $error);
+                return false;
+            }
+            $post->p_thumb_img = $fileModel->getFileUrl($file);
+            $post->p_thumb_img_id = $file->f_id;
+        }
+
         $result = $post->insert(false);
         if(!$result){
             $this->addError('', Yii::t('app', '写入失败'));

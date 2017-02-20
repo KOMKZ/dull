@@ -17,7 +17,11 @@ use common\formatter\Formatter;
                     'attributes' => [
                         'p_id',
                         'p_title',
-                        'p_thumb_img',
+                        'p_thumb_img_id',
+                        [
+                            'attribute' => 'p_thumb_img',
+                            'format' => ['imageThumb']
+                        ],
                         [
                             'attribute' => 'p_content_type',
                             'format' => ['map', $postContentTypeMap]

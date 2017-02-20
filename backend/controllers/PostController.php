@@ -5,6 +5,7 @@ use Yii;
 use common\base\AdminController;
 use common\models\post\tables\Post;
 use common\models\post\PostModel;
+use common\models\file\FileModel;
 
 class PostController extends AdminController
 {
@@ -20,18 +21,28 @@ class PostController extends AdminController
     public function actionAdd(){
         $post = new Post();
         if(Yii::$app->request->isPost){
+            $postData = Yii::$app->request->post();
+            // $fileModel = new FileModel();
+            // $file = $fileModel->uploadTmpFile($postData['Post']['p_thumb_img']);
+            // if(!$file){
+            //     list($code, $error) = $fileModel->getOneError();
+            //     $this->error($code, $error);
+            //     return $this->refresh();
+            // }
             $postModel = new PostModel();
-            $post = Yii::$app->request->post();
-            echo json_encode(['id' => 1]);
-            exit();
-            $result = $postModel->createPost($post['Post']);
+            $data = $postData['Post'];
+
+
+            $result = $postModel->createPost($data);
             if(!$result){
                 list($code, $error) = $postModel->getOneError();
                 $this->error($code, $error);
+                return $this->refresh();
             }else{
                 $this->succ();
+                return $this->refresh();
             }
-            return $this->refresh();
+
         }
         return $this->render('add', [
             'model' => $post,
