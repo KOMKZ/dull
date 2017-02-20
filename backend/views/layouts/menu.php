@@ -244,6 +244,11 @@ return [
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/webshell']
                 ],
+                [
+                    'label' => '分词',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/tool/word-seg']
+                ],
             ],
         ],
 
