@@ -9,13 +9,58 @@ use common\models\file\File;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 use yii\web\Response;
+use yii\imagine\Image;
+use Imagine\Image\Box;
+
+
 
 /**
  *
  */
 class FileController extends ApiController
 {
+    public function actionSaveTmpCropImg(){
 
+        $uploadFile = UploadedFile::getInstanceByName('file');
+        if(!$uploadFile){
+            return $this->error(null, Yii::t('app', '服务器读取不到上传文件'));
+        }
+
+        $request = Yii::$app->request;
+        $width = $request->post('width', 200);
+        $height = $request->post('height', 200);
+        $image = Image::crop(
+            $uploadFile->tempName,
+            intval($request->post('w')),
+            intval($request->post('h')),
+            [$request->post('x'), $request->post('y')]
+        )->resize(
+            new Box($width, $height)
+        );
+
+        $tempDir = Yii::getAlias('@api/runtime/files') . DIRECTORY_SEPARATOR;
+        $fileName = uniqid(time(), true);
+        $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
+        $filePath = $tempDir . $fileTotalName;
+        if(!$image->save($filePath)){
+            Yii::error('保存临时文件出错' . $filePath);
+            return $this->error(null, Yii::t('app', '保存文件出错'));
+        }
+
+        $fileModel = new FileModel();
+        $file = $fileModel->saveTmpFile($filePath);
+        if(!$file){
+            list($code, $error) = $fileModel->getOneError();
+            return $this->error($code, $error);
+        }else{
+            unlink($filePath);
+        }
+        echo json_encode([
+            'filelink' => $fileModel->getFileUrl($file),
+            'file_name' => $file->getFilePath()
+        ]);
+        exit();
+    }
 
     public function actionUpload(){
         // 首先先上传文件

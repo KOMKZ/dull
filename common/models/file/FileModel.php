@@ -112,7 +112,7 @@ class FileModel extends Model
         File::deleteAll($condition);
     }
 
-    public function saveFile($data, $file = null){
+    public function saveFile($data, $file = null, $save = true){
         if(!$file){
             $file = new File();
         }
@@ -134,6 +134,17 @@ class FileModel extends Model
             $this->sendFileDataAsyc($file);
         }
         return $file;
+    }
+
+    public function saveTmpFile($filePath){
+        $file = new File();
+        $file->f_storage_type = File::DR_DISK;
+        $file->source_path = $filePath;
+        $file->source_path_type = File::SP_LOCAL;
+        $file->f_category = 'tmp_file';
+        $path_parts = pathinfo($filePath);
+        $file->f_name = $path_parts['filename'];
+        return $this->uploadFileToTps($file);
     }
 
     public function uploadFileToTps($file){

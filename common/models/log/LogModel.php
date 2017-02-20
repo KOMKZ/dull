@@ -17,17 +17,17 @@ class LogModel extends Model
 
     public function getOne($condition, $table){
         $one = (new Query())
-                ->from($table)
+                ->from('{{%'.$table.'}}')
                 ->where($condition)
                 ->one();
         return $one;
     }
     public function isLogTableExists($tableName){
-        return Yii::$app->db->getTableSchema($tableName, true) ? true : false;
+        return Yii::$app->db->getTableSchema('{{%'.$tableName.'}}', true) ? true : false;
     }
     public function getProvider($condition = [], $sortData = [], $withPage = true, $table){
         $query = (new Query())
-                ->from($table);
+                ->from('{{%'.$table.'}}');
         $query = $this->buildQueryWithCondition($query, $condition);
 
         $defaultOrder = [

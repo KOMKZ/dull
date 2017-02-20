@@ -1,8 +1,9 @@
 <?php
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use dosamigos\fileupload\FileUploadUI;
 use yii\bootstrap\Tabs;
+use budyaga\cropper\Widget;
+
 
 
 $fileUploaddOneCallBack = <<<JS
@@ -24,18 +25,20 @@ $postBaseInfo .= $form->field($model, 'p_content_type')->dropDownList($postConte
 $postBaseInfo .= $form->field($model, 'p_status')->dropDownList($postStatusMap);
 $postBaseInfo = Html::tag('div', $postBaseInfo, ['class' => 'box-body']);
 
-$postThumbImg = Html::tag('div', FileUploadUI::widget([
-    'model' => $model,
-    'attribute' => 'p_thumb_img',
-    'url' => $fileUploadUrl, // your url, this is just for demo purposes,
-    'clientEvents' => [
-        'fileuploaddone' => $fileUploaddOneCallBack,
-        'fileuploadfail' => 'function(e, data) {
-                                // console.log(e);
-                                console.log(data);
-                            }',
-    ],
-]), ['class' => 'box-body']);
+$postThumbImg = Html::tag('div', $form->field($model, 'p_thumb_img')->widget(Widget::className(), [
+        'uploadUrl' => $fileUploadUrl,
+        'onCompleteJcrop' => "
+        function(name, data){
+            if(!$.isPlainObject(data)){
+                return dull.new_alert('上传失败', 'error');
+            }else{
+                if(data.code > 0){
+                    return dull.new_alert(data.code + ':' + data.message, 'error');
+                }
+            }
+        }
+        "
+    ]), ['class' => 'box-body']);
 
 $postContent = Html::tag('div', $form->field($model, 'p_content'), ['class' => 'box-body']);
 

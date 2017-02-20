@@ -40,15 +40,15 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'hostInfo' => 'http://localhost:8055/index.php',
-            'baseUrl' => '/',
+            'baseUrl' => '',
         ],
 
         'apiurl' => [
             'class' => 'yii\web\UrlManager',
-            'enablePrettyUrl' => false,
-            'showScriptName' => true,
-            'hostInfo' => 'http://localhost:8053',
-            'baseUrl' => '/'
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'hostInfo' => 'http://localhost:8053/index.php',
+            'baseUrl' => ''
         ]
     ],
 ];

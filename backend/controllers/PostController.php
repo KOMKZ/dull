@@ -22,6 +22,8 @@ class PostController extends AdminController
         if(Yii::$app->request->isPost){
             $postModel = new PostModel();
             $post = Yii::$app->request->post();
+            echo json_encode(['id' => 1]);
+            exit();
             $result = $postModel->createPost($post['Post']);
             if(!$result){
                 list($code, $error) = $postModel->getOneError();
@@ -35,7 +37,7 @@ class PostController extends AdminController
             'model' => $post,
             'postContentTypeMap' => Post::getValidConsts('p_content_type'),
             'postStatusMap' => Post::getValidConsts('p_status'),
-            'fileUploadUrl' => '#',
+            'fileUploadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['file/save-tmp-crop-img'], 'http'),
         ]);
     }
 
