@@ -19,7 +19,7 @@ class m170220_075948_sys_msg extends Migration
             'smgs_created_uid' => $this->integer()->notNull(),
             'smsg_releate_type' => $this->smallinteger()->notNull(),
             'smsg_object_id' => $this->integer()->notNull(),
-            'smsg_expire_time' => $this->integer()->notNull(),
+            'smsg_expired_at' => $this->integer()->notNull(),
             'smsg_created_at' => $this->integer()->notNull(),
             'smsg_updated_at' => $this->integer()->notNull(),
         ], $tableOptions);

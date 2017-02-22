@@ -8,3 +8,15 @@
 1条广播消息
 1条用户组消息
 1条范围用户id消息
+
+查询某个用户的未读消息
+select * from dull_sys_msg
+left join dull_dull_sys_msg
+where
+    未过期
+    and
+    广播消息
+    and
+    该用户组的消息
+    and
+    该用户id消息
