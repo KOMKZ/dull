@@ -51,7 +51,40 @@ class PostModel extends Model
         $pagination = $provider->getPagination();
         return [$provider, $pagination];
     }
+    public function updatePost($condition, $data){
+        $post = $this->getOne($condition);
+        if(!$post){
+            $this->addError('', Yii::t('app', '文章不存在'));
+            return false;
+        }
+        $post->scenario = 'update';
 
+        if(!$post->load($data, '') || !$post->validate()){
+            $this->addError('', $this->getArErrMsg($post));
+            return false;
+        }
+
+        if(urldecode($post['p_thumb_img']) != urldecode($data['p_thumb_img'])){
+            $fileModel = new FileModel();
+            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
+            if(!$file){
+                list($code, $error) = $fileModel->getOneError();
+                $this->addError($code, $error);
+                return false;
+            }
+            $post->p_thumb_img = $fileModel->getFileUrl($file);
+            $post->p_thumb_img_id = $file->f_id;
+            // 标记原来的图片已经废弃
+        }
+
+        $result = $post->update(false);
+        if(false === $result){
+            $this->addError('', Yii::t('app', '写入失败'));
+            return false;
+        }
+        return $post;
+
+    }
     public function createPost($data){
         $post = new Post();
         $post->scenario = 'create';

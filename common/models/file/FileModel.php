@@ -165,7 +165,7 @@ class FileModel extends Model
         $file->f_storage_type = File::DR_DISK;
         $file->f_acl_type = File::FILE_ACL_PRI;
         $file->f_category = 'post_thumb';
-        $file->save_asyc = true;
+        $file->save_asyc = false;
         $path_parts = pathinfo($tmpName);
         $file->f_name = $path_parts['filename'];
 

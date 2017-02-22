@@ -35,7 +35,8 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false
+            'showScriptName' => false,
+            'baseUrl' => '/appapi'
         ],
     ],
     'params' => $params,

@@ -19,6 +19,56 @@ use Imagine\Image\Box;
  */
 class FileController extends ApiController
 {
+    private function ckError($error){
+        $callbackNum = $_GET['CKEditorFuncNum'];
+        $result = <<<JS
+<script type="text/javascript">
+    window.parent.CKEDITOR.tools.callFunction("{$callbackNum}", "", '{$error}');
+</script>
+JS;
+        echo $result;
+        exit();
+    }
+    private function ckSucc($url){
+        $callbackNum = $_GET['CKEditorFuncNum'];
+        $result = <<<JS
+<script type="text/javascript">
+    window.parent.CKEDITOR.tools.callFunction('{$callbackNum}', "{$url}", '');
+</script>
+JS;
+        echo $result;
+        exit();
+    }
+    public function actionSaveTmpCkImg(){
+        try {
+            $uploadFile = UploadedFile::getInstanceByName('upload');
+            if(!$uploadFile){
+                return $this->ckError(Yii::t('app', '服务器读取不到上传文件'));
+            }
+
+            $tempDir = Yii::getAlias('@api/runtime/files') . DIRECTORY_SEPARATOR;
+            $fileName = uniqid(time(), true);
+            $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
+            $filePath = $tempDir . $fileTotalName;
+            if(!$uploadFile->saveAs($filePath)){
+                Yii::error('保存临时文件出错' . $filePath);
+                return $this->error(null, Yii::t('app', '保存文件出错'));
+            }
+
+            $fileModel = new FileModel();
+            $file = $fileModel->saveTmpFile($filePath);
+            if(!$file){
+                list($code, $error) = $fileModel->getOneError();
+                return $this->ckError($code.':'.$error);
+            }else{
+                unlink($filePath);
+            }
+            return $this->ckSucc($fileModel->getFileUrl($file));
+        } catch (\Exception $e) {
+            return $this->ckError($e->getMessage());
+        }
+    }
+
     public function actionSaveTmpCropImg(){
 
         $uploadFile = UploadedFile::getInstanceByName('file');

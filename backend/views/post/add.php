@@ -3,8 +3,8 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\bootstrap\Tabs;
 use budyaga\cropper\Widget;
-
-
+use common\assets\CKEditorAsset;
+CKEditorAsset::register($this);
 
 $fileUploadedCallback = <<<JS
     function(name, data){
@@ -20,6 +20,15 @@ $fileUploadedCallback = <<<JS
     }
 JS;
 
+$script = <<<JS
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('#editor1', {
+        filebrowserBrowseUrl : 'http://www.baidu.com',
+        filebrowserUploadUrl : '{$contentImgUploadUrl}'
+    });
+JS;
+$this->registerJs($script);
 
 $form = ActiveForm::begin();
 $postBaseInfo  = $form->field($model, 'p_title')->textInput(['autofocus' => true]);
@@ -32,7 +41,7 @@ $postThumbImg = Html::tag('div', $form->field($model, 'p_thumb_img')->widget(Wid
         'onCompleteJcrop' => $fileUploadedCallback
     ]), ['class' => 'box-body']);
 
-$postContent = Html::tag('div', $form->field($model, 'p_content'), ['class' => 'box-body']);
+$postContent = Html::tag('div', $form->field($model, 'p_content')->textarea(['id' => '#editor1']), ['class' => 'box-body']);
 
 ?>
 <div class="row">

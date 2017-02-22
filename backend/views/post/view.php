@@ -31,7 +31,6 @@ use yii\helpers\Html;
                             'attribute' => 'p_status',
                             'format' => ['map', $postStatusMap]
                         ],
-                        'p_content',
                         [
                             'attribute' => 'p_created_at',
                             'format' => ['date', 'Y-MM-dd HH:mm:ss']
@@ -55,7 +54,7 @@ use yii\helpers\Html;
                 <h5>文章内容</h5>
             </div>
             <div class="box-body">
-                <?= Html::encode($model['p_content'])?>
+                <?= $model['p_content'];?>
             </div>
         </div>
     </div>

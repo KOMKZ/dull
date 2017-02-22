@@ -94,9 +94,16 @@ class Post extends ActiveRecord
             'create' => [
                 'p_title',
                 'p_content',
-                'p_thumb_img_url',
+                // 'p_thumb_img',
                 'p_status',
                 // 'p_created_uid',
+                'p_content_type'
+            ],
+            'update' => [
+                'p_title',
+                'p_content',
+                // 'p_thumb_img',
+                'p_status',
                 'p_content_type'
             ]
         ];

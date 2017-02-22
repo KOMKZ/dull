@@ -47,8 +47,8 @@ return [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'hostInfo' => 'http://localhost:8053/index.php',
-            'baseUrl' => ''
+            'hostInfo' => 'http://localhost:8054',
+            'baseUrl' => '/appapi'
         ]
     ],
 ];
