@@ -7,6 +7,7 @@ use common\models\log\LogModel;
 use common\models\log\tables\LogBackend;
 use yii\helpers\VarDumper;
 use yii\i18n\Formatter;
+use yii\helpers\Url;
 
 class LogController extends AdminController
 {
@@ -43,7 +44,8 @@ class LogController extends AdminController
             list($provider, $pagination) = $logModel->getProvider($condition, [], true, $table_name);
         }
         return $this->render('search', [
-            'provider' => $provider
+            'provider' => $provider,
+            'logSearchUrl' => Url::to(['log/search'])
         ]);
     }
 

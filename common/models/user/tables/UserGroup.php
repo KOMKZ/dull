@@ -8,8 +8,10 @@ use yii\db\ActiveRecord;
  */
 class UserGroup extends ActiveRecord
 {
-    CONST ROOT_GROUP = 'root_group';
-    CONST TEST_GROUP = 'test_group';
+    CONST ROOT_GROUP = 1;
+    CONST ADMIN_GROUP = 2;
+    CONST TEST_GROUP = 3;
+    CONST VISTOR_GROUP = 4;
 
     public static function tableName(){
         return "{{%user_group}}";

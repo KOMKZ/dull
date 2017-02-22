@@ -17,7 +17,7 @@ class m170216_074108_user_identity extends Migration
             // 用户id
             'ui_uid' => $this->integer()->notNull(),
             // 用户组
-            'ui_g_name' => $this->string()->notNull()
+            'ui_gid' => $this->integer()->notNull()
         ], $tableOptions);
         return true;
     }

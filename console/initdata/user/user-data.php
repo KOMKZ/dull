@@ -16,7 +16,7 @@ $requird_users = [
             'u_email' => '784248377@qq.com'
         ],
         'UserIdentity' => [
-            'ui_g_name' => UserGroup::ROOT_GROUP,
+            'ui_gid' => UserGroup::ROOT_GROUP,
         ]
     ]
 ];
@@ -34,7 +34,7 @@ while($i < 2){
         'u_auth_status' => User::STATUS_AUTHED,
     ];
     $userData['UserIdentity'] = [
-        'ui_g_name' => UserGroup::TEST_GROUP
+        'ui_gid' => UserGroup::TEST_GROUP
     ];
     $test_users[] = $userData;
     $i++;

@@ -53,7 +53,7 @@ $js = <<<JS
             query_string += i + '=' + v + '&';
         });
         query_string = query_string.substring(0, query_string.length - 1);
-        location.href = '/?' + query_string;
+        location.href = $(this).attr('action') + '?' + query_string;
         return false;
     });
 
@@ -158,7 +158,7 @@ $this->registerJs($js);
     <div class="col-md-3">
         <div class="box">
             <div class="box-body">
-                <form class="" action="" method="get" id="search-form">
+                <form class="" action="<?= $logSearchUrl?>" method="get" id="search-form">
                     <div class="form-group">
                         <label for="">日志表</label>
                         <select class="form-control" name="table_name" id="table_search">

@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
  */
 class GroupModel extends Model
 {
-    
+
 
 
 
@@ -27,7 +27,7 @@ class GroupModel extends Model
     }
     public static function getGroupsMap(){
         $result = UserGroup::find()->asArray()->all();
-        return ArrayHelper::map($result, 'ug_name', 'ug_description');
+        return ArrayHelper::map($result, 'ug_id', 'ug_description');
     }
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = UserGroup::find();

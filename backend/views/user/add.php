@@ -37,7 +37,7 @@ use yii\helpers\Html;
             </div>
             <div class="box-body">
                 <?php
-                echo $form->field($identityModel, 'ui_g_name')->dropDownList($userGroupMap);
+                echo $form->field($identityModel, 'ui_gid')->dropDownList($userGroupMap);
                 ?>
             </div>
         </div>

@@ -103,7 +103,7 @@ class InstallController extends Controller{
         $tableName = UserGroup::tableName();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
         Yii::$app->db->createCommand()->truncateTable($tableName)->execute();
-        $command = Yii::$app->db->createCommand()->batchInsert($tableName, ['ug_name', 'ug_description', 'ug_created_at', 'ug_updated_at'], $userGroup);
+        $command = Yii::$app->db->createCommand()->batchInsert($tableName, ['ug_id', 'ug_name', 'ug_description', 'ug_created_at', 'ug_updated_at'], $userGroup);
         $result = $command->execute();
         printf("installed {$result} user group item.\n");
     }
