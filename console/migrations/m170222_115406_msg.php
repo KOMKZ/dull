@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m170222_071537_sys_msg_read extends Migration
+class m170222_115406_msg extends Migration
 {
     public function up()
     {
@@ -12,20 +12,19 @@ class m170222_071537_sys_msg_read extends Migration
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
-        $this->createTable('{{%sys_msg_read}}', [
-            'smsr_id' => $this->primaryKey(),
-            // 已经阅读的msgid
-            'smsr_mid' => $this->integer()->notNull(),
-            'smsr_uid' => $this->integer()->notNull(),
-            'smsr_created_at' => $this->integer()->notNull(),
-            'smsr_updated_at' => $this->integer()->notNull(),
+        $this->createTable('{{%msg}}', [
+            'm_id' => $this->primaryKey(),
+            'm_title' => $this->string()->notNull(),
+            'm_content' => $this->string(255)->notNull(),
+            'm_params_map' => $this->text()->null(),
+            'm_created_at' => $this->integer()->notNull()
         ], $tableOptions);
         return true;
     }
 
     public function down()
     {
-        $this->dropTable('{{%sys_msg_read}}');
+        $this->dropTable('{{%msg}}');
         return true;
     }
 }

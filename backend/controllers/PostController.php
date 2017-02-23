@@ -40,6 +40,7 @@ class PostController extends AdminController
             'postContentTypeMap' => Post::getValidConsts('p_content_type'),
             'postStatusMap' => Post::getValidConsts('p_status'),
             'fileUploadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['file/save-tmp-crop-img'], 'http'),
+            'contentImgUploadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['file/save-tmp-ck-img'], 'http')
         ]);
     }
 

@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m170220_075948_sys_msg extends Migration
+class m170222_120127_sys_msg extends Migration
 {
     public function up()
     {
@@ -13,15 +13,13 @@ class m170220_075948_sys_msg extends Migration
         }
 
         $this->createTable('{{%sys_msg}}', [
-            'smsg_id' => $this->primaryKey(),
-            // 系统消息类型
-            'smsg_type' => $this->smallinteger()->notNull(),
-            'smgs_created_uid' => $this->integer()->notNull(),
-            'smsg_releate_type' => $this->smallinteger()->notNull(),
-            'smsg_object_id' => $this->integer()->notNull(),
-            'smsg_expired_at' => $this->integer()->notNull(),
-            'smsg_created_at' => $this->integer()->notNull(),
-            'smsg_updated_at' => $this->integer()->notNull(),
+            'sm_id' => $this->primaryKey(),
+            'sm_mid' => $this->integer()->notNull(),
+            'sm_create_uid' => $this->integer()->notNull(),
+            'sm_object_type' => $this->smallinteger()->notNull(),
+            'sm_object_id' => $this->integer()->notNull(),
+            'sm_expired_at' => $this->integer()->notNull(),
+            'sm_created_at' => $this->integer()->notNull()
         ], $tableOptions);
         return true;
     }
