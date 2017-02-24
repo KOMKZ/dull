@@ -11,6 +11,9 @@ use common\models\email\EmailModel;
  */
 class DemoController extends Controller
 {
+    public function actionIndex(){
+        return $this->render('index');
+    }
     public function actionLog(){
         Yii::error(mt_rand(111111111111,99999999999999999999));
     }

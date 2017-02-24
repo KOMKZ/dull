@@ -28,7 +28,8 @@
         "2amigos/yii2-file-upload-widget": "~1.0",
         "branchonline/yii2-lightbox": "^1.2",
         "fukuball/jieba-php": "^0.25.0",
-        "budyaga/yii2-cropper": "^2.0"
+        "budyaga/yii2-cropper": "^2.0",
+        "yii2mod/yii2-sweet-alert": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
