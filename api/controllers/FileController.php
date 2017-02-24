@@ -29,6 +29,7 @@ JS;
         echo $result;
         exit();
     }
+    
     private function ckSucc($url){
         $callbackNum = $_GET['CKEditorFuncNum'];
         $result = <<<JS

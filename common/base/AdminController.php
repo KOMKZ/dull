@@ -17,7 +17,8 @@ class AdminController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => [$this->route]
+                        // 'roles' => [$this->route]
+                        'roles' => ['@']
                     ]
                 ]
             ]

@@ -22,7 +22,9 @@ class SiteController extends AdminController
                     ],
                     [
                         'allow' => true,
-                        'roles' => [$this->route],
+                        // 'roles' => [$this->route],
+                        'roles' => ['@'],
+
                     ]
                 ],
             ],

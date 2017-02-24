@@ -24,10 +24,10 @@ $form = ActiveForm::begin();
                 </div>
                 <div class="box-body">
                     <?php
-                    echo $form->field($model, 'm_title');
-                    echo $form->field($model, 'm_content');
-                    echo $form->field($model, 'use_tpl')->dropDownList($mUseTplMap);
-                    echo $form->field($model, 'tpl_type')->dropDownList($mTplTypeMap, ['id' => 'tpl_dropdown']);
+                    echo $form->field($model, 'sm_title');
+                    echo $form->field($model, 'sm_content');
+                    echo $form->field($model, 'sm_use_tpl')->dropDownList($mUseTplMap);
+                    echo $form->field($model, 'sm_tpl_type')->dropDownList($mTplTypeMap, ['id' => 'tpl_dropdown']);
                     echo $form->field($model, 'sm_object_type')->dropDownList($mSmObjectTypeMap);
                     ?>
                     <div class="form-group">

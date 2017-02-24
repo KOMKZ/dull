@@ -30,9 +30,9 @@ class NotifyModel extends Model
                 return false;
             }
             // build title and content
-            if($sysMsg->use_tpl){
+            if($sysMsg->sm_use_tpl){
                 $tplMap = self::getMTplTypeMap();
-                $tplData = $tplMap[$sysMsg->tpl_type];
+                $tplData = $tplMap[$sysMsg->sm_tpl_type];
                 console($tplData);
             }
 

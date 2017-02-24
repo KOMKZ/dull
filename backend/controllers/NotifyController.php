@@ -33,7 +33,7 @@ class NotifyController extends AdminController
             'model' => $sysMsg,
             'mTplTypeMap' => NotifyModel::getMTplTypeMap(true),
             'mTplTypeData' => NotifyModel::getMTplTypeMap(),
-            'mUseTplMap' => SysMsg::getValidConsts('use_tpl'),
+            'mUseTplMap' => SysMsg::getValidConsts('sm_use_tpl'),
             'mSmObjectTypeMap' => SysMsg::getValidConsts('sm_object_type')
         ]);
     }

@@ -20,7 +20,7 @@ class User extends BaseUser
         }
         $assignId = null;
         if($this->identity){
-            $assignId = $this->identity->identity->ui_g_name;
+            $assignId = $this->identity->identity->ui_gid;
         }
         $permissionName = Yii::$app->id . '-' . $permissionName;
         $access = $accessChecker->checkAccess($assignId, $permissionName, $params);
