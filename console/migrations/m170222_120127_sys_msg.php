@@ -11,10 +11,9 @@ class m170222_120127_sys_msg extends Migration
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-
-        $this->createTable('{{%sys_msg}}', [
+        $table = '{{%sys_msg}}';
+        $this->createTable($table, [
             'sm_id' => $this->primaryKey(),
-            'sm_mid' => $this->integer()->notNull(),
             'sm_create_uid' => $this->integer()->notNull(),
             'sm_object_type' => $this->smallinteger()->notNull(),
             'sm_object_id' => $this->integer()->notNull(),
@@ -25,6 +24,9 @@ class m170222_120127_sys_msg extends Migration
             'sm_expired_at' => $this->integer()->notNull(),
             'sm_created_at' => $this->integer()->notNull()
         ], $tableOptions);
+        $this->createIndex('idx_sm_object_type', $table, 'sm_object_type');
+        $this->createIndex('idx_sm_expired_at', $table, 'sm_expired_at');
+
         return true;
     }
 

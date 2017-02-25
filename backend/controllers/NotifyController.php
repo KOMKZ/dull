@@ -4,14 +4,42 @@ namespace backend\controllers;
 use Yii;
 use common\base\AdminController;
 use common\models\notify\tables\SysMsg;
+use common\models\notify\tables\UserMsg;
 use common\models\notify\NotifyModel;
+use common\models\user\UserModel;
+use yii\helpers\Url;
 
 class NotifyController extends AdminController
 {
+    public function actionPull($u_username = ''){
+        $userModel = new UserModel();
+        $user = $userModel->getOne(['u_username' => $u_username]);
 
+        $notifyModel = new NotifyModel();
+        $result = $notifyModel->pullUserMsg($user->u_id);
+
+        console($result);
+    }
     public function actionIndex()
     {
-        return $this->render('index');
+        $getData = Yii::$app->request->get();
+        $notifyModel = new NotifyModel();
+
+        $condition['um_uid'] = Yii::$app->user->getId();
+        if(isset($getData['um_read_status']) && in_array($getData['um_read_status'], ['1,0', '1', '0'])){
+            $condition['um_read_status'] = $getData['um_read_status'];
+        }
+
+
+        list($provider, $pagination) = $notifyModel->getUserMsgProvider($condition);
+
+        return $this->render('index', [
+            'provider' => $provider,
+            'readStatusMap' => UserMsg::getValidConsts('um_read_status'),
+            'getOneNotifyUrl' => Yii::$app->apiurl->createAbsoluteUrl(['notify/get-one-user-notify']),
+            'setNotifyReadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['notify/set-notify-read']),
+            'searchNotifyUrl' => Url::toRoute(['notify/index']),
+        ]);
     }
 
     public function actionSend(){

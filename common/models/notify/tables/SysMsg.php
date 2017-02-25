@@ -5,6 +5,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use common\base\ActiveRecord;
 use common\models\notify\NotifyModel;
+use common\models\user\tables\User;
 
 
 /**
@@ -17,8 +18,27 @@ class SysMsg extends ActiveRecord
 
 
 
-
     static protected $_constMap = null;
+
+    public function getIsUseTpl(){
+        return 1 == $this->sm_use_tpl;
+    }
+
+    public function getIsGlobalMsg(){
+        return self::GLOBAL_MSG == $this->sm_object_type;
+    }
+
+    public function getIsPrivateMsg(){
+        return self::PRIVATE_MSG == $this->sm_object_type;
+    }
+
+
+    public function getCreate_user(){
+        return $this->hasOne(User::className(), ['u_id' => 'sm_create_uid']);
+    }
+
+
+
 
     public static function tableName(){
         return "{{%sys_msg}}";
@@ -29,8 +49,8 @@ class SysMsg extends ActiveRecord
             'sm_id' => '消息',
             'sm_title' => '消息标题',
             'sm_content' => '消息内容',
-            'sm_mid' => '消息主体id',
             'sm_create_uid' => '发送人用户id',
+            'create_user.u_username' => '发送者用户名',
             'sm_object_type' => '接受对象类型',
             'sm_object_id' => '接受对象id',
             'sm_expired_at' => '过期时间',
@@ -45,17 +65,21 @@ class SysMsg extends ActiveRecord
             [
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'sm_created_at',
+                'updatedAtAttribute' => false
             ]
         ];
     }
     public function rules(){
         return [
+            ['sm_expired_at', 'default', 'value' => time() + 3600*24],
+
             ['sm_object_type', 'required'],
             ['sm_object_type', 'in', 'range' => self::getValidConsts('sm_object_type', true)],
 
             ['sm_tpl_type', 'in', 'range' => self::getValidConsts('sm_tpl_type', true)],
 
-            ['sm_use_tpl', 'filter', 'filter' => 'boolval'],
+            ['sm_use_tpl', 'filter', 'filter' => 'intval'],
+            ['sm_object_id', 'filter', 'filter' => 'trim']
         ];
     }
     public function scenarios(){
@@ -64,6 +88,7 @@ class SysMsg extends ActiveRecord
                 'sm_title',
                 'sm_content',
                 'sm_object_type',
+                'sm_object_id',
                 'sm_expired_at',
                 'sm_tpl_type',
                 'sm_use_tpl',

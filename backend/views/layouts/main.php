@@ -3,7 +3,8 @@ use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
+use yii2mod\alert\AlertAsset;
+AlertAsset::register($this);
 
 if (Yii::$app->controller->action->id === 'login') {
 /**

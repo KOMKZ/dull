@@ -15,10 +15,14 @@ class ApiController extends Controller
             'message' => null
         ];
     }
+
     private function asRes($data){
         $response = Yii::$app->response;
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = $data;
+    }
+    public function notfound(){
+        return $this->error(404, '数据不存在');
     }
     public function succ($data = null){
         $res = $this->getRes();

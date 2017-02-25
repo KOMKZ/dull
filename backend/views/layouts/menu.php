@@ -200,6 +200,11 @@ return [
             'url' => '#',
             'items' => [
                 [
+                    'label' => '通知列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/notify/index']
+                ],
+                [
                     'label' => '发送通知',
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/notify/send']

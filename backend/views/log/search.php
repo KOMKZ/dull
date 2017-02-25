@@ -85,7 +85,7 @@ $this->registerJs($js);
 <div class="row">
     <div class="col-md-9">
         <div class="box">
-            <?php
+<?php
             if($provider){
                 echo GridView::widget([
                     'dataProvider' => $provider,
@@ -128,7 +128,6 @@ $this->registerJs($js);
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => '操作',
-                        'buttonOptions' => ['target' => '_blank'],
                         'template' => '{view}',
                         'buttons' => [
                             'view' => function($url, $model, $key){
@@ -138,21 +137,21 @@ $this->registerJs($js);
                                     ]);
                                 },
                                 ],
-                                'urlCreator' => function ($action, $model, $key, $index) {
-                                    switch ($action) {
-                                        case 'view':
-                                        return Url::to(['log/one', 'id' => $model['id']]);
-                                    }
-                                },
-                                ],
-                                ]
-                                ]);
-                            }else{
-                                echo "
-                                <div class='box-body'>没有数据</div>
-                                ";
+                        'urlCreator' => function ($action, $model, $key, $index) {
+                            switch ($action) {
+                                case 'view':
+                                return Url::to(['log/one', 'id' => $model['id']]);
                             }
-                    ?>
+                        },
+                    ],
+                ]
+            ]);
+        }else{
+            echo "
+            <div class='box-body'>没有数据</div>
+            ";
+        }
+?>
         </div>
     </div>
     <div class="col-md-3">

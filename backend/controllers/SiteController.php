@@ -65,7 +65,7 @@ class SiteController extends AdminController
         if ($exception instanceof UserException) {
             $message = $exception->getMessage();
         } else {
-            $message = Yii::t('yii', 'An internal server error occurred.');
+            $message = Yii::t('yii', $exception->getMessage());
         }
         if (Yii::$app->getRequest()->getIsAjax()) {
             return "$name: $message";
