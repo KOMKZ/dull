@@ -24,6 +24,7 @@ https://github.com/2amigos/yii2-ckeditor-widget
 
 漂亮的弹框
 https://github.com/yii2mod/yii2-sweet-alert
+http://t4t5.github.io/sweetalert/
 
 阿里pay
 https://github.com/funson86/yii2-alipay
@@ -39,4 +40,27 @@ https://github.com/loveorigami/yii2-jquery-loading
 
 https://github.com/raoul2000/yii2-workflow
 
-27
+
+html echo icons
+https://github.com/kartik-v/yii2-icons
+
+roll admin
+https://github.com/hscstudio/yii2-mimin
+
+
+按钮点击有loading效果
+http://fancyapps.com/fancybox/
+https://github.com/newerton/yii2-fancybox
+
+yii2-adminlte-widgets
+https://github.com/Insolita/yii2-adminlte-widgets
+
+服务器负载信息
+https://github.com/abhi1693/yii2-system-info
+
+console命令的wrapper
+https://github.com/vova07/yii2-console-runner-extension
+
+
+文件存储抽象（看看其设计）
+https://github.com/yii2tech/file-storage
