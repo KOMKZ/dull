@@ -36,6 +36,17 @@ $js = <<<JS
         return false;
     });
 
+    $('#pull-form').submit(function(){
+        $.post($(this).attr('action'), $(this).serialize(), function(res){
+            if(res.code > 0){
+                sweetAlert("", res.message, "error");
+            }else{
+                location.href = location.href;
+            }
+        }, 'json')
+        return false;
+    });
+
     $('.view-btn').click(function(){
         $.get($(this).attr('href'), {
             'um_id' : $(this).attr('data-id')
@@ -149,7 +160,17 @@ $this->registerJs($js);
                         </select>
                     </div>
                     <div class="from-group">
-                        <input type="submit" class="btn btn-default" bname="" value="查找">
+                        <input type="submit" class="btn btn-default" value="查找">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-body">
+                <form id="pull-form" action="<?= $pullNotifyUrl?>" method="post">
+                    <div class="form-group">
+                        <input type="hidden" name="u_username" value="admin">
+                        <input type="submit" name="" value="主动拉取" class="btn btn-default">
                     </div>
                 </form>
             </div>

@@ -21,8 +21,8 @@ class ApiController extends Controller
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = $data;
     }
-    public function notfound(){
-        return $this->error(404, '数据不存在');
+    public function notfound($error){
+        return $this->error(404, $error ? $error : '数据不存在');
     }
     public function succ($data = null){
         $res = $this->getRes();

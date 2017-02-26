@@ -11,15 +11,7 @@ use yii\helpers\Url;
 
 class NotifyController extends AdminController
 {
-    public function actionPull($u_username = ''){
-        $userModel = new UserModel();
-        $user = $userModel->getOne(['u_username' => $u_username]);
 
-        $notifyModel = new NotifyModel();
-        $result = $notifyModel->pullUserMsg($user->u_id);
-
-        console($result);
-    }
     public function actionIndex()
     {
         $getData = Yii::$app->request->get();
@@ -29,7 +21,7 @@ class NotifyController extends AdminController
         if(isset($getData['um_read_status']) && in_array($getData['um_read_status'], ['1,0', '1', '0'])){
             $condition['um_read_status'] = $getData['um_read_status'];
         }
-
+        
 
         list($provider, $pagination) = $notifyModel->getUserMsgProvider($condition);
 
@@ -39,6 +31,7 @@ class NotifyController extends AdminController
             'getOneNotifyUrl' => Yii::$app->apiurl->createAbsoluteUrl(['notify/get-one-user-notify']),
             'setNotifyReadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['notify/set-notify-read']),
             'searchNotifyUrl' => Url::toRoute(['notify/index']),
+            'pullNotifyUrl' => Yii::$app->apiurl->createAbsoluteUrl(['notify/pull'])
         ]);
     }
 

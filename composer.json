@@ -29,7 +29,8 @@
         "branchonline/yii2-lightbox": "^1.2",
         "fukuball/jieba-php": "^0.25.0",
         "budyaga/yii2-cropper": "^2.0",
-        "yii2mod/yii2-sweet-alert": "^1.2"
+        "yii2mod/yii2-sweet-alert": "^1.2",
+        "yii2tech/crontab": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
