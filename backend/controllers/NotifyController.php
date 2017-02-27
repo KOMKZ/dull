@@ -17,11 +17,12 @@ class NotifyController extends AdminController
         $getData = Yii::$app->request->get();
         $notifyModel = new NotifyModel();
 
+
         $condition['um_uid'] = Yii::$app->user->getId();
         if(isset($getData['um_read_status']) && in_array($getData['um_read_status'], ['1,0', '1', '0'])){
             $condition['um_read_status'] = $getData['um_read_status'];
         }
-        
+
 
         list($provider, $pagination) = $notifyModel->getUserMsgProvider($condition);
 

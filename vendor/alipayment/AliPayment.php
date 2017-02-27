@@ -217,7 +217,7 @@ class AliPayment extends Object
     }
 
     public function buildRefundFromData($refundResult){
-        if($this->verify($returnData)){
+        if($this->verify($refundResult)){
             $notify = new RefundNotifyResponse();
             $refund = new Refund();
             foreach($refundResult as $name => $value){

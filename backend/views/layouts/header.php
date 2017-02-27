@@ -7,7 +7,40 @@ $userInfo = [
 if($userCache){
     $userInfo['u_username'] = $userCache->u_username;
 }
+$js = <<<JS
+    $('.latest-msg').click(function(){
+        var node = $(this);
+        swal({
+            title: $(this).attr('data-title'),
+            text: $(this).attr('data-content'),
+            type: "info",
+            showCancelButton: false,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, I Got it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function(isConfirm){
+               if (isConfirm) {
+                  $.get(node.attr('href'), function(res){
+                      if(res.code > 0){
+                          swal("警告!", res.message, "error");
+                      }else{
+                          swal({
+                              title: "You had Read！",
+                              timer: 500,
+                              showConfirmButton: false
+                          });
+                          location.href = location.href;
+                      }
+                  }, 'json')
+               }
+           }
+        );
+        return false;
+    });
 
+JS;
+$this->registerJs($js);
 
 
 /* @var $this \yii\web\View */
@@ -113,39 +146,31 @@ if($userCache){
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+                        <span class="label label-warning"><?= $this->params['notifications_count']?></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 10 notifications</li>
+                        <li class="header"><?= Yii::t('app', '您好，您当前有{count}条通知', ['count' => $this->params['notifications_count']])?></li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
                                 <li>
-                                    <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                    <?php
+                                    $msgItem = "
+                                    <a href=\":href\" data-content=\":content\" class=\"latest-msg\" data-title=\":title\">
+                                        <i class=\"fa fa-users text-aqua\"></i> :title
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may
-                                        not fit into the page and may cause design problems
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-users text-red"></i> 5 new members joined
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-user text-red"></i> You changed your username
-                                    </a>
+                                    ";
+                                    foreach($this->params['notifications'] as $item){
+                                        echo strtr($msgItem, [
+                                            ':title' => $item['um_title'],
+                                            ':content' => $item['um_content'],
+                                            ':href' => Yii::$app->apiurl->createAbsoluteUrl([
+                                                'notify/set-notify-read',
+                                                'um_id' => $item['um_id']
+                                            ])
+                                        ]);
+                                    }
+                                    ?>
                                 </li>
                             </ul>
                         </li>

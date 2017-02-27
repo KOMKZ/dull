@@ -40,18 +40,22 @@ class Refund extends Object
     public function setResult_details($value){
         $refunds = explode('#', $value);
         foreach($refunds as $refund){
-            list($trade_no, $total_fee, $errno) = explode('^', $refund);
+            list($trade_no, $total_fee, $report) = explode('^', $refund);
             $this->_refundResult[$trade_no] = [
                 'trade_no' => $trade_no,
                 'total_fee' => $total_fee,
-                'errno' => $errno,
-                'error' => static::getError($errno)
+                'report' => $report,
+                'error' => static::getError($report)
             ];
         }
     }
 
     public function getResult_details(){
         return empty($this->_refundResult) ? null : $this->_refundResult;
+    }
+
+    public function isSuccess($report){
+        return 'SUCCESS' == $report;
     }
 
     public function addOneRefund($trade_no, $total_fee, $des = ''){

@@ -115,6 +115,16 @@ class NotifyModel extends Model
         return $query;
     }
 
+    public static function getLatestUserMsg($uid, $num = 5, $status = '1,0'){
+        $status = explode(',', $status);
+        return UserMsg::find()
+                        ->where(['um_uid' => $uid, 'um_read_status' => $status])
+                        ->limit($num)
+                        ->orderBy(['um_created_at' => SORT_DESC])
+                        ->asArray()
+                        ->all();
+    }
+
     public function getUserMsgProvider($condition = [], $sortData = [], $withPage = true){
         $query = UserMsg::find();
         $query = $this->buildQueryWithCondition($query, $condition);

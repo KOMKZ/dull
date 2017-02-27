@@ -6,6 +6,8 @@ use common\base\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use common\models\notify\NotifyModel;
+
 
 class AdminController extends Controller
 {
@@ -39,6 +41,20 @@ class AdminController extends Controller
         Yii::$app->session->setFlash('success', $message ? $message : '成功');
     }
 
+    public function render($view, $params = [])
+    {
+        $viewComponent = $this->getView();
+        if(!Yii::$app->user->isGuest){
+            $viewComponent = Yii::$app->view;
+            $viewComponent->params['notifications'] = NotifyModel::getLatestUserMsg(Yii::$app->user->getId(), 5, '0');
+            $viewComponent->params['notifications_count'] = count($viewComponent->params['notifications']);
+        }else{
+            $viewComponent->params['notifications'] = [];
+            $viewComponent->params['notifications_count'] = 0;
+        }
+        $content = $viewComponent->render($view, $params, $this);
+        return $this->renderContent($content);
+    }
 
 
 }
