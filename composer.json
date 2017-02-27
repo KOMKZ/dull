@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.6",
@@ -30,7 +30,8 @@
         "fukuball/jieba-php": "^0.25.0",
         "budyaga/yii2-cropper": "^2.0",
         "yii2mod/yii2-sweet-alert": "^1.2",
-        "yii2tech/crontab": "^1.0"
+        "yii2tech/crontab": "^1.0",
+        "mytharcher/alipay-php-sdk": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
@@ -51,5 +52,10 @@
     },
     "scripts": {
         "post-install-cmd": "php init --env=Development --overwrite=n"
+    },
+    "autoload": {
+        "psr-4": {
+            "alipay\\": "vendor/alipayment/"
+        }
     }
 }

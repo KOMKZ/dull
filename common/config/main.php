@@ -49,6 +49,16 @@ return [
             'showScriptName' => false,
             'hostInfo' => 'http://localhost:8054',
             'baseUrl' => '/appapi'
+        ],
+
+        'alipay' => [
+            'class' => 'alipay\AliPayment',
+            'partner' => '',
+            'key' => '',
+            'sign_type' => '',
+            'seller_email' => '',
+            'return_url' => '',
+            'notify_url' => ''
         ]
     ],
 ];

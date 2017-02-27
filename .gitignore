@@ -19,7 +19,8 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-/vendor
+/vendor/*
+!/vendor/alipayment
 
 # composer itself is not needed
 composer.phar
