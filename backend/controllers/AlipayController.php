@@ -8,37 +8,54 @@ use common\base\AdminController;
  *
  */
 class AlipayController extends AdminController{
-    public function actionNotify(){
-        $notifyData = [
-            'discount' => '0.00',
-            'payment_type' => '1',
-            'subject' => '安全家.安全防爆电器课程',
-            'trade_no' => '2017022721001004880233070742',
-            'buyer_email' => 'tianlongdiguo@hotmail.com',
-            'gmt_create' => '2017-02-27 15:17:49',
-            'notify_type' => 'trade_status_sync',
-            'quantity' => '1',
-            'out_trade_no' => '20170227100233',
-            'seller_id' => '2088812483293400',
-            'notify_time' => '2017-02-27 15:17:58',
-            'body' => '安全家.安全防爆电器课程',
-            'trade_status' => 'TRADE_SUCCESS',
-            'is_total_fee_adjust' => 'N',
-            'total_fee' => '0.01',
-            'gmt_payment' => '2017-02-27 15:17:58',
-            'seller_email' => 'alicloud@trainor.cn',
-            'price' => '0.01',
-            'buyer_id' => '2088302401130884',
-            'notify_id' => '1e88c7c03f0458ce97cbb33fb720bd9msi',
-            'use_coupon' => 'N',
+    public function actionRefund_notify(){
+        $refundResult = [
+            'sign' => '8882ad02735879169c01b7e530940054',
+            'result_details' => '2017022721001004880233243222^0.02^REFUND_TRADE_FEE_ERROR',
+            'notify_time' => '2017-02-27 17:35:03',
             'sign_type' => 'MD5',
-            'sign' => 'b8865f37153a1c83898c263e7a0dcfb9'
+            'notify_type' => 'batch_refund_notify',
+            'notify_id' => '3f91ed3396455e934b4fba505f6568fj5y',
+            'batch_no' => '20170227173243001',
+            'success_num' => '0',
         ];
         $payment = Yii::$app->alipay;
-        //
-        $result = $payment->buildOrderFromData($notifyData);
+        $refund = $payment->buildRefundFromData($refundResult);
+        console($refund->toArray());
+    }
+    public function actionNotify(){
+        Yii::error(1);
+        // $notifyData = [
+        //     'discount' => '0.00',
+        //     'payment_type' => '1',
+        //     'subject' => '安全家.安全防爆电器课程',
+        //     'trade_no' => '2017022721001004880233070742',
+        //     'buyer_email' => 'tianlongdiguo@hotmail.com',
+        //     'gmt_create' => '2017-02-27 15:17:49',
+        //     'notify_type' => 'trade_status_sync',
+        //     'quantity' => '1',
+        //     'out_trade_no' => '20170227100233',
+        //     'seller_id' => '2088812483293400',
+        //     'notify_time' => '2017-02-27 15:17:58',
+        //     'body' => '安全家.安全防爆电器课程',
+        //     'trade_status' => 'TRADE_SUCCESS',
+        //     'is_total_fee_adjust' => 'N',
+        //     'total_fee' => '0.01',
+        //     'gmt_payment' => '2017-02-27 15:17:58',
+        //     'seller_email' => 'alicloud@trainor.cn',
+        //     'price' => '0.01',
+        //     'buyer_id' => '2088302401130884',
+        //     'notify_id' => '1e88c7c03f0458ce97cbb33fb720bd9msi',
+        //     'use_coupon' => 'N',
+        //     'sign_type' => 'MD5',
+        //     'sign' => 'b8865f37153a1c83898c263e7a0dcfb9'
+        // ];
+        // $payment = Yii::$app->alipay;
+        // //
+        // $result = $payment->buildOrderFromData($notifyData);
     }
     public function actionReturn(){
+        Yii::error(2);
         // $notifyData = [
         //     'body' => '安全家.安全防爆电器课程',
         //     'buyer_email' => 'tianlongdiguo@hotmail.com',

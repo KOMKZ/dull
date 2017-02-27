@@ -3,17 +3,14 @@ namespace alipay;
 
 
 use yii\base\Object;
-use yii\helpers\ArrayHelper;
-
+use yii\base\ArrayableTrait;
 
 /**
  *
  */
 class PayOrder extends Object
 {
-    public function toArray(){
-        return ArrayHelper::toArray($this);
-    }
+    use ArrayableTrait;
 
     /**
     * 说明: 商户网站唯一订单号

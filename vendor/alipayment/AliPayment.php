@@ -4,7 +4,9 @@ namespace alipay;
 use Yii;
 use yii\base\Object;
 use alipay\PayOrder;
+use alipay\Refund;
 use alipay\PayNotifyResponse;
+use alipay\RefundNotifyResponse;
 use alipay\Helper;
 
 /**
@@ -74,6 +76,8 @@ class AliPayment extends Object
     */
     public $return_url;
 
+    public $refund_notify_url;
+
     /**
     *签名方式
     */
@@ -119,11 +123,7 @@ class AliPayment extends Object
     private $_payment_type = 1;
     public function getPayment_type(){return $this->_payment_type;}
 
-    /**
-    * 产品类型，无需修改
-    */
-    private $_service = 'create_direct_pay_by_user';
-    public function getService(){return $this->_service;}
+
 
 
     /**
@@ -165,16 +165,30 @@ class AliPayment extends Object
     private $_pay_notify;
     public function getPay_notify(){return $this->_pay_notify;}
 
+    private $_refund_notify;
+    public function getRefund_notify(){return $this->_refund_notify;}
+
 
 
     public function createOrder(){
         return new PayOrder();
     }
 
+    public function createRefund(){
+        return new Refund();
+    }
+
     public function buildOrderUrl(PayOrder $order){
-        $para = $this->appendRequiredPara($order->toArray());
+        $para = $this->appendOrderPara($order->toArray());
         $para = $this->buildRequestPara($para);
         return $this->_alipay_gateway_new . http_build_query($para);
+    }
+
+    public function buildRefundUrl(Refund $refund){
+        $para = $this->appendRefundPara($refund->toArray());
+        $para = $this->buildRequestPara($para);
+        return $this->_alipay_gateway_new . http_build_query($para);
+
     }
 
     /**
@@ -197,6 +211,25 @@ class AliPayment extends Object
             }
             $this->_pay_notify = $notify;
             return $payOrder;
+        }else{
+            return null;
+        }
+    }
+
+    public function buildRefundFromData($refundResult){
+        if($this->verify($returnData)){
+            $notify = new RefundNotifyResponse();
+            $refund = new Refund();
+            foreach($refundResult as $name => $value){
+                if($notify->canSetProperty($name)){
+                    $notify->$name = $value;
+                }
+                if($refund->canSetProperty($name)){
+                    $refund->$name = $value;
+                }
+            }
+            $this->_refund_notify = $notify;
+            return $refund;
         }else{
             return null;
         }
@@ -226,13 +259,9 @@ class AliPayment extends Object
 
 
 
-    protected function request(){
-
-    }
-
-    protected function appendRequiredPara($para){
+    protected function appendOrderPara($para){
         $corePara = [
-            'service' => $this->_service,
+            'service' => 'create_direct_pay_by_user',
             'partner' => $this->partner,
             'seller_id' => $this->getSeller_id(),
             'payment_type' => $this->_payment_type,
@@ -240,6 +269,18 @@ class AliPayment extends Object
             'notify_url' => $this->notify_url,
             'anti_phishing_key' => $this->anti_phishing_key,
             'exter_invoke_ip' => $this->exter_invoke_ip,
+            '_input_charset' => $this->_input_charset
+        ];
+        return array_merge($para, $corePara);
+    }
+
+    protected function appendRefundPara($para){
+        $corePara = [
+            'service' => 'refund_fastpay_by_platform_pwd',
+            'partner' => $this->partner,
+            'seller_email' => $this->seller_email,
+            'notify_url' => $this->refund_notify_url,
+            'refund_date' => date("Y-m-d H:i:s",time()),
             '_input_charset' => $this->_input_charset
         ];
         return array_merge($para, $corePara);

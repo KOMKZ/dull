@@ -24,6 +24,17 @@ class DemoController extends Controller
         return $this->renderPartial('index');
     }
 
+    public function actionRefund(){
+        $payment = Yii::$app->alipay;
+
+        $refund = $payment->createRefund();
+
+        $refund->batch_no = (date("YmdHis",time())).'001';
+        $refund->addOneRefund('2017022721001004880233243222', '0.02', '课程退款');
+
+        $refundUrl = $payment->buildRefundUrl($refund);
+        console($refundUrl);
+    }
 
     public function actionDemo(){
         $payment = Yii::$app->alipay;
@@ -33,7 +44,7 @@ class DemoController extends Controller
          * 20170227100231,
          * 20170227100232
          */
-        $payOrder->out_trade_no = '20170227100233';
+        $payOrder->out_trade_no = '20170227100234';
         $payOrder->total_fee = '0.01';
         $payOrder->subject = '安全家.安全防爆电器课程';
         $payOrder->body = '安全家.安全防爆电器课程';
