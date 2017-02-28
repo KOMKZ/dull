@@ -23,7 +23,7 @@ $requird_users = [
 $test_users = [];
 $userData = ['User' => [], 'UserIdentity' => []];
 $i = 0;
-while($i < 2){
+while($i < 3){
     $faker = \Faker\Factory::create();
     $userData['User'] = [
         'u_username' => strtolower($faker->firstName.'_'.$faker->lastName),

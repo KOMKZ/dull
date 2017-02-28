@@ -4,6 +4,7 @@ namespace common\models\user;
 use Yii;
 use common\base\Model;
 use common\models\user\tables\User;
+use common\models\user\tables\UserFocus;
 use common\models\user\tables\UserIdentity;
 use common\models\email\EmailModel;
 use yii\data\ActiveDataProvider;
@@ -155,7 +156,7 @@ class UserModel extends Model
                 $this->sendAuthEmailToUser($user);
             }
 
-            // $transaction->commit();
+            $transaction->commit();
             return $user;
         } catch (\Exception $e) {
             $transaction->rollback();
@@ -206,6 +207,9 @@ class UserModel extends Model
                 $this->addError('', Yii::t('app', '数据写入失败'));
                 return false;
             }
+
+            // 加入关注者
+
             $transaction->commit();
             return $user;
         } catch (\Exception $e) {
@@ -215,6 +219,84 @@ class UserModel extends Model
             return false;
         }
     }
+
+    public function addUserUFocus($uid, $fuids = [], $strict = true){
+        $master = User::find()->where(['u_id' => $uid])->asArray()->one();
+        if(!$master){
+            $this->addError("", "{$uid}不存在");
+            return false;
+        }
+        $validFuids = array_keys(User::find()
+                                  ->select('u_id')
+                                  ->where(['in', 'u_id', $fuids])
+                                  ->asArray()
+                                  ->indexBy('u_id')
+                                  ->all()
+                                  );
+
+        if($strict && !empty($invalidFuids = array_diff_assoc($fuids, $validFuids))){
+            $this->addError('', sprintf('用户id不存在：%s', implode(', ', $invalidFuids)));
+            return false;
+        }
+        $query =      UserFocus::find()->select('uf_f_uid')
+                                       ->where(['in', 'uf_f_uid', $fuids]);
+        $focusFuids = array_keys($query->andWhere(['=', 'uf_uid', $uid])
+                                       ->asArray()
+                                       ->indexBy('uf_f_uid')
+                                       ->all());
+
+        $fuids = array_diff_assoc($validFuids, $focusFuids);
+        if(!empty($fuids)){
+            $focusData = [];
+            foreach($fuids as $fuid){
+                $focusData[] = ['uf_uid' => $uid, 'uf_f_uid' => $fuid, 'uf_created_at' => time()];
+            }
+            $cmd = Yii::$app->db->createCommand()->batchInsert(UserFocus::tableName(), ['uf_uid', 'uf_f_uid', 'uf_created_at'], $focusData);
+            $cmd->execute();
+            return true;
+        }
+        return true;
+    }
+
+    public function removeUserUFocus($uid, $fuids = []){
+        $master = User::find()->where(['u_id' => $uid])->asArray()->one();
+        if(!$master){
+            $this->addError("", "{$uid}不存在");
+            return false;
+        }
+        UserFocus::deleteAll(['and', ['=', 'uf_uid', $uid], ['in', 'uf_f_uid', $fuids]]);
+        return true;
+    }
+
+    public function getUserUFocus($uid){
+       $query = UserFocus::find()
+                           ->joinWith('user_info')
+                           ->where(['uf_uid' => $uid])->asArray();
+       $provider = new ActiveDataProvider([
+           'query' => $query
+       ]);
+       $pagination = $provider->getPagination();
+       return [$provider, $pagination];
+    }
+
+    public function getUserUFans($uid){
+
+    }
+
+    public function hadOneFocus($uid, $fuid){
+
+    }
+
+    public function hadOneFan($uid, $fuid){
+
+    }
+
+    protected static function getUserFocusTableName(){
+        return "{{%user_focus}}";
+    }
+
+
+
     public static function signData($data){
         ksort($data);
         $key = 'philips';

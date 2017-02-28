@@ -8,6 +8,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use common\models\email\EmailModel;
 use alipay\AliPayment;
 use yii\helpers\ArrayHelper;
+use common\models\user\UserModel;
 
 
 /**
@@ -16,6 +17,19 @@ use yii\helpers\ArrayHelper;
 class DemoController extends Controller
 {
     public $enableCsrfValidation = false;
+
+
+
+    public function actionA(){
+        $userModel = new UserModel();
+        // $result = $userModel->addUserUFocus(2, [1, 3, 4, 5], false);
+        // console($result, $userModel->getOneError());
+        // $result = $userModel->removeUserUFocus(2, [1, 3, 4, 5]);
+        // console($result, $userModel->getOneError());
+        list($provider, ) = $userModel->getUserUFocus(2);
+        $result = $provider->getModels();
+        console($result);
+    }
 
     public function actionAlipayapi(){
         return $this->renderPartial('alipayapi');
