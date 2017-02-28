@@ -60,6 +60,8 @@ class AliPayment extends Object
      */
     public $key;
 
+    public $order_time_out = '30m';
+
     /**
     *支付宝的公钥，查看地址：https://b.alipay.com/order/pidAndKey.htm
     */
@@ -235,8 +237,12 @@ class AliPayment extends Object
         }
     }
 
+    public function success(){
+        echo "success";
+        exit();
+    }
+
     public function verify($returnData){
-        return true;
 		if(empty($returnData)) {
 			return false;
 		}

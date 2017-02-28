@@ -49,6 +49,7 @@ class DemoController extends Controller
         $payOrder->subject = '安全家.安全防爆电器课程';
         $payOrder->body = '安全家.安全防爆电器课程';
         $payOrder->it_b_pay = '1m';
+
         $url = $payment->buildOrderUrl($payOrder);
         console($url);
     }

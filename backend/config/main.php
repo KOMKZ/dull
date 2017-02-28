@@ -52,7 +52,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'baseUrl' => '/admin'
-        ],
+        ]
     ],
     'params' => $params,
 ];

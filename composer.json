@@ -31,7 +31,8 @@
         "budyaga/yii2-cropper": "^2.0",
         "yii2mod/yii2-sweet-alert": "^1.2",
         "yii2tech/crontab": "^1.0",
-        "mytharcher/alipay-php-sdk": "dev-master"
+        "mytharcher/alipay-php-sdk": "dev-master",
+        "riverslei/payment": "^2.7"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -3,11 +3,44 @@ namespace backend\controllers;
 
 use Yii;
 use common\base\AdminController;
+use Payment\QueryContext;
+use Payment\Config;
 
 /**
  *
  */
 class AlipayController extends AdminController{
+    public function actionA(){
+        // 支付宝配置信息
+        $aliconfig = [
+            'partner'   => '2088812483293400',
+            'sign_type' => 'md5',
+            'md5_key'   => 'tmpztj8qacr6axz95kiouqtotoqexhal',
+            "notify_url"	=> 'http://test.helei.com/pay-notify.html',
+            "return_url"	=> 'http://test.helei.com/return-url.html',
+            "time_expire"	=> '14',
+        ];
+
+        $data = [
+            // 通过支付宝交易号查询，  推荐  效率更高
+            'transaction_id'    => '2016011421001004330041239366',// 支付宝
+
+            // 通过订单号查询
+            'order_no'    => '2016011402433464',// 支付宝
+        ];
+
+        $query = new QueryContext();
+
+        try {
+            // 支付宝查询
+            $query->initQuery(Config::ALI, $aliconfig);
+            $ret = $query->query($data);
+
+        } catch (PayException $e) {
+            echo $e->errorMessage();exit;
+        }
+        console($ret);
+    }
     public function actionRefund_notify(){
         $refundResult = [
             'sign' => '8882ad02735879169c01b7e530940054',
@@ -54,7 +87,7 @@ class AlipayController extends AdminController{
         // //
         // $result = $payment->buildOrderFromData($notifyData);
     }
-    public function actionReturn(){
+    public function actionReturn() {
         Yii::error(2);
         // $notifyData = [
         //     'body' => '安全家.安全防爆电器课程',

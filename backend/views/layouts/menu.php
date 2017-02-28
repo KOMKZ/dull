@@ -158,6 +158,11 @@ return [
             'url' => '#',
             'items' => [
                 [
+                    'label' => '我的邮箱',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/email/index']
+                ],
+                [
                     'label' => '发送邮件',
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/email/send']

@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use common\models\notify\NotifyModel;
+use yii\helpers\Url;
 
 
 class AdminController extends Controller
@@ -48,9 +49,11 @@ class AdminController extends Controller
             $viewComponent = Yii::$app->view;
             $viewComponent->params['notifications'] = NotifyModel::getLatestUserMsg(Yii::$app->user->getId(), 5, '0');
             $viewComponent->params['notifications_count'] = count($viewComponent->params['notifications']);
+            $viewComponent->params['notifications_view_all'] = Url::toRoute(['notify/index']);
         }else{
             $viewComponent->params['notifications'] = [];
             $viewComponent->params['notifications_count'] = 0;
+            $viewComponent->params['notifications_view_all'] = '#';
         }
         $content = $viewComponent->render($view, $params, $this);
         return $this->renderContent($content);

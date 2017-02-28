@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use Yii;
 use common\base\AdminController;
 use common\models\email\EmailModel;
 
@@ -10,6 +11,8 @@ class EmailController extends AdminController
 
     public function actionIndex()
     {
+        $mailbox = Yii::$app->imap->connection;
+        print_r($mailbox->searchMailBox(ALL));
         return $this->render('index');
     }
 

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4bac051b46a00782df58304678f5b718",
-    "content-hash": "16eda9b2df7c595f6c3e2370fd0a81d7",
+    "hash": "b697856a7123e400d034c4d12ae1ad37",
+    "content-hash": "563ed1693410394332c28648ee54a6dc",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -1105,6 +1105,48 @@
             "time": "2015-09-19 16:54:05"
         },
         {
+            "name": "mytharcher/alipay-php-sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mytharcher/alipay-php-sdk.git",
+                "reference": "23916466816e4645e98d6ea9eb849096fd43610b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mytharcher/alipay-php-sdk/zipball/23916466816e4645e98d6ea9eb849096fd43610b",
+                "reference": "23916466816e4645e98d6ea9eb849096fd43610b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mytharcher\\sdk\\alipay\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mytharcher",
+                    "email": "mytharcher@gmail.com"
+                }
+            ],
+            "description": "Refactored Alipay PHP SDK (include mobile version). 经重构的支付宝 PHP 开发包（含移动网页支付）",
+            "keywords": [
+                "alipay",
+                "php",
+                "sdk",
+                "支付宝"
+            ],
+            "time": "2016-08-20 03:57:45"
+        },
+        {
             "name": "php-amqplib/php-amqplib",
             "version": "v2.6.3",
             "source": {
@@ -1233,6 +1275,53 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "time": "2017-01-09 09:33:47"
+        },
+        {
+            "name": "riverslei/payment",
+            "version": "v2.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/helei112g/payment.git",
+                "reference": "b8797351d2dbf6b4ac3b9b172feb6228555062a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/helei112g/payment/zipball/b8797351d2dbf6b4ac3b9b172feb6228555062a0",
+                "reference": "b8797351d2dbf6b4ac3b9b172feb6228555062a0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Payment\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "helei",
+                    "email": "dayugog@gmail.com",
+                    "homepage": "https://helei112g.github.io/"
+                }
+            ],
+            "description": "集成支付宝、微信支付等流行的支付接口，后续会持续跟进中",
+            "homepage": "https://helei112g.github.io/",
+            "keywords": [
+                "alipay",
+                "weixin",
+                "微信支付",
+                "支付宝支付",
+                "集成支付接口SDK"
+            ],
+            "time": "2017-02-21 09:16:16"
         },
         {
             "name": "rmrevin/yii2-fontawesome",
@@ -4232,8 +4321,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "mytharcher/alipay-php-sdk": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
