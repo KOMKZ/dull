@@ -30,6 +30,36 @@ class InstallController extends Controller{
         $this->installRbacData();
         echo ":)\n";
     }
+    public function actionFakerUser(){
+        printf("\nnow installing faker user data...\n");
+
+        $userModel = new UserModel();
+        $userData = ['User' => [], 'UserIdentity' => []];
+        $i = 0;
+        while($i < 10000){
+            $faker = \Faker\Factory::create();
+            $userData['User'] = [
+                'u_username' => strtolower($faker->firstName.'_'.$faker->lastName.mt_rand(111111, 999999)),
+                'u_email' => mt_rand(111111, 999999).$faker->email,
+                'password' => '123456',
+                'password_confirm' => '123456',
+                'u_status' => User::STATUS_ACTIVE,
+                'u_auth_status' => User::STATUS_AUTHED,
+            ];
+            $userData['UserIdentity'] = [
+                'ui_gid' => UserGroup::TEST_GROUP
+            ];
+            printf("installed user -> {$userData['User']['u_username']}\n");
+            $result = $userModel->createUser($userData, true);
+            if(!$result){
+                list($code, $error) = $userModel->getOneError();
+                echo sprintf("error: %s, %s\n", $code, $error);
+            }
+            $i++;
+        }
+
+
+    }
     public function actionUserData(){
         $this->installUserGroupData();
         $this->installUserAssign();

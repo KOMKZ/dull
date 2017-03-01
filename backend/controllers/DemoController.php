@@ -26,9 +26,12 @@ class DemoController extends Controller
         // console($result, $userModel->getOneError());
         // $result = $userModel->removeUserUFocus(2, [1, 3, 4, 5]);
         // console($result, $userModel->getOneError());
-        list($provider, ) = $userModel->getUserUFocus(2);
+
+        list($provider, ) = $userModel->getUserUFans(1);
         $result = $provider->getModels();
         console($result);
+        //
+        console($userModel->hadOneFocus(2, 1));
     }
 
     public function actionAlipayapi(){

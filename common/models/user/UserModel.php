@@ -209,6 +209,9 @@ class UserModel extends Model
             }
 
             // 加入关注者
+            if(1 != $user->u_id){
+                $this->addUserUFocus($user->u_id, [1]);
+            }
 
             $transaction->commit();
             return $user;
@@ -269,9 +272,19 @@ class UserModel extends Model
     }
 
     public function getUserUFocus($uid){
+       $u = User::tableName();
+       $uf = UserFocus::tableName();
        $query = UserFocus::find()
-                           ->joinWith('user_info')
-                           ->where(['uf_uid' => $uid])->asArray();
+                           ->select('
+                           uf.*,
+                           u.u_username,
+                           u_f.u_username as u_f_username
+                           ')
+                           ->from(sprintf('(%s as uf)', UserFocus::tableName()))
+                           ->leftJoin(sprintf('(%s as u)', User::tableName()), 'uf.uf_uid = u.u_id')
+                           ->leftJoin(sprintf('(%s as u_f)', User::tableName()), 'uf.uf_f_uid = u_f.u_id')
+                           ->where(['uf.uf_uid' => $uid])
+                           ->asArray();
        $provider = new ActiveDataProvider([
            'query' => $query
        ]);
@@ -280,15 +293,42 @@ class UserModel extends Model
     }
 
     public function getUserUFans($uid){
-
+        $u = User::tableName();
+        $uf = UserFocus::tableName();
+        $query = UserFocus::find()
+                            ->select('
+                            uf.*,
+                            u.u_username,
+                            u_f.u_username as u_f_username
+                            ')
+                            ->from(sprintf('(%s as uf)', UserFocus::tableName()))
+                            ->leftJoin(sprintf('(%s as u)', User::tableName()), 'uf.uf_uid = u.u_id')
+                            ->leftJoin(sprintf('(%s as u_f)', User::tableName()), 'uf.uf_f_uid = u_f.u_id')
+                            ->where(['uf.uf_f_uid' => $uid])
+                            ->asArray();
+        $provider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+        $pagination = $provider->getPagination();
+        return [$provider, $pagination];
     }
 
     public function hadOneFocus($uid, $fuid){
-
+        $uf = UserFocus::tableName();
+        $sql = "
+            select 1 from $uf where uf_uid = :p1 and uf_f_uid = :p2
+        ";
+        $result = Yii::$app->db->createCommand($sql,[':p1' => $uid, ':p2' => $fuid])->queryOne();
+        return !!$result;
     }
 
     public function hadOneFan($uid, $fuid){
-
+        $uf = UserFocus::tableName();
+        $sql = "
+            select 1 from $uf where uf_uid = :p1 and uf_f_uid = :p2
+        ";
+        $result = Yii::$app->db->createCommand($sql,[':p1' => $fuid, ':p2' => $uid])->queryOne();
+        return !!$result;
     }
 
     protected static function getUserFocusTableName(){
