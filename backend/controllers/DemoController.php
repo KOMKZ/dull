@@ -9,6 +9,7 @@ use common\models\email\EmailModel;
 use alipay\AliPayment;
 use yii\helpers\ArrayHelper;
 use common\models\user\UserModel;
+use common\models\notify\NotifyModel;
 
 
 /**
@@ -18,7 +19,12 @@ class DemoController extends Controller
 {
     public $enableCsrfValidation = false;
 
+    public function actionB(){
+        $notifyModel = new NotifyModel();
+        $result = $notifyModel->test(2);
+        console($result);
 
+    }
 
     public function actionA(){
         $userModel = new UserModel();

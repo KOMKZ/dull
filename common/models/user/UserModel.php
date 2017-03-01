@@ -271,7 +271,7 @@ class UserModel extends Model
         return true;
     }
 
-    public function getUserUFocus($uid){
+    public function getUserUFocus($uid, $withPage = true){
        $u = User::tableName();
        $uf = UserFocus::tableName();
        $query = UserFocus::find()
@@ -285,6 +285,11 @@ class UserModel extends Model
                            ->leftJoin(sprintf('(%s as u_f)', User::tableName()), 'uf.uf_f_uid = u_f.u_id')
                            ->where(['uf.uf_uid' => $uid])
                            ->asArray();
+       if(!$withPage){
+           $pageConfig['pageSize'] = 0;
+       }else{
+           $pageConfig['pageSize'] = 10;
+       }
        $provider = new ActiveDataProvider([
            'query' => $query
        ]);

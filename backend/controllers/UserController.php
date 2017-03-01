@@ -178,10 +178,14 @@ class UserController extends AdminController
         if(!$one){
             return $this->error(Yii::t('app', '数据不存在'));
         }
+        list($fansProvider, $pagination) = $userModel->getUserUFans($u_id);
+        list($focusProvider, $pagination) = $userModel->getUserUFocus($u_id);
         return $this->render('view', [
             'model' => $one,
             'userStatusMap' => User::getValidConsts('u_status'),
             'userAuthStatusMap' => User::getValidConsts('u_auth_status'),
+            'fansProvider' => $fansProvider,
+            'focusProvider' => $focusProvider
         ]);
     }
 

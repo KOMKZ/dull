@@ -2,7 +2,11 @@
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\Html;
-
+if(Yii::$app->user->isGuest){
+    $u_username = '';
+}else{
+    $u_username = Yii::$app->user->identity->u_username;
+}
 $js = <<<JS
     function merge(target, source) {
         if ( typeof target !== 'object' ) {
@@ -169,7 +173,7 @@ $this->registerJs($js);
             <div class="box-body">
                 <form id="pull-form" action="<?= $pullNotifyUrl?>" method="post">
                     <div class="form-group">
-                        <input type="hidden" name="u_username" value="admin">
+                        <input type="hidden" name="u_username" value="<?= $u_username;?>">
                         <input type="submit" name="" value="主动拉取" class="btn btn-default">
                     </div>
                 </form>

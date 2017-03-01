@@ -15,6 +15,7 @@ class SysMsg extends ActiveRecord
 {
     const GLOBAL_MSG = 1;
     const PRIVATE_MSG = 2;
+    const FOCUS_PULL_MSG = 3;
 
 
 
@@ -105,7 +106,8 @@ class SysMsg extends ActiveRecord
                 ],
                 'sm_object_type' => [
                     self::GLOBAL_MSG => Yii::t('app', '全局消息'),
-                    self::PRIVATE_MSG => Yii::t('app', '个人消息')
+                    self::PRIVATE_MSG => Yii::t('app', '个人消息'),
+                    self::FOCUS_PULL_MSG => Yii::t('app', '关注用户拉取消息')
                 ],
                 'sm_tpl_type' => NotifyModel::getMTplTypeMap(true)
             ];

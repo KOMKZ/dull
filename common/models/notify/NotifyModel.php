@@ -47,7 +47,7 @@ class NotifyModel extends Model
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $query = $this->getUserNewMsgQuery($uid);
-            $newMsg = $query->asArray()->all();
+            $newMsg = $query->all();
             if($newMsg){
                 $data = [];
                 foreach($newMsg as $item){
@@ -88,8 +88,46 @@ class NotifyModel extends Model
     protected function getUserNewMsgQuery($uid){
         $sysMsgTable = SysMsg::tableName();
         $userMsgTable = UserMsg::tableName();
+        $gQuery = SysMsg::find()
+                       ->from(sprintf('(%s as s)', $sysMsgTable))
+                       ->select('s.*, um.*')
+                       ->leftJoin(sprintf('(%s as um)', $userMsgTable), 's.sm_id = um.um_mid and um.um_uid = :uid', [':uid' => $uid]);
+        $gQuery->andWhere(['>=', 's.sm_expired_at', time()]);
+        $gQuery->andWhere(['=', 's.sm_object_type', SysMsg::GLOBAL_MSG]);
+        $gQuery->andWhere(['is', 'um.um_id', Null]);
+
+        $userModel = new UserModel();
+        list($focusUserProvider, ) = $userModel->getUserUFocus($uid);
+        $fuids = array_unique(ArrayHelper::getColumn($focusUserProvider->getModels(), 'uf_f_uid'));
+
+        if(!empty($fuids)){
+            $pullQuery = SysMsg::find()
+            ->from(sprintf('(%s as s)', $sysMsgTable))
+            ->select('s.*, um.*')
+            ->leftJoin(sprintf('(%s as um)', $userMsgTable), 's.sm_id = um.um_mid and um.um_uid = :uid', [':uid' => $uid]);
+            $pullQuery->andWhere(['>=', 's.sm_expired_at', time()]);
+            $pullQuery->andWhere(['=', 's.sm_object_type', SysMsg::FOCUS_PULL_MSG]);
+            $pullQuery->andWhere(['in', 's.sm_object_id', $fuids]);
+            $pullQuery->andWhere(['is', 'um.um_id', Null]);
+            $gQuery->union($pullQuery);
+        }
+
+        $query = (new \yii\db\Query())
+                 ->select('*')
+                 ->from(['tmp' => $gQuery])
+                 ->orderBy(['sm_created_at' => SORT_DESC]);
+        return $query;
+    }
+
+    public function test($uid){
+
+
+
+
+        $sysMsgTable = SysMsg::tableName();
+        $userMsgTable = UserMsg::tableName();
         $sql = "
-        select
+        (select
             s.*, um.*
         from
             $sysMsgTable as s
@@ -105,15 +143,39 @@ class NotifyModel extends Model
             s.sm_object_type = :global_type
             and
             um.um_id is null
+        )
+        union
+        (select
+            s.*, um.*
+        from
+            $sysMsgTable as s
+        left join
+            $userMsgTable as um
+        on
+            s.sm_id = um.um_mid
+            and
+            um.um_uid = :uid
+        where
+            s.sm_expired_at >= :time
+            and
+            s.sm_object_type = :pull_type
+            and
+            um.um_id is null
+        )
+
         ";
         $params = [
             ':time' => time(),
             ':global_type' => SysMsg::GLOBAL_MSG,
+            ':pull_type' => SysMsg::FOCUS_PULL_MSG,
             ':uid' => $uid
         ];
         $query = SysMsg::findBySql($sql, $params);
         return $query;
+
     }
+
+
 
     public static function getLatestUserMsg($uid, $num = 5, $status = '1,0'){
         $status = explode(',', $status);
