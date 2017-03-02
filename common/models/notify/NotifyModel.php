@@ -39,6 +39,7 @@ class NotifyModel extends Model
     }
 
     public function pullUserMsg($uid, $save = true){
+
         $userModel = new UserModel();
         $user = $userModel->getOne(['u_id' => $uid]);
         if(!$user){
@@ -65,6 +66,7 @@ class NotifyModel extends Model
                     $sqlCommand->execute();
                 }
                 $transaction->commit();
+
                 return $data;
             }else{
                 return [];
@@ -312,7 +314,6 @@ class NotifyModel extends Model
                     $this->addError('', Yii::t('app', '插入失败'));
                     return false;
                 }
-
                 $transaction->commit();
                 return $userMsg;
             }

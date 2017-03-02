@@ -10,7 +10,8 @@ use alipay\AliPayment;
 use yii\helpers\ArrayHelper;
 use common\models\user\UserModel;
 use common\models\notify\NotifyModel;
-
+use common\models\notify\tables\SysMsg;
+use yii\helpers\Url;
 
 /**
  *
@@ -19,8 +20,25 @@ class DemoController extends Controller
 {
     public $enableCsrfValidation = false;
 
+    public function actionC(){
+        $notifyModel = new NotifyModel();
+        $msgData = [
+            'sm_use_tpl' => 1,
+            'sm_object_type' => SysMsg::FOCUS_PULL_MSG,
+            'sm_object_id' => 1,
+            'sm_tpl_type' => 'publist_post',
+        ];
+        $user = Yii::$app->user->identity;
+        $notifyModel->createMsg($msgData, [
+            '{focus_username}' => $user->u_username,
+            '{post_title}' => '《进击的巨人》舞台剧预告 经典人设、场景逼真还原',
+            '{post_url}' => Url::toRoute(['post/view', 'id' => 1])
+        ]);
+    }
+
     public function actionB(){
         $notifyModel = new NotifyModel();
+        // test pull msg sql
         $result = $notifyModel->test(2);
         console($result);
 

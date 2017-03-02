@@ -58,7 +58,11 @@ $js = <<<JS
             if(res.code > 0){
                 sweetAlert("", res.message, "error");
             }else{
-                swal(res.data.um_title, res.data.um_content);
+                swal({
+                    title: res.data.um_title,
+                    text: res.data.um_content,
+                    html: true
+                });
             }
         }, 'json')
         return false;

@@ -13,6 +13,7 @@ $js = <<<JS
         swal({
             title: $(this).attr('data-title'),
             text: $(this).attr('data-content'),
+            html: true,
             type: "info",
             showCancelButton: false,
             confirmButtonColor: "#DD6B55",
@@ -163,7 +164,7 @@ $this->registerJs($js);
                                     foreach($this->params['notifications'] as $item){
                                         echo strtr($msgItem, [
                                             ':title' => $item['um_title'],
-                                            ':content' => $item['um_content'],
+                                            ':content' => Html::encode($item['um_content']),
                                             ':href' => Yii::$app->apiurl->createAbsoluteUrl([
                                                 'notify/set-notify-read',
                                                 'um_id' => $item['um_id']
