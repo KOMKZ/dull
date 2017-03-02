@@ -2,7 +2,7 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
+use common\base\AdminController as Controller;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use common\models\email\EmailModel;
@@ -19,6 +19,11 @@ use yii\helpers\Url;
 class DemoController extends Controller
 {
     public $enableCsrfValidation = false;
+
+
+    public function actionD(){
+        return $this->render('d.php');
+    }
 
     public function actionC(){
         $notifyModel = new NotifyModel();

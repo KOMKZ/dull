@@ -32,7 +32,8 @@
         "yii2mod/yii2-sweet-alert": "^1.2",
         "yii2tech/crontab": "^1.0",
         "mytharcher/alipay-php-sdk": "dev-master",
-        "riverslei/payment": "^2.7"
+        "riverslei/payment": "^2.7",
+        "loveorigami/yii2-jquery-loading": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

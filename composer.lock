@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b697856a7123e400d034c4d12ae1ad37",
-    "content-hash": "563ed1693410394332c28648ee54a6dc",
+    "hash": "942e2bca980a4492777afc82d84c11c4",
+    "content-hash": "908bb06ec0051b82211ded2844a48425",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -397,6 +397,49 @@
                 "jquery",
                 "library"
             ]
+        },
+        {
+            "name": "bower-asset/jquery-loading",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CarlosBonetti/jquery-loading.git",
+                "reference": "9e125b7e29f01c5b6af8dd311ef099b512b87a83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CarlosBonetti/jquery-loading/zipball/9e125b7e29f01c5b6af8dd311ef099b512b87a83",
+                "reference": "9e125b7e29f01c5b6af8dd311ef099b512b87a83",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7.0"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "dist/jquery.loading.min.css",
+                    "dist/jquery.loading.min.js"
+                ],
+                "bower-asset-ignore": [
+                    "node_modules"
+                ],
+                "branch-alias": {
+                    "dev-master": "1.2.0-dev"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Easily add and manipulate loading states of any element on the page",
+            "keywords": [
+                "ajax",
+                "jquery",
+                "loader",
+                "loading",
+                "overlay"
+            ],
+            "time": "2016-11-01 12:57:30"
         },
         {
             "name": "bower-asset/jquery.inputmask",
@@ -1103,6 +1146,50 @@
                 "image processing"
             ],
             "time": "2015-09-19 16:54:05"
+        },
+        {
+            "name": "loveorigami/yii2-jquery-loading",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/loveorigami/yii2-jquery-loading.git",
+                "reference": "782348afaf46b060dad17ece3acfacf5618891e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/loveorigami/yii2-jquery-loading/zipball/782348afaf46b060dad17ece3acfacf5618891e7",
+                "reference": "782348afaf46b060dad17ece3acfacf5618891e7",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-loading": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "lo\\widgets\\loading\\": "/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lukyanov Andrey",
+                    "homepage": "http://loveorigami.info"
+                }
+            ],
+            "description": "A wrapper around Yii2 jquery loading for using with AJAX requests",
+            "homepage": "https://github.com/loveorigami/yii2-jquery-loading",
+            "keywords": [
+                "ajax",
+                "jquery-loading",
+                "loading",
+                "yii2"
+            ],
+            "time": "2016-09-30 09:32:16"
         },
         {
             "name": "mytharcher/alipay-php-sdk",
