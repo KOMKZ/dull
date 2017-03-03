@@ -124,3 +124,9 @@ google 反带
 https://github.com/rptec/ngx_http_google_filter_module
 
 https://github.com/arogozin/tagcloud
+
+jquery 插件模板
+https://github.com/jquery-boilerplate/jquery-patterns
+http://kolodny.github.io/blog/blog/2013/12/27/my-favorite-jquery-plugin-template/
+
+48
