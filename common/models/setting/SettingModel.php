@@ -19,7 +19,7 @@ class SettingModel extends Model
     }
 
     public function getProvider(){
-        
+
     }
 
     public function update($condition, $data = []){
@@ -27,11 +27,15 @@ class SettingModel extends Model
     }
 
     public function create($def){
-
+        console($def);
     }
 
     public function remove($name){
 
+    }
+
+    protected function createValidators(){
+        
     }
 
 
