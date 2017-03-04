@@ -1,15 +1,116 @@
 <?php
 namespace common\models\setting\tables;
 
+use Yii;
 use common\base\ActiveRecord;
+
 
 /**
  *
  */
 class Setting extends ActiveRecord
 {
+    CONST M_WEBSITE = 1;
+
+    const STRING = 1;
+
+    const W_TEXT = 1;
+
+    static protected $_constMap = [];
+
     public static function tableName(){
         return "{{%setting}}";
+    }
+
+    public function behaviors(){
+        return [
+            [
+                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'createdAtAttribute' => 'set_created_at',
+                'updatedAtAttribute' => false
+            ]
+        ];
+    }
+
+    public function rules(){
+        return [
+            ['set_name', 'required'],
+            ['set_name', 'string', 'min' => 2, 'max' => 30],
+
+            ['set_value_type', 'default', 'value' => self::STRING],
+            ['set_value_type', 'in', 'range' => self::getValidConsts('set_value_type', true)],
+
+            ['set_des', 'string', 'max' => 100],
+
+            ['set_parent_id', 'default', 'value' => 0],
+            ['set_parent_id', 'number'],
+
+            ['set_module', 'default', 'value' => 0],
+            ['set_module', 'number'],
+
+            ['set_active', 'default', 'value' => 1],
+            ['set_active', 'filter', 'filter' => 'intval'],
+
+            [
+                [
+                    'set_value',
+                    // 'set_validators',
+                    // 'set_validators_params',
+                    'set_widget',
+                    'set_widget_params',
+
+                    // extra_fileds
+                    'set_module_name'
+                ], 'safe'
+            ]
+        ];
+    }
+
+    public static function getValidConsts($type, $onlyValue = false){
+        if(empty(self::$_constMap)){
+            self::$_constMap = [
+                'set_value_type' => [
+                    self::STRING => Yii::t('app', '字符串')
+                ],
+                'set_module' => [
+                    self::M_WEBSITE => Yii::t('app', '网站设置'),
+                ],
+                'set_widget' => [
+                    self::W_TEXT => Yii::t('app', '普通文本框'),
+                ],
+            ];
+        }
+        if(array_key_exists($type, self::$_constMap) && !empty(self::$_constMap[$type])){
+            return $onlyValue ? array_keys(self::$_constMap[$type]) : self::$_constMap[$type];
+        }else{
+            throw new \Exception("zh:不存在常量映射定义{$type}");
+        }
+    }
+
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields,[
+            'set_module_name',
+            'set_value_type_name',
+            'set_widget_name'
+        ]);
+    }
+
+
+
+    public function getSet_value_type_name(){
+        $map = self::getValidConsts('set_value_type');
+        return $map[$this->set_value_type];
+    }
+
+    public function getSet_module_name(){
+        $map = self::getValidConsts('set_module');
+        return $map[$this->set_module];
+    }
+
+    public function getSet_widget_name(){
+        $map = self::getValidConsts('set_widget');
+        return $map[$this->set_widget];
     }
 
     public function attributeLabels(){

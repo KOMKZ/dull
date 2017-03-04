@@ -20,8 +20,7 @@ class Post extends ActiveRecord
 
     static private $_constMap = [];
 
-    public function behaviors()
-    {
+    public function behaviors(){
         return [
             [
                 'class' => \yii\behaviors\TimestampBehavior::className(),

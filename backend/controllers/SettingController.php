@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use common\base\AdminController;
+use common\models\setting\tables\Setting;
 use common\models\setting\SettingModel;
 
 class SettingController extends AdminController
@@ -9,24 +10,29 @@ class SettingController extends AdminController
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $settingModel = new SettingModel();
+        $setting = $settingModel->all();
+        return $this->render('index', [
+            'settings' => $setting
+        ]);
     }
-
+    public function actionHome(){
+        $settingModel = new SettingModel();
+        $result = $settingModel->all();
+    }
     public function actionDemo(){
         $data = [
             'set_name' => 'web_title',
             'set_value' => 'DULL',
-            'set_value_type' => 'string',
+            'set_value_type' => Setting::STRING,
             'set_des' => '网站名称',
-            'set_module' => 1,
-            'set_parent_id' => 0,
+            'set_module' => Setting::M_WEBSITE,
             'set_validators' => [
-                ['string', 'min' => 3, 'max' => 10]
+                ['string', 'min' => 1, 'max' => 50]
             ],
             'set_validators_params' => '',
-            'set_widget' => 'pure-text',
-            'set_widget_params' => '',
-            'set_active' => time()
+            'set_widget' => Setting::W_TEXT,
+            'set_widget_params' => ''
         ];
         $settingModel = new SettingModel();
         $result = $settingModel->create($data);

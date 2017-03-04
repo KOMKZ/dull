@@ -118,16 +118,15 @@ https://github.com/EvilCult/Video-Downloader
 https://you-get.org/
 
 强大直接播放youku  该作者是牛人
+https://github.com/rptec/rpvideo
 
 google 反带
 https://github.com/rptec/ngx_http_google_filter_module
 
 https://github.com/arogozin/tagcloud
 
+jquery 插件模板
+https://github.com/jquery-boilerplate/jquery-patterns
+http://kolodny.github.io/blog/blog/2013/12/27/my-favorite-jquery-plugin-template/
 
-
-we work with the cross-platform editor TeXworks
-This book uses the freely available TeX Live distribution,
-
-LaTeX will produce the same output on all systems. Though there are different LaTeX
-software packages, so called TeX distributions, we will focus on TeX Live,
+4
