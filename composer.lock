@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "942e2bca980a4492777afc82d84c11c4",
-    "content-hash": "908bb06ec0051b82211ded2844a48425",
+    "hash": "934f8530398d90e877ce43a49f4c4f5a",
+    "content-hash": "02ea59e98b656e4c9ff2aa486859cfa2",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -855,6 +855,49 @@
                 "yii"
             ],
             "time": "2013-12-10 17:49:58"
+        },
+        {
+            "name": "chenkby/yii2-region",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chenkby/yii2-region.git",
+                "reference": "b377af6986f0372bb0707512e52a7b54f7d323c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chenkby/yii2-region/zipball/b377af6986f0372bb0707512e52a7b54f7d323c2",
+                "reference": "b377af6986f0372bb0707512e52a7b54f7d323c2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-widget",
+            "autoload": {
+                "psr-4": {
+                    "chenkby\\region\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "ChenGuanQun",
+                    "email": "99912250@qq.com"
+                }
+            ],
+            "description": "Yii2中国省市区三级联动",
+            "keywords": [
+                "city",
+                "district",
+                "province",
+                "region",
+                "yii2"
+            ],
+            "time": "2017-02-22 07:06:12"
         },
         {
             "name": "digitalnature/php-ref",
@@ -4410,7 +4453,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "mytharcher/alipay-php-sdk": 20
+        "mytharcher/alipay-php-sdk": 20,
+        "chenkby/yii2-region": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

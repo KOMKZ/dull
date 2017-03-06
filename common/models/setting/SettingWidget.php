@@ -9,6 +9,9 @@ use yii\base\Object;
 class SettingWidget extends Object
 {
     const W_TEXT = 1;
+    const W_DATETIME = 2;
+    const W_DROPDOWN = 3;
+    const W_CHECKBOX = 4;
 
     public static function render($setting){
         $renderClass = self::getRenderClass($setting['set_widget']);
@@ -20,7 +23,7 @@ class SettingWidget extends Object
             'label' => $item['set_des'],
             'name' => $item['set_name'],
             'value' => $item['set_value'],
-            'input_options' => $item['set_widget_params']
+            'params' => $item['set_widget_params']
         ];
     }
 
@@ -28,6 +31,12 @@ class SettingWidget extends Object
         switch ($type) {
             case self::W_TEXT:
                 return '\common\models\setting\widgets\Text';
+            case self::W_DATETIME:
+                return '\common\models\setting\widgets\Datetime';
+            case self::W_DROPDOWN:
+                return '\common\models\setting\widgets\Dropdown';
+            case self::W_CHECKBOX:
+                return '\common\models\setting\widgets\CheckBox';
             default:
                 throw new \Exception('Unsupport setting render widget definations');
         }

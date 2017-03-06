@@ -4,6 +4,7 @@ namespace backend\controllers;
 use common\base\AdminController;
 use common\models\setting\tables\Setting;
 use common\models\setting\SettingModel;
+use common\models\setting\SettingWidget;
 
 class SettingController extends AdminController
 {
@@ -20,6 +21,8 @@ class SettingController extends AdminController
         $settingModel = new SettingModel();
         $result = $settingModel->all();
     }
+
+
     public function actionDemo(){
         $data = [
             'set_name' => 'web_title',
@@ -32,6 +35,76 @@ class SettingController extends AdminController
             ],
             'set_validators_params' => '',
             'set_widget' => Setting::W_TEXT,
+            'set_widget_params' => ''
+        ];
+        $settingModel = new SettingModel();
+        $result = $settingModel->create($data);
+        if(!$result){
+            console($settingModel->getOneError());
+        }
+    }
+    public function actionCheckbox(){
+        $data = [
+            'set_name' => 'web_01',
+            'set_value' => 1,
+            'set_value_type' => Setting::NUMBER,
+            'set_des' => '打击目标',
+            'set_module' => Setting::M_WEBSITE,
+            'set_validators' => [
+                ['number']
+            ],
+            'set_validators_params' => '',
+            'set_widget' => SettingWidget::W_CHECKBOX,
+            'set_widget_params' => [
+                'map' => [
+                    1 => '广东省',
+                    2 => '福建省'
+                ]
+            ]
+        ];
+        $settingModel = new SettingModel();
+        $result = $settingModel->create($data);
+        if(!$result){
+            console($settingModel->getOneError());
+        }
+    }
+    public function actionDropdown(){
+        $data = [
+            'set_name' => 'web_area',
+            'set_value' => 1,
+            'set_value_type' => Setting::NUMBER,
+            'set_des' => '攻击地区',
+            'set_module' => Setting::M_WEBSITE,
+            'set_validators' => [
+                ['number']
+            ],
+            'set_validators_params' => '',
+            'set_widget' => SettingWidget::W_DROPDOWN,
+            'set_widget_params' => [
+                'map' => [
+                    1 => '广东省',
+                    2 => '福建省'
+                ]
+            ]
+        ];
+        $settingModel = new SettingModel();
+        $result = $settingModel->create($data);
+        if(!$result){
+            console($settingModel->getOneError());
+        }
+    }
+    public function actionDatetime(){
+        $data = [
+            'set_name' => 'author_birthday',
+            'set_value' => '2012-12-12 12:12:12',
+            'set_value_type' => Setting::DATETIME,
+            'set_des' => '作者生日',
+            'set_module' => Setting::M_WEBSITE,
+            'set_validators' => [
+                ['datetime', 'format' => 'yyyy-MM-dd HH:mm:ss']
+            ],
+            'set_validators_params' => '',
+            'set_widget' => SettingWidget::W_DATETIME,
             'set_widget_params' => ''
         ];
         $settingModel = new SettingModel();

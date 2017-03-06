@@ -3,6 +3,7 @@ namespace common\models\setting\tables;
 
 use Yii;
 use common\base\ActiveRecord;
+use common\models\setting\SettingWidget;
 
 
 /**
@@ -13,6 +14,9 @@ class Setting extends ActiveRecord
     CONST M_WEBSITE = 1;
 
     const STRING = 1;
+    const DATETIME = 2;
+    const NUMBER = 3;
+
 
     const W_TEXT = 1;
 
@@ -70,13 +74,18 @@ class Setting extends ActiveRecord
         if(empty(self::$_constMap)){
             self::$_constMap = [
                 'set_value_type' => [
-                    self::STRING => Yii::t('app', '字符串')
+                    self::STRING => Yii::t('app', '字符串'),
+                    self::DATETIME => Yii::t('app', '时间戳'),
+                    self::NUMBER => Yii::t('app', '数字')
                 ],
                 'set_module' => [
                     self::M_WEBSITE => Yii::t('app', '网站设置'),
                 ],
                 'set_widget' => [
-                    self::W_TEXT => Yii::t('app', '普通文本框'),
+                    SettingWidget::W_TEXT => Yii::t('app', '普通文本框'),
+                    SettingWidget::W_DATETIME => Yii::t('app', '日期时间框'),
+                    SettingWidget::W_DROPDOWN => Yii::t('app', '下拉单选框'),
+                    SettingWidget::W_CHECKBOX => Yii::t('app', 'checkbox多选框')
                 ],
             ];
         }

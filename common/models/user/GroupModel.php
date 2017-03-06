@@ -12,9 +12,6 @@ use yii\helpers\ArrayHelper;
 class GroupModel extends Model
 {
 
-
-
-
     public function getOne($condition){
         if(is_object($condition)){
             return $condition;

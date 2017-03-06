@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'language' => 'zh-CN',
+    // 'language' => 'zh-CN',
     'modules' => [
         'webshell' => [
             'class' => 'samdark\webshell\Module',

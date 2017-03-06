@@ -47,7 +47,6 @@ class SettingModel extends Model
             foreach($validators as $validator){
                 $validator->validateAttribute($setting, 'set_value');
                 if($setting->hasErrors()){
-                    console($setting->getErrors());
                     $this->addError('', $this->getArErrMsg($setting));
                     return false;
                 }
@@ -59,6 +58,9 @@ class SettingModel extends Model
             $setting->set_validators_params = '';
         }
 
+        if(!empty($def['set_widget_params']) && is_array($def['set_widget_params'])){
+            $setting->set_widget_params = json_encode($def['set_widget_params']);
+        }
         $result = $setting->insert(false);
         if(!$result){
             $this->addError('', '插入失败');
