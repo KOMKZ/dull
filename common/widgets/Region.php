@@ -16,32 +16,31 @@ class Region extends Widget
 
 
 
-    public $name;
     public function run(){
         $this->province['value'] = !empty($this->province['value']) ? $this->province['value'] : -1;
         $this->city['value'] = !empty($this->city['value']) ? $this->city['value'] : -1;
         $this->district['value'] = !empty($this->district['value']) ? $this->district['value'] : -1;
         $this->registerJs();
-        $html[] = Html::DropdownList($this->name, null, [], ArrayHelper::merge($this->province['options'], [
+        $html[] = Html::DropdownList($this->province['name'], null, [], ArrayHelper::merge($this->province['options'], [
             'id' => $this->getProvinceId(),
         ]));
-        $html[] = Html::DropdownList($this->name, null, [],  ArrayHelper::merge($this->city['options'], [
+        $html[] = Html::DropdownList($this->city['name'], null, [],  ArrayHelper::merge($this->city['options'], [
             'id' => $this->getCityId(),
         ]));
-        $html[] = Html::DropdownList($this->name, null, [],  ArrayHelper::merge($this->district['options'], [
+        $html[] = Html::DropdownList($this->district['name'], null, [],  ArrayHelper::merge($this->district['options'], [
             'id' => $this->getDistrictId(),
         ]));
         return implode("\n", $html);
     }
 
     public function getProvinceId(){
-        return trim($this->name, '[]') . '_province';
+        return trim($this->province['name'], '[]') . '_province';
     }
     public function getCityId(){
-        return trim($this->name, '[]') . '_city';
+        return trim($this->city['name'], '[]') . '_city';
     }
     public function getDistrictId(){
-        return trim($this->name, '[]') . '_district';
+        return trim($this->district['name'], '[]') . '_district';
     }
 
     public function registerJs(){
@@ -51,9 +50,9 @@ class Region extends Widget
         $cityId = $this->getCityId();
         $districtId = $this->getDistrictId();
 
-        $provinceDefault = Html::renderSelectOptions('', ['' => $this->province['options']['prompt']]);
-        $cityDefault = Html::renderSelectOptions('', ['' => $this->city['options']['prompt']]);
-        $districtDefault = Html::renderSelectOptions('', ['' => $this->district['options']['prompt']]);
+        $provinceDefault = Html::renderSelectOptions('', ['-1' => $this->province['options']['prompt']]);
+        $cityDefault = Html::renderSelectOptions('', ['-1' => $this->city['options']['prompt']]);
+        $districtDefault = Html::renderSelectOptions('', ['-1' => $this->district['options']['prompt']]);
 
         $provinceValue = $this->province['value'];
         $cityValue = $this->city['value'];
@@ -82,36 +81,47 @@ class Region extends Widget
             });
             return $('#{$districtId}').html(html);
         }
-        $.get('{$url}parent_id=0', function(res){
-            if(res.code == 0){
-                province = res.data;
-                fill_province(province);
-                if(-1 != {$provinceValue}){
-                    $('#{$provinceId}').val('{$provinceValue}');
-                    $('#{$provinceId}').change();
-                }
-            }
-        })
-        $('#{$provinceId}').change(function(){
-            $.get('{$url}parent_id=' + $(this).val(), function(res){
-                if(res.code == 0){
+        function value_init(){
+            if(-1 != {$provinceValue}){
+                $('#{$provinceId}').val('{$provinceValue}');
+                get_data('{$provinceValue}', function(res){
                     fill_city(res.data);
                     if(-1 != {$cityValue}){
                         $('#{$cityId}').val('{$cityValue}');
-                        $('#{$cityId}').change();
                     }
-                }
-            })
-        });
-        $('#{$cityId}').change(function(){
-            $.get('{$url}parent_id=' + $(this).val(), function(res){
-                if(res.code == 0){
+                });
+                get_data('{$cityValue}', function(res){
                     fill_district(res.data);
                     if(-1 != {$districtValue}){
                         $('#{$districtId}').val('{$districtValue}');
-                        $('#{$districtId}').change();
                     }
+                });
+            }
+
+
+        }
+        function get_data(pid, callback){
+            $.get('{$url}parent_id=' + pid, function(res){
+                if(res.code == 0){
+                    callback(res);
                 }
+            })
+        }
+        get_data(0, function(res){
+            fill_province(res.data);
+            value_init();
+        });
+        $('#{$provinceId}').change(function(){
+            get_data($(this).val(), function(res){
+                fill_city(res.data);
+                $('#{$cityId}').val('-1');
+                $('#{$cityId}').change();
+            });
+        });
+        $('#{$cityId}').change(function(){
+            get_data($(this).val(), function(res){
+                fill_district(res.data);
+                $('#{$districtId}').val('-1');
             })
         });
 JS;

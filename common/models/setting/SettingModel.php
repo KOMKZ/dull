@@ -60,6 +60,8 @@ class SettingModel extends Model
 
         if(!empty($def['set_widget_params']) && is_array($def['set_widget_params'])){
             $setting->set_widget_params = json_encode($def['set_widget_params']);
+        }else{
+            $setting->set_widget_params = '';
         }
         $result = $setting->insert(false);
         if(!$result){

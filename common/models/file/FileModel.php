@@ -46,6 +46,18 @@ class FileModel extends Model
         }
     }
 
+    public function setFileValidFromArray($newIds, $oldIds = []){
+        // 得到删除的id
+        $deleteIds = array_diff_assoc($oldIds, $newIds);
+        $newValidIds = array_diff_assoc($newIds, $oldIds);
+        if(!empty($newValidIds)){
+            // 设置文件为有效
+        }
+        if(!empty($deleteIds)){
+            // 设置文件为临时文件
+        }
+    }
+
     public function setFileValidFromContent($newContent, $oldContent = null){
         $newIds = $this->parseIdFromUrls($this->getUrlFromContent($newContent));
         if(!empty($newIds)){
@@ -57,16 +69,17 @@ class FileModel extends Model
             // 得到删除的id
             $deleteIds = array_diff_assoc($oldIds, $newIds);
             $newValidIds = array_diff_assoc($newIds, $oldIds);
-            console([
-                'new' => $newIds,
-                'old' => $oldIds,
-                'delete' => $deleteIds,
-                'new_valid' => $newValidIds
-            ]);
+            if(!empty($newValidIds)){
+                // 设置文件为有效
+            }
+            if(!empty($deleteIds)){
+                // 设置文件为临时文件
+            }
         }
         return 0;
-
     }
+
+
 
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = File::find();

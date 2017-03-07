@@ -26,8 +26,8 @@ class DemoController extends Controller
 
     public function actionParse(){
         $fileModel = new FileModel();
-        $content = file_get_contents('/tmp/1.txt');
-        $oldContent = file_get_contents('/tmp/2.txt');
+        $content = file_get_contents('//var/www/html/dull/1.txt');
+        $oldContent = file_get_contents('//var/www/html/dull/2.txt');
         $fileModel->setFileValidFromContent($content, $oldContent);
     }
 

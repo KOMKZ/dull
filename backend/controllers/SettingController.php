@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use Yii;
 use common\base\AdminController;
 use common\models\setting\tables\Setting;
 use common\models\setting\SettingModel;
@@ -11,12 +12,16 @@ class SettingController extends AdminController
 
     public function actionIndex()
     {
+        if(Yii::$app->request->isPost){
+            console(Yii::$app->request->post());
+        }
         $settingModel = new SettingModel();
         $setting = $settingModel->all();
         return $this->render('index', [
             'settings' => $setting
         ]);
     }
+
     public function actionHome(){
         $settingModel = new SettingModel();
         $result = $settingModel->all();
@@ -60,6 +65,25 @@ class SettingController extends AdminController
                     1 => '一级原子弹',
                     2 => '二级原子弹'
                 ]
+            ]
+        ];
+        $settingModel = new SettingModel();
+        $result = $settingModel->create($data);
+        if(!$result){
+            console($settingModel->getOneError());
+        }
+    }
+    public function actionRegion(){
+        $data = [
+            'set_name' => 'web_region',
+            'set_value' => '1,2801,2827',
+            'set_value_type' => Setting::STRING,
+            'set_des' => '战略地点',
+            'set_module' => Setting::M_WEBSITE,
+            'set_validators' => [],
+            'set_validators_params' => '',
+            'set_widget' => SettingWidget::W_REGION,
+            'set_widget_params' => [
             ]
         ];
         $settingModel = new SettingModel();
