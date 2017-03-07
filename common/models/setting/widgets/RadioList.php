@@ -12,7 +12,7 @@ use common\assets\ICheckAsset;
 /**
  *
  */
-class CheckBox extends Object
+class RadioList extends Object
 {
     static protected $hasRegister = false;
     public static function registerJs(){
@@ -20,7 +20,7 @@ class CheckBox extends Object
             return false;
         }
         $js = <<<JS
-        $('.setting-icheck-checkbox').iCheck({
+        $('.setting-icheck-raido').iCheck({
           checkboxClass: 'icheckbox_square-blue',
           radioClass: 'iradio_square-blue',
           increaseArea: '20%' // optional
@@ -45,8 +45,9 @@ HTML;
             '{{label}}' => $item['label'],
             '{{set_name}}' => $item['name'],
             '{{set_value}}' => $item['value'],
-            '{{checkbox}}' => Html::checkboxList('set_value', $item['value'], $params['map'], [
-                'class' => 'checkbox setting-icheck-checkbox'
+            '{{checkbox}}' => Html::radioList('set_value',  $item['value'], $params['map'], [
+                'class' => 'radio setting-icheck-raido',
+
             ])
         ]);
     }

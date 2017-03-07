@@ -85,7 +85,8 @@ class Setting extends ActiveRecord
                     SettingWidget::W_TEXT => Yii::t('app', '普通文本框'),
                     SettingWidget::W_DATETIME => Yii::t('app', '日期时间框'),
                     SettingWidget::W_DROPDOWN => Yii::t('app', '下拉单选框'),
-                    SettingWidget::W_CHECKBOX => Yii::t('app', 'checkbox多选框')
+                    SettingWidget::W_CHECKBOX => Yii::t('app', 'checkbox多选框'),
+                    SettingWidget::W_RADIOLIST => Yii::t('app', 'radiolist单选框')
                 ],
             ];
         }

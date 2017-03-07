@@ -12,6 +12,7 @@ class SettingWidget extends Object
     const W_DATETIME = 2;
     const W_DROPDOWN = 3;
     const W_CHECKBOX = 4;
+    const W_RADIOLIST = 5;
 
     public static function render($setting){
         $renderClass = self::getRenderClass($setting['set_widget']);
@@ -37,6 +38,8 @@ class SettingWidget extends Object
                 return '\common\models\setting\widgets\Dropdown';
             case self::W_CHECKBOX:
                 return '\common\models\setting\widgets\CheckBox';
+            case self::W_RADIOLIST:
+                return '\common\models\setting\widgets\RadioList';
             default:
                 throw new \Exception('Unsupport setting render widget definations');
         }

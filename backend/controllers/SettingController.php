@@ -43,6 +43,31 @@ class SettingController extends AdminController
             console($settingModel->getOneError());
         }
     }
+    public function actionRadiolist(){
+        $data = [
+            'set_name' => 'web_02',
+            'set_value' => 1,
+            'set_value_type' => Setting::NUMBER,
+            'set_des' => '爆炸威力',
+            'set_module' => Setting::M_WEBSITE,
+            'set_validators' => [
+                ['number']
+            ],
+            'set_validators_params' => '',
+            'set_widget' => SettingWidget::W_RADIOLIST,
+            'set_widget_params' => [
+                'map' => [
+                    1 => '一级原子弹',
+                    2 => '二级原子弹'
+                ]
+            ]
+        ];
+        $settingModel = new SettingModel();
+        $result = $settingModel->create($data);
+        if(!$result){
+            console($settingModel->getOneError());
+        }
+    }
     public function actionCheckbox(){
         $data = [
             'set_name' => 'web_01',
