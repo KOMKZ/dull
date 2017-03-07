@@ -19,7 +19,54 @@ class FileModel extends Model
     static private $amqpConn;
     static private $Channel;
 
+    protected function getValidPrefix(){
+        return [
+            'trainor-oss-test.oss-cn-shenzhen.aliyuncs.com'
+        ];
+    }
+    protected function buildIdFromUrl($url){
+        return 'oss:' . basename($url);
+    }
+    protected function parseIdFromUrls($urls){
+        $prefix = $this->getValidPrefix();
+        $result = [];
+        foreach($urls as $url){
+            $one = parse_url($url);
+            if(in_array($one['host'], $prefix)){
+                $result[] = $this->buildIdFromUrl($url);
+            }
+        }
+        return array_unique($result);;
+    }
+    protected function getUrlFromContent($content){
+        if(preg_match_all('/(http:\/\/.*?)[\s\"\'\n]+/', $content, $matches)){
+            return $matches[1];
+        }else{
+            return [];
+        }
+    }
 
+    public function setFileValidFromContent($newContent, $oldContent = null){
+        $newIds = $this->parseIdFromUrls($this->getUrlFromContent($newContent));
+        if(!empty($newIds)){
+            if(!empty($oldContent)){
+                $oldIds = $this->parseIdFromUrls($this->getUrlFromContent($oldContent));
+            }else{
+                $oldIds = [];
+            }
+            // 得到删除的id
+            $deleteIds = array_diff_assoc($oldIds, $newIds);
+            $newValidIds = array_diff_assoc($newIds, $oldIds);
+            console([
+                'new' => $newIds,
+                'old' => $oldIds,
+                'delete' => $deleteIds,
+                'new_valid' => $newValidIds
+            ]);
+        }
+        return 0;
+
+    }
 
     public function getProvider($condition = [], $sortData = [], $withPage = true){
         $query = File::find();

@@ -12,6 +12,9 @@ use common\models\user\UserModel;
 use common\models\notify\NotifyModel;
 use common\models\notify\tables\SysMsg;
 use yii\helpers\Url;
+use common\models\file\FileModel;
+use common\models\post\PostModel;
+
 
 /**
  *
@@ -20,6 +23,13 @@ class DemoController extends Controller
 {
     public $enableCsrfValidation = false;
 
+
+    public function actionParse(){
+        $fileModel = new FileModel();
+        $content = file_get_contents('/tmp/1.txt');
+        $oldContent = file_get_contents('/tmp/2.txt');
+        $fileModel->setFileValidFromContent($content, $oldContent);
+    }
 
     public function actionD(){
         return $this->render('d.php');
