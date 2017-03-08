@@ -130,3 +130,5 @@ https://github.com/jquery-boilerplate/jquery-patterns
 http://kolodny.github.io/blog/blog/2013/12/27/my-favorite-jquery-plugin-template/
 
 4
+
+https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html#component-box

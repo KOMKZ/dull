@@ -57,6 +57,7 @@ $js = <<<JS
         return false;
     });
 
+
     $('#date_time_panel').DateTimePicker({
         dateTimeFormat: "yyyy-MM-dd HH:mm:ss",
         settingValueOfElement : function(sInputValue, dDateTime, oInputElement){

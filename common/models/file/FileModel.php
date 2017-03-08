@@ -24,9 +24,11 @@ class FileModel extends Model
             'trainor-oss-test.oss-cn-shenzhen.aliyuncs.com'
         ];
     }
+    
     protected function buildIdFromUrl($url){
         return 'oss:' . basename($url);
     }
+
     protected function parseIdFromUrls($urls){
         $prefix = $this->getValidPrefix();
         $result = [];
@@ -38,6 +40,7 @@ class FileModel extends Model
         }
         return array_unique($result);;
     }
+
     protected function getUrlFromContent($content){
         if(preg_match_all('/(http:\/\/.*?)[\s\"\'\n]+/', $content, $matches)){
             return $matches[1];
