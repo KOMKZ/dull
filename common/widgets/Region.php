@@ -34,13 +34,16 @@ class Region extends Widget
     }
 
     public function getProvinceId(){
-        return trim($this->province['name'], '[]') . '_province';
+        $s = str_replace('[', '', $this->province['name']) . '_province';
+        return str_replace(']', '', $s);
     }
     public function getCityId(){
-        return trim($this->city['name'], '[]') . '_city';
+        $s = str_replace('[', '', $this->city['name']) . '_city';
+        return str_replace(']', '', $s);
     }
     public function getDistrictId(){
-        return trim($this->district['name'], '[]') . '_district';
+        $s = str_replace('[', '', $this->district['name']) . '_district';
+        return str_replace(']', '', $s);
     }
 
     public function registerJs(){

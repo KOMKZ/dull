@@ -16,8 +16,12 @@ class SettingWidget extends Object
     const W_REGION = 6;
 
     public static function render($setting){
-        $renderClass = self::getRenderClass($setting['set_widget']);
-        return $renderClass::render(self::buildRenderData($setting));
+        if(!empty($setting)){
+            $renderClass = self::getRenderClass($setting['set_widget']);
+            return $renderClass::render(self::buildRenderData($setting));
+        }else{
+            return '';
+        }
     }
 
     protected static function buildRenderData($item){

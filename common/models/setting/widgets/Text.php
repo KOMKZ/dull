@@ -10,13 +10,11 @@ class Text extends Object
 {
     public static function render($item){
         $html = <<<HTML
-        <form class="" action="" method="post">
             <div class="form-group">
                 <label for="">{{label}}</label>
-                <input type="hidden" name="set_name" value="{{set_name}}">
-                <input class="form-control" type="text" name="set_value" value="{{set_value}}">
+                <input type="hidden" name="{{set_name}}[set_name]" value="{{set_name}}">
+                <input class="form-control" type="text" name="{{set_name}}[set_value]" value="{{set_value}}">
             </div>
-        </form>
 HTML;
         return strtr($html, [
             '{{label}}' => $item['label'],

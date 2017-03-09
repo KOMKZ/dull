@@ -12,32 +12,36 @@ class Region extends Object
 {
     public static function render($item){
         $html = <<<HTML
-        <form action="" method="post">
             <div class="form-group">
                 <label for="">{{label}}</label>
-                <input type="hidden" name="set_name" value="{{set_name}}">
+                <input type="hidden" name="{{set_name}}[set_name]" value="{{set_name}}">
                 <div class="form-inline">
                     {{region}}
                 </div>
             </div>
-        </form>
 HTML;
+        if(is_string($item['value']) && preg_match('/[\w_\-]+,[\w_\-]+/', $item['value'])){
+            $value = explode(',', $item['value']);
+        }elseif(!is_array($item['value'])){
+            $value = [0 => -1, 1 => -1, 2 => -1];
+        }
+
         $w = Yii::createObject([
             'class' => RegionWidget::className(),
             'url'=> Yii::$app->apiurl->createAbsoluteUrl(['open/get-region']),
             'province'=>[
-                'name' => 'set_value[]',
-                'value' => 1,
+                'name' => $item['name'] . '[set_value][]',
+                'value' => $value[0],
                 'options'=>[ 'class'=>'form-control','prompt'=>'选择省份' ]
             ],
             'city'=>[
-                'name' => 'set_value[]',
-                'value' => 2801,
+                'name' => $item['name'] . '[set_value][]',
+                'value' => $value[1],
                 'options'=>[ 'class'=>'form-control','prompt'=>'选择城市' ]
             ],
             'district'=>[
-                'name' => 'set_value[]',
-                'value' => 2827,
+                'name' => $item['name'] . '[set_value][]',
+                'value' => $value[2],
                 'options'=>[ 'class'=>'form-control','prompt'=>'选择县/区']
             ]
         ]);

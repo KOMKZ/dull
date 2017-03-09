@@ -3,21 +3,30 @@ use Yii;
 use common\models\setting\SettingWidget;
 use common\models\open\OpenModel;
 ?>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="box">
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-lg-12">
+<form class="" action="" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
                         <?php
-                        $item = $settings['web_region'];
-                        echo SettingWidget::render($item);
+                        foreach($settings as $item){
+                            echo '<div class="col-lg-12">';
+                            echo SettingWidget::render($item);
+                            echo '</div>';
+                        }
                         ?>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="submit" name="" value="提交" class="btn btn-default">
+                            </div>
+                        </div>
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
