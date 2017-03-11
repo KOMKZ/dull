@@ -2,6 +2,12 @@
 use Yii;
 use common\models\setting\SettingWidget;
 use common\models\open\OpenModel;
+/**
+ * 1. 使用tab
+ * 2. tab中使用box
+ * 3. 使用布局数组放在这个页面中，后面再考虑分离
+ */
+
 $js = <<<JS
     $('#form').submit(function(){
         $.post($(this).attr('action'), $(this).serialize(), function(res){

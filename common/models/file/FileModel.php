@@ -19,12 +19,17 @@ class FileModel extends Model
     static private $amqpConn;
     static private $Channel;
 
+
+
+
+
+
     protected function getValidPrefix(){
         return [
             'trainor-oss-test.oss-cn-shenzhen.aliyuncs.com'
         ];
     }
-    
+
     protected function buildIdFromUrl($url){
         return 'oss:' . basename($url);
     }
@@ -122,6 +127,7 @@ class FileModel extends Model
     }
 
     public function getFileUrl($id){
+        // todo 这个方法应该改造到可以不需要查询数据库
         if(!($id instanceof File)){
             $file = $this->getOne(['f_id' => $id]);
         }else{

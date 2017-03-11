@@ -6,7 +6,7 @@ use common\base\AdminController;
 /**
  *
  */
-class GoodsController extends AnotherClass
+class GoodsController extends AdminController
 {
     public function actionList(){
         return $this->render('list');
