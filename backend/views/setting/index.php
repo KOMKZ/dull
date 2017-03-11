@@ -2,8 +2,21 @@
 use Yii;
 use common\models\setting\SettingWidget;
 use common\models\open\OpenModel;
+$js = <<<JS
+    $('#form').submit(function(){
+        $.post($(this).attr('action'), $(this).serialize(), function(res){
+            if(res.code > 0){
+                return dull.new_alert(res.code + ':' + res.message, 'error');
+            }else{
+                return dull.new_alert('修改成功', 'success');
+            }
+        }, 'json')
+        return false;
+    });
+JS;
+$this->registerJs($js);
 ?>
-<form class="" action="" method="post">
+<form id="form" class="" action="<?= $url['setting/update-all']?>" method="post">
     <div class="row">
         <div class="col-md-12">
             <div class="box">
@@ -24,7 +37,6 @@ use common\models\open\OpenModel;
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

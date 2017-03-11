@@ -12,13 +12,14 @@ class SettingController extends AdminController
 
     public function actionIndex()
     {
-        if(Yii::$app->request->isPost){
-            console(Yii::$app->request->post());
-        }
         $settingModel = new SettingModel();
         $setting = $settingModel->all();
+        $url = [
+            'setting/update-all' => Yii::$app->apiurl->createAbsoluteUrl(['setting/update-all'])
+        ];
         return $this->render('index', [
-            'settings' => $setting
+            'settings' => $setting,
+            'url' => $url
         ]);
     }
 

@@ -15,11 +15,14 @@ class SettingModel extends Model
     public $useCache = true;
 
     public function get($name, $default = null){
+        // 1. 只取出名称还有数值
+        // 2. 最好根据fields来取，默认是上面两个项目
+        // 3. 假设是用cache， cache分为组件cache 还有 参数cache
 
     }
 
-    public function set($name, $value, $createOnEmpty = false){
-
+    public function set($name, $value){
+        // 1. update one value 的快捷方法
     }
 
     public function all(){
@@ -30,6 +33,26 @@ class SettingModel extends Model
 
     public function update($condition, $data = []){
 
+
+    }
+
+    public function updateOneValue($condition, $value){
+        // 设定修改场景
+        // 1. 增加一个返回loadvalue
+        // 2. 工厂
+    }
+
+    public function updateAllSettings($data){
+        if(!empty($data)){
+            $errors = [];
+            foreach($data as $name => $def){
+                $result = $this->updateOneValue(['set_name' => $def['set_name']], $def['set_value']);
+                if(!$result){
+                    $error[$name] = $this->getOneError();
+                }
+            }
+        }
+        return true;
     }
 
     public function create($def){
@@ -69,6 +92,17 @@ class SettingModel extends Model
             return false;
         }
         return $setting;
+    }
+
+    public function getOne($condition){
+        if(is_object($condition)){
+            return $condition;
+        }
+        if($condition){
+            return Setting::find()->where($condition)->one();
+        }else{
+            return null;
+        }
     }
 
     public function remove($name){
