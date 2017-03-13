@@ -222,7 +222,7 @@ class FileModel extends Model
     }
 
 
-    public function uploadTmpFile($tmpName){
+    public function moveTmpFileToTps($tmpName, $asyc = false){
         $path = $this->getLocalFilePath($tmpName);
         if(!file_exists($path)){
             $this->addError('', Yii::t('app', '文件不存在'.$path));
@@ -234,7 +234,7 @@ class FileModel extends Model
         $file->f_storage_type = File::DR_DISK;
         $file->f_acl_type = File::FILE_ACL_PRI;
         $file->f_category = 'post_thumb';
-        $file->save_asyc = false;
+        $file->save_asyc = $asyc;
         $path_parts = pathinfo($tmpName);
         $file->f_name = $path_parts['filename'];
 

@@ -44,6 +44,10 @@ class UserModel extends Model
         return [$provider, $pagination];
     }
     public function login($condition, $password, $remember = false){
+        if(empty($password)){
+            $this->addError('', Yii::t('app', '密码不能为空'));
+            return false;
+        }
         $remember = (bool)$remember;
         $condition['u_status'] = User::STATUS_ACTIVE;
         $condition['u_auth_status'] = User::STATUS_AUTHED;

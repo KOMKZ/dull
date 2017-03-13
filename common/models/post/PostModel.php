@@ -66,7 +66,7 @@ class PostModel extends Model
 
         if(urldecode($post['p_thumb_img']) != urldecode($data['p_thumb_img'])){
             $fileModel = new FileModel();
-            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
+            $file = $fileModel->moveTmpFileToTps($data['p_thumb_img']);
             if(!$file){
                 list($code, $error) = $fileModel->getOneError();
                 $this->addError($code, $error);
@@ -98,7 +98,7 @@ class PostModel extends Model
         // 保存图片
         if(!empty($data['p_thumb_img'])){
             $fileModel = new FileModel();
-            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
+            $file = $fileModel->moveTmpFileToTps($data['p_thumb_img']);
             if(!$file){
                 list($code, $error) = $fileModel->getOneError();
                 $this->addError($code, $error);

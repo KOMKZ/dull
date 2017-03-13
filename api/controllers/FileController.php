@@ -29,7 +29,7 @@ JS;
         echo $result;
         exit();
     }
-    
+
     private function ckSucc($url){
         $callbackNum = $_GET['CKEditorFuncNum'];
         $result = <<<JS
@@ -70,13 +70,14 @@ JS;
         }
     }
 
-    public function actionSaveTmpCropImg(){
 
+    public function actionSaveTmpCropImg(){
         $uploadFile = UploadedFile::getInstanceByName('file');
         if(!$uploadFile){
             return $this->error(null, Yii::t('app', '服务器读取不到上传文件'));
         }
 
+        // 裁切文件
         $request = Yii::$app->request;
         $width = $request->post('width', 200);
         $height = $request->post('height', 200);
@@ -89,6 +90,7 @@ JS;
             new Box($width, $height)
         );
 
+        // 保存裁切文件
         $tempDir = Yii::getAlias('@api/runtime/files') . DIRECTORY_SEPARATOR;
         $fileName = uniqid(time(), true);
         $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
@@ -98,6 +100,7 @@ JS;
             return $this->error(null, Yii::t('app', '保存文件出错'));
         }
 
+        // 保存入库
         $fileModel = new FileModel();
         $file = $fileModel->saveTmpFile($filePath);
         if(!$file){
@@ -134,6 +137,8 @@ JS;
         if(empty($post['File'])){
             return $this->error(null, '数据结构错误');
         }
+
+        // 构造入库的实际文件数据
         $post['File']['source_path'] = $filePath;
         $post['File']['source_path_type'] = File::SP_LOCAL;
         $file->upload_file = $uploadFile;
