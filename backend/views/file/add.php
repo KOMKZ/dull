@@ -15,6 +15,13 @@ $fileUploaddOneCallBack = <<<JS
         }
     }
 JS;
+$css = <<<CSS
+.preview video{
+    width:300px;
+    height:300px;
+}
+CSS;
+$this->registerCss($css);
 ?>
 <div class="row">
     <div class="col-lg-5">
@@ -47,6 +54,10 @@ JS;
                     'model' => $model,
                     'attribute' => 'upload_file',
                     'url' => $fileUploadUrl, // your url, this is just for demo purposes,
+                    'clientOptions' => [
+                        'previewMaxWidth' => 300,
+                        'previewMaxHeight' => 300
+                    ],
                     'clientEvents' => [
                         'fileuploaddone' => $fileUploaddOneCallBack,
                         'fileuploadfail' => 'function(e, data) {

@@ -255,10 +255,15 @@ return [
                     'url' => ['/webshell']
                 ],
                 [
-                    'label' => '分词',
+                    'label' => 'player',
                     'icon' => 'fa fa-circle-o',
-                    'url' => ['/tool/word-seg']
+                    'url' => ['/tool/player']
                 ],
+                // [
+                //     'label' => '分词',
+                //     'icon' => 'fa fa-circle-o',
+                //     'url' => ['/tool/word-seg']
+                // ],
             ],
         ],
 
