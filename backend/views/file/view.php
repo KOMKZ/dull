@@ -49,10 +49,14 @@ use branchonline\lightbox\Lightbox;
                         'f_ext',
                         [
                             'attribute' => 'f_category',
-                            'format' => ['map', $fileCategoryMap]
+                            'format' => ['map', $map['f_category']]
                         ],
                         'f_prefix',
                         'f_host',
+                        [
+                            'attribute' => 'f_valid_type',
+                            'format' => ['map', $map['f_valid_type']]
+                        ],
                         'f_hash',
                         [
                             'attribute' => 'ext_img_url',
@@ -61,11 +65,11 @@ use branchonline\lightbox\Lightbox;
                         'f_mime_type',
                         [
                             'attribute' => 'f_storage_type',
-                            'format' => ['map', $fileStorageTypeMap],
+                            'format' => ['map', $map['f_storage_type']],
                         ],
                         [
                             'attribute' => 'f_acl_type',
-                            'format' => ['map', $fileAclTypeMap],
+                            'format' => ['map', $map['f_acl_type']],
                         ],
                         [
                             'attribute' => 'f_size',
@@ -73,7 +77,7 @@ use branchonline\lightbox\Lightbox;
                         ],
                         [
                             'attribute' => 'f_status',
-                            'format' => ['map', $fileStatusMap]
+                            'format' => ['map', $map['f_status']]
                         ],
                         [
                             'attribute' => 'f_created_at',

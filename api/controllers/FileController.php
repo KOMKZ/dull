@@ -40,6 +40,7 @@ JS;
         echo $result;
         exit();
     }
+
     public function actionSaveTmpCkImg(){
         try {
             $uploadFile = UploadedFile::getInstanceByName('upload');
@@ -102,7 +103,19 @@ JS;
 
         // 保存入库
         $fileModel = new FileModel();
-        $file = $fileModel->saveTmpFile($filePath);
+
+        $data = [
+            'source_path' => $filePath,
+            'source_path_type' => File::SP_LOCAL,
+            'f_storage_type' => File::DR_DISK,
+            'f_category' => 'image_crop',
+            'f_name' => $fileName,
+            'f_acl_type' => File::FILE_ACL_PRI,
+            // todo get setting
+            'save_asyc' => false,
+        ];
+
+        $file = $fileModel->saveFile($data);
         if(!$file){
             list($code, $error) = $fileModel->getOneError();
             return $this->error($code, $error);

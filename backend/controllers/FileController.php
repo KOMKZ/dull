@@ -18,8 +18,7 @@ class FileController extends AdminController
         list($provider, $pagination) = $fileModel->getProvider();
         return $this->render('list', [
             'provider' => $provider,
-            'fileStatusMap' => File::getValidConsts('f_status'),
-            'fileStorageTypeMap' => File::getValidConsts('f_storage_type')
+            'map' => File::getValidConsts()
         ]);
     }
 
@@ -33,10 +32,7 @@ class FileController extends AdminController
 
         return $this->render('view', [
             'model' => $file,
-            'fileStatusMap' => File::getValidConsts('f_status'),
-            'fileCategoryMap' => File::getValidConsts('f_category'),
-            'fileStorageTypeMap' => File::getValidConsts('f_storage_type'),
-            'fileAclTypeMap' => File::getValidConsts('f_acl_type'),
+            'map' => File::getValidConsts(),
             'fileUrl' => $fileModel->getFileUrl($file->f_id),
             'fileMeta' => $file->getMetaObj(),
         ]);
@@ -47,11 +43,7 @@ class FileController extends AdminController
         $file = new File();
         return $this->render('add', [
             'model' => $file,
-            'filePathTypeMap' => File::getValidConsts('source_path_type'),
-            'fileStorageTypeMap' => File::getValidConsts('f_storage_type'),
-            'fileAclTypeMap' => File::getValidConsts('f_acl_type'),
-            'fileCategoryMap' => File::getValidConsts('f_category'),
-            "fileSaveAsycMap" => File::getValidConsts('save_asyc'),
+            'map' => File::getValidConsts(),
             'fileUploadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['file/upload']),
         ]);
     }

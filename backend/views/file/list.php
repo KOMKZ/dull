@@ -19,14 +19,20 @@ use yii\helpers\Url;
                         [ 'attribute' => 'f_size', 'format' => ['shortSize']],
                         [
                             'attribute' => 'f_status',
-                            'value' => function($model, $key, $index, $column) use($fileStatusMap){
-                                return $fileStatusMap[$model['f_status']];
+                            'value' => function($model, $key, $index, $column) use($map){
+                                return $map['f_status'][$model['f_status']];
                             },
                         ],
                         [
                             'attribute' => 'f_storage_type',
-                            'value' => function($model, $key, $index, $column) use($fileStorageTypeMap){
-                                return $fileStorageTypeMap[$model['f_storage_type']];
+                            'value' => function($model, $key, $index, $column) use($map){
+                                return $map['f_storage_type'][$model['f_storage_type']];
+                            },
+                        ],
+                        [
+                            'attribute' => 'f_valid_type',
+                            'value' => function($model, $key, $index, $column) use($map){
+                                return $map['f_valid_type'][$model['f_valid_type']];
                             },
                         ],
                         [

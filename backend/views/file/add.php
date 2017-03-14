@@ -24,11 +24,11 @@ JS;
                 echo $form->field($model, 'f_name')->textInput(['autofocus' => true]);
                 echo $form->field($model, 'f_prefix')->textInput();
                 // echo $form->field($model, 'source_path_type')->dropDownList($filePathTypeMap);
-                echo $form->field($model, 'f_storage_type')->dropDownList($fileStorageTypeMap);
-                echo $form->field($model, 'f_category')->dropDownList($fileCategoryMap);
-                echo $form->field($model, 'f_acl_type')->dropDownList($fileAclTypeMap);
-                echo $form->field($model, 'save_asyc')->dropDownList($fileSaveAsycMap);
-
+                echo $form->field($model, 'f_storage_type')->dropDownList($map['f_storage_type']);
+                echo $form->field($model, 'f_category')->dropDownList($map['f_category']);
+                echo $form->field($model, 'f_acl_type')->dropDownList($map['f_acl_type']);
+                echo $form->field($model, 'save_asyc')->dropDownList($map['save_asyc']);
+                echo $form->field($model, 'f_valid_type')->dropDownList($map['f_valid_type']);
                 // echo $form->field($model, 'u_email');
                 // echo $form->field($model, 'u_status')->dropDownList($userStatusMap);
                 // echo $form->field($model, 'u_auth_status')->dropDownList($userAuthStatusMap);

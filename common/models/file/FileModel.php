@@ -12,7 +12,7 @@ use yii\data\ActiveDataProvider;
 
 
 /**
- *
+ * 需要在queryId上标记存储位
  */
 class FileModel extends Model
 {
@@ -54,11 +54,11 @@ class FileModel extends Model
         }
     }
 
-    public function setFileValidFromArray($newIds, $oldIds = []){
+    public function setFilePermanentFromArray($newIds, $oldIds = []){
         // 得到删除的id
         $deleteIds = array_diff_assoc($oldIds, $newIds);
-        $newValidIds = array_diff_assoc($newIds, $oldIds);
-        if(!empty($newValidIds)){
+        $newPermanentIds = array_diff_assoc($newIds, $oldIds);
+        if(!empty($newPermanentIds)){
             // 设置文件为有效
         }
         if(!empty($deleteIds)){
@@ -66,7 +66,7 @@ class FileModel extends Model
         }
     }
 
-    public function setFileValidFromContent($newContent, $oldContent = null){
+    public function setFilePermanentFromContent($newContent, $oldContent = null){
         $newIds = $this->parseIdFromUrls($this->getUrlFromContent($newContent));
         if(!empty($newIds)){
             if(!empty($oldContent)){
@@ -76,7 +76,7 @@ class FileModel extends Model
             }
             // 得到删除的id
             $deleteIds = array_diff_assoc($oldIds, $newIds);
-            $newValidIds = array_diff_assoc($newIds, $oldIds);
+            $newPermanentIds = array_diff_assoc($newIds, $oldIds);
             if(!empty($newValidIds)){
                 // 设置文件为有效
             }

@@ -182,6 +182,7 @@ class InstallController extends Controller{
             'source_path_type' => File::SP_LOCAL,
             'f_storage_type' => File::DR_DISK,
             'f_acl_type' => File::FILE_ACL_PUB_RW,
+            'f_valid_type' => File::PERMANENT_FILE,
             'f_category' => 'file_thumbs',
             'save_asyc' => false
         ];
