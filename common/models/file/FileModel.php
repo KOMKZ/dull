@@ -9,6 +9,7 @@ use yii\web\HttpException;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -25,22 +26,37 @@ class FileModel extends Model
 
 
     protected function getValidPrefix(){
+        // todo localhost
         return [
+            'localhost',
             'trainor-oss-test.oss-cn-shenzhen.aliyuncs.com'
         ];
     }
 
     protected function buildIdFromUrl($url){
-        return 'oss:' . basename($url);
+        $urlparts = parse_url($url);
+        // todo localhost
+        if(in_array($urlparts['host'], ['localhost'])){
+            if(preg_match('/name=([^\&]*)/', $urlparts['query'], $matches)){
+                return $matches[1];
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
 
-    protected function parseIdFromUrls($urls){
+    protected function parseQIdFromUrls($urls){
         $prefix = $this->getValidPrefix();
         $result = [];
         foreach($urls as $url){
+            $url = urldecode($url);
             $one = parse_url($url);
             if(in_array($one['host'], $prefix)){
-                $result[] = $this->buildIdFromUrl($url);
+                $qid = $this->buildIdFromUrl($url);
+                if(false !== $qid){
+                    $result[] = $qid;
+                }
             }
         }
         return array_unique($result);;
@@ -54,39 +70,152 @@ class FileModel extends Model
         }
     }
 
-    public function setFilePermanentFromArray($newIds, $oldIds = []){
+    public function setFilePermanentFromArray($newQIds, $oldQIds = []){
+        foreach($newQIds as $key => $nId){
+            $newQIds[$key] = urldecode($nId);
+        }
+        foreach($oldQIds as $key => $oId){
+            $oldQIds[$key] = urldecode($oId);
+        }
         // 得到删除的id
-        $deleteIds = array_diff_assoc($oldIds, $newIds);
-        $newPermanentIds = array_diff_assoc($newIds, $oldIds);
-        if(!empty($newPermanentIds)){
+        $deleteQIds = array_diff_assoc($oldQIds, $newQIds);
+        $newPermanentQIds = array_diff_assoc($newQIds, $oldQIds);
+        $report = [
+            'p_succ' => [],
+            'p_fail' => [],
+            'd_succ' => [],
+            'd_fail' => []
+        ];
+        if(!empty($newPermanentQIds)){
             // 设置文件为有效
+            foreach ($newPermanentQIds as $queryId) {
+                $condition = $this->buildConditionByQueryId($queryId);
+                $file = $this->setFilePermanent($condition);
+                if(!$file){
+                    $report['p_fail'][] = $queryId;
+                }else{
+                    $report['p_succ'][] = $queryId;
+                }
+            }
         }
-        if(!empty($deleteIds)){
+        if(!empty($deleteQIds)){
             // 设置文件为临时文件
+            foreach ($deleteQIds as $queryId) {
+                $condition = $this->buildConditionByQueryId($queryId);
+                $file = $this->setFileTmp($condition);
+                if(!$file){
+                    $report['d_fail'][] = $queryId;
+                }else{
+                    $report['d_succ'][] = $queryId;
+                }
+            }
         }
+        // todo 不应该怎么鲁莽的
+        return true;
     }
 
     public function setFilePermanentFromContent($newContent, $oldContent = null){
-        $newIds = $this->parseIdFromUrls($this->getUrlFromContent($newContent));
-        if(!empty($newIds)){
+        $newQIds = $this->parseQIdFromUrls($this->getUrlFromContent($newContent));
+        $report = [
+            'p_succ' => [],
+            'p_fail' => [],
+            'd_succ' => [],
+            'd_fail' => []
+        ];
+        if(!empty($newQIds)){
             if(!empty($oldContent)){
-                $oldIds = $this->parseIdFromUrls($this->getUrlFromContent($oldContent));
+                $oldQIds = $this->parseQIdFromUrls($this->getUrlFromContent($oldContent));
             }else{
-                $oldIds = [];
+                $oldQIds = [];
             }
             // 得到删除的id
-            $deleteIds = array_diff_assoc($oldIds, $newIds);
-            $newPermanentIds = array_diff_assoc($newIds, $oldIds);
-            if(!empty($newValidIds)){
+            $deleteQIds = array_diff_assoc($oldQIds, $newQIds);
+            $newPermanentQIds = array_diff_assoc($newQIds, $oldQIds);
+            if(!empty($newPermanentQIds)){
                 // 设置文件为有效
+                foreach ($newPermanentQIds as $queryId) {
+                    $condition = $this->buildConditionByQueryId($queryId);
+                    $file = $this->setFilePermanent($condition);
+                    if(!$file){
+                        $report['p_fail'][] = $queryId;
+                    }else{
+                        $report['p_succ'][] = $queryId;
+                    }
+                }
             }
-            if(!empty($deleteIds)){
+            if(!empty($deleteQIds)){
                 // 设置文件为临时文件
+                foreach ($deleteQIds as $queryId) {
+                    $condition = $this->buildConditionByQueryId($queryId);
+                    $file = $this->setFileTmp($condition);
+                    if(!$file){
+                        $report['d_fail'][] = $queryId;
+                    }else{
+                        $report['d_succ'][] = $queryId;
+                    }
+                }
             }
         }
-        return 0;
+        // todo 不应该怎么鲁莽的
+        return true;
     }
 
+    public function deleteOneFile($condition){
+        $file = $this->getOne($condition);
+        if(!$file){
+            return true;
+        }
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            // 1. 删除数据库记录
+            $result = $file->delete();
+            if(false === $result){
+                $this->addError('', '删除失败');
+                return false;
+            }
+
+            // 2. 删除文件
+            $result = $this->deleteFileFromTps($file->f_storage_type, $file->getFilePath());
+
+            $transaction->commit();
+            return true;
+        } catch (\Exception $e) {
+            Yii::error($e);
+            $transaction->rollback();
+            $this->addError('', '发生异常');
+            return false;
+        }
+    }
+
+    protected function deleteFileFromTps($storageType, $filePath){
+        $driver = $this->instanceDriver($storageType);
+
+        return $driver->deleteFile($filePath);
+    }
+    public function savePrimaryIds($ids = []){
+        foreach($ids as $key => $id){
+            $ids[$key] = ['vfi_fid' => $id];
+        }
+        $command = Yii::$app->db->createCommand();
+        $command->batchInsert("{{%valid_file_id}}", ['vfi_fid'], $ids);
+        $command->execute();
+        return true;
+    }
+    public function getTmpFileIds(){
+        $query = $this->getTmpFileQuery();
+        $result = $query->select(['f_id'])->asArray()->all();
+        if(!empty($result)){
+            $result = ArrayHelper::getColumn($result, 'f_id');
+        }
+        return $result;
+    }
+
+
+    protected function getTmpFileQuery(){
+        $query = File::find();
+        $query->andWhere(['=', 'f_valid_type', File::TMP_FILE]);
+        return $query;
+    }
 
 
     public function getProvider($condition = [], $sortData = [], $withPage = true){
@@ -118,7 +247,30 @@ class FileModel extends Model
         return [$provider, $pagination];
     }
 
+
+    protected function buildConditionByQueryId($queryId){
+        $pathParts = pathinfo($queryId);
+        $condition = [];
+        if(isset($pathParts['dirname'])){
+            $condition['f_category'] = $pathParts['dirname'];
+        }
+        if(isset($pathParts['filename'])){
+            $condition['f_name'] = $pathParts['filename'];
+        }
+        if(isset($pathParts['extension'])){
+            $condition['f_ext'] = $pathParts['extension'];
+        }
+        return $condition;
+    }
+    public function getOneByQueryId($queryId){
+        $condition = $this->buildConditionByQueryId($queryId);
+        return !empty($condition) ? $this->getOne($condition) : null;
+    }
+
     public function getOne($condition){
+        if(is_object($condition)){
+            return $condition;
+        }
         if(!empty($condition)){
             return File::find()->where($condition)->one();
         }else{
@@ -165,6 +317,11 @@ class FileModel extends Model
     }
 
     public function setFileUploaded($file){
+        $file = $this->getOne($file);
+        if(!$file){
+            $this->addError('', '数据不存在');
+            return false;
+        }
         $file->f_status = File::STATUS_UPLOADED;
         if(false === $file->update(false)){
             $this->addError('', Yii::t('app', '数据库更新失败'));
@@ -174,7 +331,36 @@ class FileModel extends Model
     }
 
     public function setFileFailed($file){
+        $file = $this->getOne($file);
+        if(!$file){
+            $this->addError('', '数据不存在');
+            return false;
+        }
         $file->f_status = File::STATU_UPLOAD_FAIL;
+        return $this->updateOneInner($file);
+    }
+
+    public function setFilePermanent($file){
+        $file = $this->getOne($file);
+        if(!$file){
+            $this->addError('', '数据不存在');
+            return false;
+        }
+        $file->f_valid_type = File::PERMANENT_FILE;
+        return $this->updateOneInner($file);
+    }
+
+    public function setFileTmp(){
+        $file = $this->getOne($file);
+        if(!$file){
+            $this->addError('', '数据不存在');
+            return false;
+        }
+        $file->f_valid_type = File::TMP_FILE;
+        return $this->updateOneInner($file);
+    }
+
+    protected function updateOneInner($file){
         if(false === $file->update(false)){
             $this->addError('', Yii::t('app', '数据库更新失败'));
             return false;
@@ -281,7 +467,7 @@ class FileModel extends Model
         }
     }
 
-    protected function instanceDriver($type){
+    public static function instanceDriver($type){
         switch ($type) {
             case File::DR_DISK:
                 return Yii::$app->diskfile;

@@ -18,8 +18,6 @@ class FileController extends FrController
         console($url);
     }
     public function actionRead($name){
-        header('Content-type: video/mp4');
-        header('Content-Disposition:inline; filename="148948089058c7acbaf36a52.51644655.mp4"');
         Yii::$app->diskfile->outputByPath($name);
         // $file = $fileModel->getOne(['f_id' => $id]);
         // if(!$file){

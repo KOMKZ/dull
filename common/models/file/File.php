@@ -4,6 +4,7 @@ namespace common\models\file;
 use Yii;
 use common\helpers\ExifTool;
 use common\base\ActiveRecord;
+use common\models\file\FileModel;
 
 /**
  *
@@ -133,7 +134,7 @@ class File extends ActiveRecord
     public function getFilePath(){
         return implode( DIRECTORY_SEPARATOR,[
             trim(implode(DIRECTORY_SEPARATOR, [
-                trim($this->f_category, DIRECTORY_SEPARATOR),
+                md5(trim($this->f_category, DIRECTORY_SEPARATOR)),
                 trim($this->f_prefix, DIRECTORY_SEPARATOR),
             ]), DIRECTORY_SEPARATOR),
             $this->buildTotalName()
@@ -141,6 +142,8 @@ class File extends ActiveRecord
     }
 
     public function getFileSavePath(){
+        $driver = FileModel::instanceDriver($this->f_storage_type);
+        $this->setSaveDir($driver->base);
         return implode(DIRECTORY_SEPARATOR, [
             rtrim($this->_saveDir, DIRECTORY_SEPARATOR),
             $this->buildTotalName()

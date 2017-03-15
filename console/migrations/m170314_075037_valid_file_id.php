@@ -12,24 +12,16 @@ class m170314_075037_valid_file_id extends Migration
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
-        $this->createTable('{{%user}}', [
-            'u_id' => $this->primaryKey(),
-            'u_username' => $this->string()->notNull()->unique(),
-            'u_auth_key' => $this->string(32)->notNull(),
-            'u_password_hash' => $this->string()->notNull(),
-            'u_password_reset_token' => $this->string()->unique(),
-            'u_email' => $this->string()->notNull()->unique(),
-            'u_status' => $this->char(12)->notNull(),
-            'u_auth_status' => $this->smallinteger()->notNull(),
-            'u_created_at' => $this->integer()->notNull(),
-            'u_updated_at' => $this->integer()->notNull(),
+        $this->createTable('{{%valid_file_id}}', [
+            'vfi_id' => $this->bigPrimaryKey(),
+            'vfi_fid' => $this->integer()
         ], $tableOptions);
         return true;
     }
 
     public function down()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{%valid_file_id}}');
         return true;
     }
 

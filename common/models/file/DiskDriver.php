@@ -32,11 +32,14 @@ class DiskDriver extends Model
         return $this->_host;
     }
 
-    public function setBase($value){
+    public function sedeleteFiletBase($value){
         $this->_base = rtrim($value, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     public function getBase(){
         return $this->_base;
+    }
+    public function setBase($value){
+        return $this->_base = $value;
     }
     public function outputByPath($filePath){
         $path = $this->getFilePath($filePath);
@@ -46,8 +49,16 @@ class DiskDriver extends Model
         $headers = Yii::$app->response->headers;
         return Yii::$app->response->sendFile($path);
     }
+    public function deleteFile($fileName){
+        $filePath = $this->getFilePath($fileName);
+        if(!file_exists($filePath)){
+            return true;
+        }
+        // todo 这里要严格校验路径是否在base之内
+        @unlink($filePath);
+        return true;
+    }
     public function output($file){
-        $file->setSaveDir($this->_base);
         $path = $file->getFileSavePath();
         $headers = Yii::$app->response->headers;
         return Yii::$app->response->sendFile($path, $file->f_depostion_name);
@@ -60,10 +71,10 @@ class DiskDriver extends Model
         return $frurl->createAbsoluteUrl(['file/read', 'name' => $filePath], 'http');
     }
     public function getFilePath($name){
-        $dir = md5(dirname($name)) . DIRECTORY_SEPARATOR . basename($name);
+        // $dir = md5(dirname($name)) . DIRECTORY_SEPARATOR . basename($name);
         $path = implode(DIRECTORY_SEPARATOR, [
             rtrim($this->_base, DIRECTORY_SEPARATOR),
-            trim($dir, DIRECTORY_SEPARATOR.'.')
+            trim($name, DIRECTORY_SEPARATOR.'.')
         ]);
         return $path;
     }

@@ -58,7 +58,18 @@ JS;
             }
 
             $fileModel = new FileModel();
-            $file = $fileModel->saveTmpFile($filePath);
+
+            $data = [
+                'source_path' => $filePath,
+                'source_path_type' => File::SP_LOCAL,
+                'f_storage_type' => File::DR_DISK,
+                'f_category' => 'editor_image',
+                'f_name' => $fileName,
+                'f_acl_type' => File::FILE_ACL_PUB_R,
+                // todo get setting
+                'save_asyc' => false,
+            ];
+            $file = $fileModel->saveFile($data);
             if(!$file){
                 list($code, $error) = $fileModel->getOneError();
                 return $this->ckError($code.':'.$error);
@@ -110,7 +121,7 @@ JS;
             'f_storage_type' => File::DR_DISK,
             'f_category' => 'image_crop',
             'f_name' => $fileName,
-            'f_acl_type' => File::FILE_ACL_PRI,
+            'f_acl_type' => File::FILE_ACL_PUB_R,
             // todo get setting
             'save_asyc' => false,
         ];
