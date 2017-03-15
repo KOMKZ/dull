@@ -24,6 +24,14 @@ class DemoController extends Controller
     public $enableCsrfValidation = false;
 
 
+
+    public function actionDuandian(){
+        new \common\helpers\UploadHandler([
+            'param_name' => 'File',
+            'upload_dir' => '/tmp/chuckdir/'
+        ]);
+    }
+
     public function actionParse(){
         $fileModel = new FileModel();
         $content = file_get_contents('//var/www/html/dull/1.txt');

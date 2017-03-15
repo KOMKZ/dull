@@ -53,18 +53,19 @@ $this->registerCss($css);
                 echo FileUploadUI::widget([
                     'model' => $model,
                     'attribute' => 'upload_file',
-                    'url' => $fileUploadUrl, // your url, this is just for demo purposes,
+                    'url' => 'http://localhost:8054/admin/demo/duandian', // your url, this is just for demo purposes,
                     'clientOptions' => [
                         'previewMaxWidth' => 300,
-                        'previewMaxHeight' => 300
+                        'previewMaxHeight' => 300,
+                        'maxChunkSize' => 10000000
                     ],
-                    'clientEvents' => [
-                        'fileuploaddone' => $fileUploaddOneCallBack,
-                        'fileuploadfail' => 'function(e, data) {
-                                                // console.log(e);
-                                                console.log(data);
-                                            }',
-                    ],
+                    // 'clientEvents' => [
+                    //     'fileuploaddone' => $fileUploaddOneCallBack,
+                    //     'fileuploadfail' => 'function(e, data) {
+                    //                             // console.log(e);
+                    //                             console.log(data);
+                    //                         }',
+                    // ],
                 ]); ?>
             </div>
         </div>
