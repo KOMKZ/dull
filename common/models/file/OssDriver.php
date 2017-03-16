@@ -66,7 +66,7 @@ class OssDriver extends Model
 
 
 
-    protected function instanceOss($inner = false){
+    public function instanceOss($inner = false){
         if(!$inner){
             if(null === self::$oss){
                 self::$oss = new Oss($this->access_key_id, $this->access_secret_key, $this->endpoint, $this->is_cname);

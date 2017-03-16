@@ -55,7 +55,7 @@ class Setting extends ActiveRecord
             ['set_module', 'number'],
 
             ['set_active', 'default', 'value' => 1],
-            ['set_active', 'filter', 'filter' => 'intval'],
+            ['set_active', 'filter', 'filter' => 'interval'],
 
             [
                 [

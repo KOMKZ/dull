@@ -38,6 +38,8 @@ class m170209_030141_file extends Migration
             'f_storage_type' => $this->char(20)->notNull(),
             // 文件访问类型
             'f_acl_type' => $this->char(30)->notNull(),
+            // 文件时效类型
+            'f_valid_type' => $this->smallinteger()->notNull(),
             // 文件创建时间
             'f_created_at' => $this->integer()->notNull(),
             // 文件更新时间

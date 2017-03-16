@@ -4,6 +4,7 @@ namespace common\models\file;
 use Yii;
 use common\helpers\ExifTool;
 use common\base\ActiveRecord;
+use common\models\file\FileModel;
 
 /**
  *
@@ -19,6 +20,9 @@ class File extends ActiveRecord
 
     const SAVE_SYC = 0;
     CONST SAVE_ASYC= 1;
+
+    const TMP_FILE = 1;
+    const PERMANENT_FILE = 2;
 
     const SP_LOCAL = 'local';
 
@@ -65,7 +69,7 @@ class File extends ActiveRecord
         $data = require_once(Yii::getAlias('@common/models/file/categories.php'));
         return $onlyValue ? array_keys($data) : $data;
     }
-    public static function getValidConsts($type, $onlyValue = false){
+    public static function getValidConsts($type = null, $onlyValue = false){
         if(empty(self::$constMap)){
             self::$constMap = [
                 'f_storage_type' => [
@@ -87,13 +91,19 @@ class File extends ActiveRecord
                     self::STATU_UPLOAD_FAIL => Yii::t('app', '上传失败')
                 ],
                 'save_asyc' => [
+                    self::SAVE_SYC => Yii::t('app', '同步保存'),
                     self::SAVE_ASYC => Yii::t('app', '异步保存'),
-                    self::SAVE_SYC => Yii::t('app', '同步保存')
+                ],
+                'f_valid_type' => [
+                    self::TMP_FILE => Yii::t('app', '临时文件'),
+                    self::PERMANENT_FILE => Yii::t('app', '永久文件')
                 ]
             ];
         }
         if(array_key_exists($type, self::$constMap) && !empty(self::$constMap[$type])){
             return $onlyValue ? array_keys(self::$constMap[$type]) : self::$constMap[$type];
+        }elseif(null == $type){
+            return self::$constMap;
         }else{
             throw new \Exception("zh:不存在常量映射定义{$type}");
         }
@@ -124,7 +134,7 @@ class File extends ActiveRecord
     public function getFilePath(){
         return implode( DIRECTORY_SEPARATOR,[
             trim(implode(DIRECTORY_SEPARATOR, [
-                trim($this->f_category, DIRECTORY_SEPARATOR),
+                md5(trim($this->f_category, DIRECTORY_SEPARATOR)),
                 trim($this->f_prefix, DIRECTORY_SEPARATOR),
             ]), DIRECTORY_SEPARATOR),
             $this->buildTotalName()
@@ -132,6 +142,8 @@ class File extends ActiveRecord
     }
 
     public function getFileSavePath(){
+        $driver = FileModel::instanceDriver($this->f_storage_type);
+        $this->setSaveDir($driver->base);
         return implode(DIRECTORY_SEPARATOR, [
             rtrim($this->_saveDir, DIRECTORY_SEPARATOR),
             $this->buildTotalName()
@@ -205,7 +217,12 @@ class File extends ActiveRecord
             ['source_path', 'required'],
             ['source_path', 'validateSourcePath'],
 
-            ['save_asyc', 'filter', 'filter' => 'boolval'],
+            ['save_asyc', 'filter', 'filter' => 'intval'],
+
+
+            ['f_valid_type', 'default', 'value' => self::TMP_FILE],
+            ['f_valid_type', 'filter', 'filter' => 'intval'],
+            ['f_valid_type', 'in', 'range' => self::getValidConsts('f_valid_type', true)],
 
 
             ['f_name', 'required', 'skipOnEmpty' => true],
@@ -214,6 +231,7 @@ class File extends ActiveRecord
 
             ['f_acl_type', 'required'],
             ['f_acl_type', 'in', 'range' => self::getValidConsts('f_acl_type', true)],
+
 
             ['f_ext', 'match', 'pattern' => '/^[0-9a-zA-Z]+$/'],
 
@@ -248,6 +266,7 @@ class File extends ActiveRecord
             'f_created_at' => Yii::t('app', '文件创建时间'),
             'f_updated_at' => Yii::t('app', '文件更新时间'),
             'f_status' => Yii::t('app', '文件状态'),
+            'f_valid_type' => Yii::t('app', '文件时效类型'),
             'source_path' => Yii::t('app', '文件路径'),
             'source_path_type' => Yii::t('app', '文件路径类型'),
             'save_asyc' => Yii::t('app', '是否异步保存'),
@@ -264,6 +283,7 @@ class File extends ActiveRecord
                 'source_path',
                 'save_asyc',
                 'f_name',
+                'f_valid_type',
                 'f_category',
                 'f_prefix',
                 'f_ext',

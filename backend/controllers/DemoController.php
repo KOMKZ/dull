@@ -24,6 +24,11 @@ class DemoController extends Controller
     public $enableCsrfValidation = false;
 
 
+
+    public function actionDuandian(){
+
+    }
+
     public function actionParse(){
         $fileModel = new FileModel();
         $content = file_get_contents('//var/www/html/dull/1.txt');

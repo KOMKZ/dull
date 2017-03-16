@@ -48,7 +48,6 @@ class UserController extends AdminController
             }
             $result = $userModel->login($condition, $post['password'], empty($post['remember']) ? false : $post['remember']);
             if($result){
-
                 return $this->redirect(['site/index']);
             }else{
                 list($code, $error) = $userModel->getOneError();

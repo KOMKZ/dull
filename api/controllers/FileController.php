@@ -29,7 +29,7 @@ JS;
         echo $result;
         exit();
     }
-    
+
     private function ckSucc($url){
         $callbackNum = $_GET['CKEditorFuncNum'];
         $result = <<<JS
@@ -40,6 +40,7 @@ JS;
         echo $result;
         exit();
     }
+
     public function actionSaveTmpCkImg(){
         try {
             $uploadFile = UploadedFile::getInstanceByName('upload');
@@ -57,7 +58,18 @@ JS;
             }
 
             $fileModel = new FileModel();
-            $file = $fileModel->saveTmpFile($filePath);
+
+            $data = [
+                'source_path' => $filePath,
+                'source_path_type' => File::SP_LOCAL,
+                'f_storage_type' => File::DR_DISK,
+                'f_category' => 'editor_image',
+                'f_name' => $fileName,
+                'f_acl_type' => File::FILE_ACL_PUB_R,
+                // todo get setting
+                'save_asyc' => false,
+            ];
+            $file = $fileModel->saveFile($data);
             if(!$file){
                 list($code, $error) = $fileModel->getOneError();
                 return $this->ckError($code.':'.$error);
@@ -70,13 +82,14 @@ JS;
         }
     }
 
-    public function actionSaveTmpCropImg(){
 
+    public function actionSaveTmpCropImg(){
         $uploadFile = UploadedFile::getInstanceByName('file');
         if(!$uploadFile){
             return $this->error(null, Yii::t('app', '服务器读取不到上传文件'));
         }
 
+        // 裁切文件
         $request = Yii::$app->request;
         $width = $request->post('width', 200);
         $height = $request->post('height', 200);
@@ -89,6 +102,7 @@ JS;
             new Box($width, $height)
         );
 
+        // 保存裁切文件
         $tempDir = Yii::getAlias('@api/runtime/files') . DIRECTORY_SEPARATOR;
         $fileName = uniqid(time(), true);
         $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
@@ -98,8 +112,21 @@ JS;
             return $this->error(null, Yii::t('app', '保存文件出错'));
         }
 
+        // 保存入库
         $fileModel = new FileModel();
-        $file = $fileModel->saveTmpFile($filePath);
+
+        $data = [
+            'source_path' => $filePath,
+            'source_path_type' => File::SP_LOCAL,
+            'f_storage_type' => File::DR_DISK,
+            'f_category' => 'image_crop',
+            'f_name' => $fileName,
+            'f_acl_type' => File::FILE_ACL_PUB_R,
+            // todo get setting
+            'save_asyc' => false,
+        ];
+
+        $file = $fileModel->saveFile($data);
         if(!$file){
             list($code, $error) = $fileModel->getOneError();
             return $this->error($code, $error);
@@ -134,6 +161,8 @@ JS;
         if(empty($post['File'])){
             return $this->error(null, '数据结构错误');
         }
+
+        // 构造入库的实际文件数据
         $post['File']['source_path'] = $filePath;
         $post['File']['source_path_type'] = File::SP_LOCAL;
         $file->upload_file = $uploadFile;

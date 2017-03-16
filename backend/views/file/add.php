@@ -15,6 +15,13 @@ $fileUploaddOneCallBack = <<<JS
         }
     }
 JS;
+$css = <<<CSS
+.preview video{
+    width:300px;
+    height:300px;
+}
+CSS;
+$this->registerCss($css);
 ?>
 <div class="row">
     <div class="col-lg-5">
@@ -24,11 +31,11 @@ JS;
                 echo $form->field($model, 'f_name')->textInput(['autofocus' => true]);
                 echo $form->field($model, 'f_prefix')->textInput();
                 // echo $form->field($model, 'source_path_type')->dropDownList($filePathTypeMap);
-                echo $form->field($model, 'f_storage_type')->dropDownList($fileStorageTypeMap);
-                echo $form->field($model, 'f_category')->dropDownList($fileCategoryMap);
-                echo $form->field($model, 'f_acl_type')->dropDownList($fileAclTypeMap);
-                echo $form->field($model, 'save_asyc')->dropDownList($fileSaveAsycMap);
-
+                echo $form->field($model, 'f_storage_type')->dropDownList($map['f_storage_type']);
+                echo $form->field($model, 'f_category')->dropDownList($map['f_category']);
+                echo $form->field($model, 'f_acl_type')->dropDownList($map['f_acl_type']);
+                echo $form->field($model, 'save_asyc')->dropDownList($map['save_asyc']);
+                echo $form->field($model, 'f_valid_type')->dropDownList($map['f_valid_type']);
                 // echo $form->field($model, 'u_email');
                 // echo $form->field($model, 'u_status')->dropDownList($userStatusMap);
                 // echo $form->field($model, 'u_auth_status')->dropDownList($userAuthStatusMap);
@@ -46,14 +53,19 @@ JS;
                 echo FileUploadUI::widget([
                     'model' => $model,
                     'attribute' => 'upload_file',
-                    'url' => $fileUploadUrl, // your url, this is just for demo purposes,
-                    'clientEvents' => [
-                        'fileuploaddone' => $fileUploaddOneCallBack,
-                        'fileuploadfail' => 'function(e, data) {
-                                                // console.log(e);
-                                                console.log(data);
-                                            }',
+                    'url' => 'http://localhost:8054/admin/demo/duandian', // your url, this is just for demo purposes,
+                    'clientOptions' => [
+                        'previewMaxWidth' => 300,
+                        'previewMaxHeight' => 300,
+                        'maxChunkSize' => 10000000
                     ],
+                    // 'clientEvents' => [
+                    //     'fileuploaddone' => $fileUploaddOneCallBack,
+                    //     'fileuploadfail' => 'function(e, data) {
+                    //                             // console.log(e);
+                    //                             console.log(data);
+                    //                         }',
+                    // ],
                 ]); ?>
             </div>
         </div>

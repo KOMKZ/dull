@@ -1,7 +1,7 @@
 <?php
 return [
-    'no_category' => 'no_category',
-    'file_thumbs' => 'file_thumbs',
-    'post_thumb' => 'post_thumb',
-    'tmp_file' => 'tmp_file'
+    'no_category' => '默认分类',
+    'file_thumbs' => '文件缩略图',
+    'image_crop' => '图片裁切图',
+    'editor_image' => '编辑器图片',
 ];

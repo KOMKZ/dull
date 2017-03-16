@@ -66,7 +66,7 @@ class PostModel extends Model
 
         if(urldecode($post['p_thumb_img']) != urldecode($data['p_thumb_img'])){
             $fileModel = new FileModel();
-            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
+            $file = $fileModel->moveTmpFileToTps($data['p_thumb_img']);
             if(!$file){
                 list($code, $error) = $fileModel->getOneError();
                 $this->addError($code, $error);
@@ -86,33 +86,55 @@ class PostModel extends Model
 
     }
     public function createPost($data){
-        $post = new Post();
-        $post->scenario = 'create';
-        $post->p_created_uid = Yii::$app->user->getid();
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $post = new Post();
+            $post->scenario = 'create';
+            $post->p_created_uid = Yii::$app->user->getid();
 
-        if(!$post->load($data, '') || !$post->validate()){
-            $this->addError('', $this->getArErrMsg($post));
-            return false;
-        }
-
-        // 保存图片
-        if(!empty($data['p_thumb_img'])){
-            $fileModel = new FileModel();
-            $file = $fileModel->uploadTmpFile($data['p_thumb_img']);
-            if(!$file){
-                list($code, $error) = $fileModel->getOneError();
-                $this->addError($code, $error);
+            if(!$post->load($data, '') || !$post->validate()){
+                $this->addError('', $this->getArErrMsg($post));
                 return false;
             }
-            $post->p_thumb_img = $fileModel->getFileUrl($file);
-            $post->p_thumb_img_id = $file->f_id;
-        }
+            $fileModel = new FileModel();
+            // 设置文章内容的文件为有效
+            if(!empty($data['p_content'])){
+                $result = $fileModel->setFilePermanentFromContent($data['p_content']);
+                if(!$result){
+                    $this->addError('', Yii::t('app', '设置文件时效出错'));
+                    return false;
+                }
+            }
 
-        $result = $post->insert(false);
-        if(!$result){
-            $this->addError('', Yii::t('app', '写入失败'));
+            // 保存图片
+            if(!empty($data['p_thumb_img'])){
+                // todo 应该要有一个保护机制，保护这个文件只属于这次内容
+                $file = $fileModel->getOneByQueryId($data['p_thumb_img']);
+                if(!$file){
+                    $this->addError('', Yii::t('app', '保存的文件不存在'));
+                    return false;
+                }
+                $result = $fileModel->setFilePermanentFromArray([$data['p_thumb_img']]);
+                if(!$result){
+                    $this->addError('', Yii::t('app', '设置文件时效出错'));
+                    return false;
+                }
+                $post->p_thumb_img = $fileModel->getFileUrl($file);
+                $post->p_thumb_img_id = $file->f_id;
+            }
+
+            $result = $post->insert(false);
+            if(!$result){
+                $this->addError('', Yii::t('app', '写入失败'));
+                return false;
+            }
+            $transaction->commit();
+            return $post;
+        } catch (\Exception $e) {
+            Yii::error($e);
+            $transaction->rollback();
+            $this->addError('', '发生异常');
             return false;
         }
-        return $post;
     }
 }
