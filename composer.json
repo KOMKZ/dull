@@ -35,7 +35,9 @@
         "riverslei/payment": "^2.7",
         "loveorigami/yii2-jquery-loading": "^1.0",
         "chenkby/yii2-region": "dev-master",
-        "perminder-klair/yii2-videojs": "dev-master"
+        "perminder-klair/yii2-videojs": "dev-master",
+        "gargron/fileupload": "^1.4",
+        "flowjs/flow-php-server": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

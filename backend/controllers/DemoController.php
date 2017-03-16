@@ -26,10 +26,7 @@ class DemoController extends Controller
 
 
     public function actionDuandian(){
-        new \common\helpers\UploadHandler([
-            'param_name' => 'File',
-            'upload_dir' => '/tmp/chuckdir/'
-        ]);
+
     }
 
     public function actionParse(){

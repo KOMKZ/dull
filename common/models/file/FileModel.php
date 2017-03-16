@@ -10,6 +10,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\db\Query;
 
 
 /**
@@ -454,16 +455,41 @@ class FileModel extends Model
     }
 
     protected function saveFileInfoInDb($file){
-        $file->f_size = $file->caculateSize();
-        $file->f_mime_type = $file->parseMimeType();
-        $file->f_meta_data = json_encode($file->parseMetaData());
-        $file->f_created_at = time();
-        $file->f_updated_at = time();
-        $file->f_depostion_name = $file->buildTotalName();
-        if($file->insert(false)){
-            return $file;
-        }else{
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            if($id = $this->applyNewId()){
+                $file->f_id = $id;
+            }
+            $file->f_size = $file->caculateSize();
+            $file->f_mime_type = $file->parseMimeType();
+            $file->f_meta_data = json_encode($file->parseMetaData());
+            $file->f_created_at = time();
+            $file->f_updated_at = time();
+            $file->f_depostion_name = $file->buildTotalName();
+            if($file->insert(false)){
+                $trans->commit();
+                return $file;
+            }else{
+                return false;
+            }
+        } catch (\Exception $e) {
+            Yii::error($e);
+            $trans->rollback();
             return false;
+        }
+    }
+
+    protected function applyNewId(){
+        $one = (new Query())
+                 ->from("{{%valid_file_id}}")
+                 ->one();
+        if(empty($one)){
+            return null;
+        }else{
+            $result = Yii::$app->db->createCommand("delete from {{%valid_file_id}} where vfi_id = :id", [
+                ':id' => $one['vfi_id']
+                ])->execute();
+            return $one['vfi_fid'];
         }
     }
 

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5ac4b12bda263122eafcca490e9dc595",
-    "content-hash": "121a57c02df5fafbf3387ed33807773a",
+    "hash": "6c2c2bcd5c7ddad5b476404c317aeab0",
+    "content-hash": "3eeef6c53aa839eefe03b276a8933be2",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -1036,6 +1036,58 @@
             "time": "2017-01-13 12:31:37"
         },
         {
+            "name": "flowjs/flow-php-server",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flowjs/flow-php-server.git",
+                "reference": "d621e27a18ba509de72b274241931c5b607ca95f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flowjs/flow-php-server/zipball/d621e27a18ba509de72b274241931c5b607ca95f",
+                "reference": "d621e27a18ba509de72b274241931c5b607ca95f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "dev-master",
+                "league/phpunit-coverage-listener": "~1.1",
+                "mikey179/vfsstream": "v1.2.0",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Flow": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aidas Klimas",
+                    "email": "aidaskk@gmail.com"
+                }
+            ],
+            "description": "PHP library for handling chunk uploads. Works with flow.js html5 file uploads.",
+            "keywords": [
+                "chunks",
+                "file upload",
+                "flow",
+                "flow.js",
+                "html5 file upload",
+                "resumable",
+                "resumable.js",
+                "upload"
+            ],
+            "time": "2016-10-01 08:55:14"
+        },
+        {
             "name": "fortawesome/font-awesome",
             "version": "v4.7.0",
             "source": {
@@ -1132,6 +1184,36 @@
                 "php"
             ],
             "time": "2016-02-16 18:34:14"
+        },
+        {
+            "name": "gargron/fileupload",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Gargron/fileupload.git",
+                "reference": "4886b979f6a601c2cedc390652884481ff8ec3bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Gargron/fileupload/zipball/4886b979f6a601c2cedc390652884481ff8ec3bb",
+                "reference": "4886b979f6a601c2cedc390652884481ff8ec3bb",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FileUpload\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File uploading library capable of handling large/chunked/multiple file uploads",
+            "time": "2017-02-20 08:07:43"
         },
         {
             "name": "imagine/imagine",
