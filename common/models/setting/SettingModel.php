@@ -31,6 +31,18 @@ class SettingModel extends Model
         return $result;
     }
 
+    public function classifyByModule($items){
+        $result = [];
+        $map = Setting::getValidConsts('set_module');
+        foreach($items as $key => $item){
+            $result[$item['set_module']]['childrens'][] = $item;
+        }
+        foreach($result as $key => $items){
+            $result[$key]['label'] = $map[$key];
+        }
+        return $result;
+    }
+
     public function update($condition, $data = []){
 
 
@@ -40,6 +52,9 @@ class SettingModel extends Model
         // 设定修改场景
         // 1. 增加一个返回loadvalue
         // 2. 工厂
+        $one = $this->getOne($condition);
+        console($one);
+
     }
 
     public function updateAllSettings($data){
@@ -57,6 +72,7 @@ class SettingModel extends Model
 
     public function create($def){
         $setting = new Setting();
+        $setting->scenario = 'create';
         if(!$setting->load($def, '') || !$setting->validate()){
             $this->addError('', $this->getArErrMsg($setting));
             return false;

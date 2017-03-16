@@ -46,6 +46,8 @@ class Setting extends ActiveRecord
 
             ['set_des', 'string', 'max' => 100],
 
+            ['set_value', 'formatValue'],
+
             ['set_parent_id', 'default', 'value' => 0],
             ['set_parent_id', 'number'],
 
@@ -69,6 +71,25 @@ class Setting extends ActiveRecord
             ]
         ];
     }
+
+    public function scenarios(){
+        return [
+            'create' => [
+                'set_name',
+                'set_value',
+                'set_value_type',
+                'set_des',
+                'set_module',
+                'set_parent_id',
+                'set_validators',
+                'set_validators_params',
+                'set_widget',
+                'set_widget_params',
+                'set_active'
+            ]
+        ];
+    }
+
 
     public static function getValidConsts($type, $onlyValue = false){
         if(empty(self::$_constMap)){
