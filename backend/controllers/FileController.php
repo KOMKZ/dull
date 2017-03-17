@@ -180,7 +180,8 @@ class FileController extends AdminController
     public function actionDemo(){
         $fileModel = new FileModel();
         $url = [
-            'file/wufileupload' => Url::to(['file/wufileupload'])
+            'file/save-chunked-file' => Yii::$app->apiurl->createAbsoluteUrl(['file/save-chunked-file']),
+            'file/ask-chunked-file' => Yii::$app->apiurl->createAbsoluteUrl(['file/ask-chunked-file'])
         ];
         return $this->render('demo', [
             'url' => $url

@@ -41,6 +41,49 @@ JS;
         exit();
     }
 
+    public function checkFileTotal(){
+
+    }
+
+
+    public function actionAskChunkedFile(){
+        $post = Yii::$app->request->post();
+        switch ($post['ask_type']) {
+            case 'checkFileTotal':
+
+                break;
+            case 'checkFileChunked':
+                break;
+            case 'checkFileMerge':
+                break;
+            default:
+                // 注意任何的错误都会导致重新上传
+                $this->error(null, '数据结构不正确');
+                break;
+        }
+    }
+
+    public function actionSaveChunkedFile(){
+        $fileModel = new FileModel();
+        $post = Yii::$app->request->post();
+
+        return $this->succ(null, '1');
+        // 准备上传目录
+        $targetDir = Yii::$app->getAlias('@app/runtime/files/chunked_tmp');
+        $uploadDir = Yii::$app->getAlias('@app/runtime/files/chunked_final');
+        if (!file_exists($targetDir)) {
+            @mkdir($targetDir);
+        }
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir);
+        }
+
+        $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
+        $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
+
+
+    }
+
     public function actionSaveTmpCkImg(){
         try {
             $uploadFile = UploadedFile::getInstanceByName('upload');
