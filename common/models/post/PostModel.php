@@ -52,6 +52,7 @@ class PostModel extends Model
         return [$provider, $pagination];
     }
     public function updatePost($condition, $data){
+        // Yii::$app->db->beginTransaction();
         $post = $this->getOne($condition);
         if(!$post){
             $this->addError('', Yii::t('app', '文章不存在'));
@@ -63,17 +64,25 @@ class PostModel extends Model
             $this->addError('', $this->getArErrMsg($post));
             return false;
         }
-
+        $fileModel = new FileModel();
+        $result = $fileModel->setFilePermanentFromContent($data['p_content'], $post->p_content);
+        if(!$result){
+            $this->addError('', Yii::t('app', '设置文件时效出错'));
+            return false;
+        }
         if(urldecode($post['p_thumb_img']) != urldecode($data['p_thumb_img'])){
-            $fileModel = new FileModel();
-            $file = $fileModel->moveTmpFileToTps($data['p_thumb_img']);
+            $file = $fileModel->getOneByQueryId($data['p_thumb_img']);
             if(!$file){
-                list($code, $error) = $fileModel->getOneError();
-                $this->addError($code, $error);
+                $this->addError('', Yii::t('app', '保存的文件不存在'));
+                return false;
+            }
+            $result = $fileModel->setFilePermanentFromArray([$data['p_thumb_img']], [$post->p_thumb_img_id]);
+            if(!$result){
+                $this->addError('', Yii::t('app', '设置文件时效出错'));
                 return false;
             }
             $post->p_thumb_img = $fileModel->getFileUrl($file);
-            $post->p_thumb_img_id = $file->f_id;
+            $post->p_thumb_img_id = $data['p_thumb_img'];
             // 标记原来的图片已经废弃
         }
 
@@ -120,7 +129,7 @@ class PostModel extends Model
                     return false;
                 }
                 $post->p_thumb_img = $fileModel->getFileUrl($file);
-                $post->p_thumb_img_id = $file->f_id;
+                $post->p_thumb_img_id = $data['p_thumb_img'];
             }
 
             $result = $post->insert(false);

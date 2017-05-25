@@ -18,12 +18,13 @@ class FileController extends FrController
         console($url);
     }
     public function actionRead($name){
-        Yii::$app->diskfile->outputByPath($name);
-        // $file = $fileModel->getOne(['f_id' => $id]);
-        // if(!$file){
-        //     throw new HttpException(404, Yii::t('文件不存在'));
-        // }
-        // $fileModel->output($file);
+        list($saveType, $path) = FileModel::parseQueryId($name);
+        if($saveType){
+            $driver = FileModel::instanceDriver($saveType);
+            $driver->outputByQid($name);
+        }else{
+            Header("HTTP/1.1 404 Not Found");
+        }
     }
 
 

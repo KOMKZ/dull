@@ -36,6 +36,10 @@ class File extends ActiveRecord
     private $_saveDir = null;
 
 
+    public function fields(){
+        return array_merge(parent::fields(), ['f_query_id', 'f_url']);
+    }
+
 
     /**
      * 源文件地址
@@ -120,33 +124,54 @@ class File extends ActiveRecord
     public function getUpload_file(){
         return $this->_upload_file;
     }
+
+    /**
+     * 传入保存的基础路径
+     * 最终路径 = 记录路径 + md5(category名称 + prefix名称)
+     * @param [type] $base [description]
+     */
     public function setSaveDir($base){
         $base = rtrim($base, DIRECTORY_SEPARATOR);
         if(!$base){
             throw new \Exception(Yii::t('app', 'base路径不能为空'));
         }
-        $category = trim($this->f_category, DIRECTORY_SEPARATOR);
-        $prefix = trim($this->f_prefix, DIRECTORY_SEPARATOR);
-        $path = $category . ($prefix ? (DIRECTORY_SEPARATOR . $prefix) : '');
-        $this->_saveDir = $base . DIRECTORY_SEPARATOR . md5($path);
+        $path = trim($this->f_category, DIRECTORY_SEPARATOR) .
+                (trim($this->f_prefix, DIRECTORY_SEPARATOR) ? (DIRECTORY_SEPARATOR . $this->f_prefix) : '');
+        $this->_saveDir = $base . DIRECTORY_SEPARATOR . FileModel::hashPath($path);
     }
 
-    public function getFilePath(){
-        return implode( DIRECTORY_SEPARATOR,[
-            trim(implode(DIRECTORY_SEPARATOR, [
-                md5(trim($this->f_category, DIRECTORY_SEPARATOR)),
-                trim($this->f_prefix, DIRECTORY_SEPARATOR),
-            ]), DIRECTORY_SEPARATOR),
-            $this->buildTotalName()
-        ]);
+    public function getQueryId(){
+        $path = trim($this->f_category, DIRECTORY_SEPARATOR) .
+                (trim($this->f_prefix, DIRECTORY_SEPARATOR) ? (DIRECTORY_SEPARATOR . $this->f_prefix) : '');
+        return $this->f_storage_type . ':' . $path . DIRECTORY_SEPARATOR  . $this->getTotalName();
+    }
+    public function getF_query_id(){
+        return $this->getQueryId();
+    }
+    public function getF_url(){
+        $driver = FileModel::instanceDriver($this->f_storage_type);
+        return $driver->getFileUrl($this->getQueryId(), $this->f_host, $this->isPublic);
     }
 
+
+
+
+    /**
+     * 获取文件的保存路径，不带域名
+     * 放在这里控制能够保证各个存储的路径使用同样的规则
+     * 如：
+     * 本地话
+     * /path/to/{$saveFilePath}
+     * oss
+     * {$saveFilePath}
+     * @return [type] [description]
+     */
     public function getFileSavePath(){
         $driver = FileModel::instanceDriver($this->f_storage_type);
         $this->setSaveDir($driver->base);
         return implode(DIRECTORY_SEPARATOR, [
             rtrim($this->_saveDir, DIRECTORY_SEPARATOR),
-            $this->buildTotalName()
+            $this->getTotalName()
         ]);
     }
 
@@ -173,11 +198,17 @@ class File extends ActiveRecord
     }
 
 
-
-    public function buildTotalName(){
-        if(!$this->f_ext){
+    /**
+     * 构建文件的保存名字，不带路径
+     * @return [type] [description]
+     */
+    public function getTotalName(){
+        if(!$this->f_ext && $this->source_path){
             $exiftool = new ExifTool($this->source_path);
             $this->f_ext = $exiftool->getFileExt();
+        }
+        if(!$this->f_name){
+            $this->f_name = FileModel::generateUniqueName();
         }
         return $this->f_name . ($this->f_ext ? ('.' . $this->f_ext) : '');
     }

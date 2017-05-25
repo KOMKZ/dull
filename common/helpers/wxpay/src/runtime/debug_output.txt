@@ -1,0 +1,20 @@
+2016-11-28 17:15:38	
+[
+    'appid' => 'wxeaac8f306ad9d7c3',
+    'attach' => '100元充值卡',
+    'bank_type' => 'CFT',
+    'cash_fee' => '1',
+    'fee_type' => 'CNY',
+    'is_subscribe' => 'Y',
+    'mch_id' => '1394864202',
+    'nonce_str' => 'bphirrgupa7xflsu39a479d37cgprk5c',
+    'openid' => 'o5fYBxMPJXVxEEWcI2INojRWrLC4',
+    'out_trade_no' => '139486420220161128171525',
+    'result_code' => 'SUCCESS',
+    'return_code' => 'SUCCESS',
+    'sign' => '22B08964AEE0200175F7549C0C417A75',
+    'time_end' => '20161128171537',
+    'total_fee' => '1',
+    'trade_type' => 'NATIVE',
+    'transaction_id' => '4007132001201611281093697564',
+]

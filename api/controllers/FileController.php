@@ -147,7 +147,7 @@ JS;
 
         // 保存裁切文件
         $tempDir = Yii::getAlias('@api/runtime/files') . DIRECTORY_SEPARATOR;
-        $fileName = uniqid(time(), true);
+        $fileName = FileModel::generateUniqueName();
         $fileTotalName = $uploadFile->extension ? $fileName . '.' . $uploadFile->extension : $fileName;
         $filePath = $tempDir . $fileTotalName;
         if(!$image->save($filePath)){
@@ -178,7 +178,7 @@ JS;
         }
         echo json_encode([
             'filelink' => $fileModel->getFileUrl($file),
-            'file_name' => $file->getFilePath()
+            'file_name' => $file->getQueryId()
         ]);
         exit();
     }
@@ -199,6 +199,7 @@ JS;
         if (!$uploadFile->saveAs($filePath)) {
             return $this->error($uploadFile->error, Yii::t('app', '保存文件失败'));
         }
+
         // 实际存储 todo 数据结构需要改变
         $post = Yii::$app->request->post();
         if(empty($post['File'])){

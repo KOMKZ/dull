@@ -50,7 +50,7 @@ LityAsset::register($this);
                         'multipleResolutions' => true,
                     ]);
                 }else{
-                    echo Html::tag('p', '该文件暂时不支持预览');
+                    echo Html::a('查看', $fileUrl, ['target' => '_blank']);
                 }
                 ?>
             </div>

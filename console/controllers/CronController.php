@@ -6,9 +6,13 @@ use yii\console\Controller;
 use common\models\file\FileModel;
 
 /**
- *
+ * 定时任务
  */
 class CronController extends Controller{
+    /**
+     * 清理临时文件
+     * @return [type] [description]
+     */
     public function actionClearTmpFile(){
         $fileModel = new FileModel();
         $tmpFileIds = $fileModel->getTmpFileIds();

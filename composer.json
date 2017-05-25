@@ -37,7 +37,8 @@
         "chenkby/yii2-region": "dev-master",
         "perminder-klair/yii2-videojs": "dev-master",
         "gargron/fileupload": "^1.4",
-        "flowjs/flow-php-server": "^1.0"
+        "flowjs/flow-php-server": "^1.0",
+        "elasticsearch/elasticsearch": "~2.0@beta"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

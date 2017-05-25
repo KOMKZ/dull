@@ -21,11 +21,6 @@ class FileModel extends Model
     static private $amqpConn;
     static private $Channel;
 
-
-
-
-
-
     protected function getValidPrefix(){
         // todo localhost
         return [
@@ -46,7 +41,14 @@ class FileModel extends Model
         }
         return false;
     }
-
+    public static function parseQueryId($string){
+        $r = preg_match('/^(disk|oss):{1}(.+)/', $string, $matches);
+        if($r){
+            return [$matches[1], $matches[2]];
+        }else{
+            return [null, null];
+        }
+    }
     protected function parseQIdFromUrls($urls){
         $prefix = $this->getValidPrefix();
         $result = [];
@@ -70,8 +72,8 @@ class FileModel extends Model
             return [];
         }
     }
-
     public function setFilePermanentFromArray($newQIds, $oldQIds = []){
+
         foreach($newQIds as $key => $nId){
             $newQIds[$key] = urldecode($nId);
         }
@@ -103,7 +105,9 @@ class FileModel extends Model
             // 设置文件为临时文件
             foreach ($deleteQIds as $queryId) {
                 $condition = $this->buildConditionByQueryId($queryId);
+
                 $file = $this->setFileTmp($condition);
+
                 if(!$file){
                     $report['d_fail'][] = $queryId;
                 }else{
@@ -176,7 +180,7 @@ class FileModel extends Model
             }
 
             // 2. 删除文件
-            $result = $this->deleteFileFromTps($file->f_storage_type, $file->getFilePath());
+            $result = $this->deleteFileFromTps($file->f_storage_type, $file->getQueryId());
 
             $transaction->commit();
             return true;
@@ -188,10 +192,9 @@ class FileModel extends Model
         }
     }
 
-    protected function deleteFileFromTps($storageType, $filePath){
+    protected function deleteFileFromTps($storageType, $queryId){
         $driver = $this->instanceDriver($storageType);
-
-        return $driver->deleteFile($filePath);
+        return $driver->deleteFile($queryId);
     }
     public function savePrimaryIds($ids = []){
         foreach($ids as $key => $id){
@@ -250,7 +253,8 @@ class FileModel extends Model
 
 
     protected function buildConditionByQueryId($queryId){
-        $pathParts = pathinfo($queryId);
+        list($type, $path) = self::parseQueryId($queryId);
+        $pathParts = pathinfo($path);
         $condition = [];
         if(isset($pathParts['dirname'])){
             $condition['f_category'] = $pathParts['dirname'];
@@ -261,6 +265,7 @@ class FileModel extends Model
         if(isset($pathParts['extension'])){
             $condition['f_ext'] = $pathParts['extension'];
         }
+        $condition['f_storage_type'] = $type;
         return $condition;
     }
     public function getOneByQueryId($queryId){
@@ -281,16 +286,33 @@ class FileModel extends Model
 
     public function getFileUrl($id){
         // todo 这个方法应该改造到可以不需要查询数据库
-        if(!($id instanceof File)){
+        $queryId = null;
+        $host = null;
+        $isPublic = true;
+        $type = null;
+        if(($id instanceof File)){
+            $queryId = $id->getQueryId();
+            $host = $id->f_host;
+            $isPublic = $id->isPublic;
+            $type = $id->f_storage_type;
+        }elseif(is_integer($id)){
             $file = $this->getOne(['f_id' => $id]);
+            if(!$file){
+                return null;
+            }
+            $queryId = $file->getQueryId();
+            $host = $file->f_host;
+            $isPublic = $file->isPublic;
+            $type = $file->f_storage_type;
         }else{
-            $file = $id;
+            $queryId = $id;
+            list($type, $path) = $this->parseQueryId($id);
+            if($type){
+                return null;
+            }
         }
-        if(!$file){
-            return null;
-        }
-        $driver = $this->instanceDriver($file->f_storage_type);
-        $url = $driver->getFileUrl($file->getFilePath(), $file->f_host, $file->isPublic);
+        $driver = $this->instanceDriver($type);
+        $url = $driver->getFileUrl($queryId, $host, $isPublic);
         return $url;
     }
 
@@ -351,8 +373,8 @@ class FileModel extends Model
         return $this->updateOneInner($file);
     }
 
-    public function setFileTmp(){
-        $file = $this->getOne($file);
+    public function setFileTmp($condition){
+        $file = $this->getOne($condition);
         if(!$file){
             $this->addError('', '数据不存在');
             return false;
@@ -373,6 +395,23 @@ class FileModel extends Model
         File::deleteAll($condition);
     }
 
+    /**
+     * 保存文件
+     * @param  [type] $data 提交过来的数据
+     * upload_file 可选
+     * source_path_type 原地址的类型，如 @see File::getValidConsts
+     * source_path 原地址
+     * save_asyc 保存的方式，同步保存还是异步保存
+     * f_name 下载的文件名
+     * f_valid_type 临时性定义，长期有效，临时文件
+     * f_category 分类
+     * f_prefix 前缀
+     * f_ext 后缀名
+     * f_storage_type 存储类型，本地还是oss
+     * f_acl_type 私有，公有
+     * @param  [type] $file [description]
+     * @return [type]       [description]
+     */
     public function saveFile($data, $file = null){
         if(!$file){
             $file = new File();
@@ -382,8 +421,12 @@ class FileModel extends Model
             $this->addError('', $this->getArErrMsg($file));
             return false;
         }
+        $this->buildSaveInfo($file);
         if(!$file->save_asyc){
             $file = $this->uploadFileToTps($file);
+            if(!$file){
+                return false;
+            }
             $file->f_status = File::STATUS_UPLOADED;
         }else{
             // todo异步保存需要保存本地文件
@@ -391,10 +434,20 @@ class FileModel extends Model
         }
         // insert record in db
         $file = $this->saveFileInfoInDb($file);
+        if(!$file){
+            return false;
+        }
+        // 加入到队列当中
         if($file->save_asyc){
             $this->sendFileDataAsyc($file);
         }
         return $file;
+    }
+
+
+    public function buildSaveInfo(File $file){
+        $driver = FileModel::instanceDriver($file->f_storage_type);
+        $driver->buildSaveInfo($file);
     }
 
     public function saveTmpFile($filePath){
@@ -406,6 +459,19 @@ class FileModel extends Model
         $path_parts = pathinfo($filePath);
         $file->f_name = $path_parts['filename'];
         return $this->uploadFileToTps($file);
+    }
+
+    public static function generateUniqueName(){
+        return uniqid(time(), true);
+    }
+
+    public static function coverQidToPath($queryId){
+        list($type, $qid) = self::parseQueryId($queryId);
+        return md5(dirname($qid)) . DIRECTORY_SEPARATOR . basename($qid);
+    }
+
+    public static function hashPath($string){
+        return md5($string);
     }
 
 
@@ -432,9 +498,9 @@ class FileModel extends Model
         return $file;
     }
 
-    public function uploadFileToTps($file){
+
+    protected function uploadFileToTps($file){
         $driver = $this->instanceDriver($file->f_storage_type);
-        // save in storage media
         $file = $driver->save($file);
         if(!$file){
             $this->addErrors($driver->getErrors());
@@ -465,7 +531,7 @@ class FileModel extends Model
             $file->f_meta_data = json_encode($file->parseMetaData());
             $file->f_created_at = time();
             $file->f_updated_at = time();
-            $file->f_depostion_name = $file->buildTotalName();
+            $file->f_depostion_name = $file->getTotalName();
             if($file->insert(false)){
                 $trans->commit();
                 return $file;
@@ -475,6 +541,7 @@ class FileModel extends Model
         } catch (\Exception $e) {
             Yii::error($e);
             $trans->rollback();
+            $this->addError('', "插入发生异常");
             return false;
         }
     }

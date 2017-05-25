@@ -53,7 +53,7 @@ $this->registerCss($css);
                 echo FileUploadUI::widget([
                     'model' => $model,
                     'attribute' => 'upload_file',
-                    'url' => 'http://localhost:8054/admin/demo/duandian', // your url, this is just for demo purposes,
+                    'url' => $fileUploadUrl,//'http://localhost:8054/admin/demo/duandian', // your url, this is just for demo purposes,
                     'clientOptions' => [
                         'previewMaxWidth' => 300,
                         'previewMaxHeight' => 300,

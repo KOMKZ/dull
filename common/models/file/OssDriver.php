@@ -20,14 +20,25 @@ class OssDriver extends Model
     private $_is_cname = null;
     public $endpoint = null;
     public $inner_endpoint = null;
+    public $ossFirst = true;
 
-    public function getFileUrl($filePath, $host = '', $isPublic = true){
+    public function getFileUrl($queryId, $host = '', $isPublic = true){
+        list($saveType, $path) = FileModel::parseQueryId($queryId);
+        if($this->ossFirst){
+            return $this->getFileDirectUrl($queryId, $host = '', $isPublic);
+        }else{
+            // todo 签名
+            return Yii::$app->frurl->createAbsoluteUrl(['file/read', 'name' => $queryId], 'http');
+        }
+    }
+    public function getFileDirectUrl($queryId, $host = '', $isPublic = true){
+        list($saveType, $path) = FileModel::parseQueryId($queryId);
         if($isPublic){
             $host = $this->getHostName();
-            $objectId = $this->buildFilePath($filePath);
+            $objectId = $this->buildFileObjectId($queryId);
             return "http://" . implode('/', [$host, $objectId]);
         }else{
-            $objectId = $this->buildFilePath($filePath);
+            $objectId = $this->buildFileObjectId($queryId);
             return $this->instanceOss()->signUrl($this->bucket, $objectId, 3600 , Oss::OSS_HTTP_GET, [
                 Oss::OSS_HEADERS => [
                     Oss::OSS_CONTENT_DISPOSTION => '我爱你.pdf'
@@ -35,13 +46,21 @@ class OssDriver extends Model
             ]);
         }
     }
-
+    public function outputByQid($qid, $isPublic = true){
+        $url = $this->getFileDirectUrl($qid, $isPublic);
+        header("Location: {$url}");
+        exit();
+    }
+    public function buildFileObjectId($queryId){
+        return $this->_base . DIRECTORY_SEPARATOR . FileModel::coverQidToPath($queryId);
+    }
+    public function deleteFile($qid, $bucket = ''){
+        $object = $this->_base . DIRECTORY_SEPARATOR . FileModel::coverQidToPath($qid);
+        $bucket = $bucket ? $bucket : $this->bucket;
+        return $this->instanceOss(true)->deleteObject($bucket, $object, $options = NULL);
+    }
     public function save(File $file){
-        if($file->hasErrors()){
-            $this->addErrors($file->getErrors());
-            return false;
-        }
-        $objectName = $this->buildFilePath($file->getFilePath());
+        $objectName = $file->getFileSavePath();
         try {
             $this->upload($this->bucket, $objectName, $file->source_path, []);
             if($file->isPublic){
@@ -54,18 +73,13 @@ class OssDriver extends Model
             return false;
         }
     }
-
     public function upload($bucket, $objName, $sourcePath, $options = []){
         $options[Oss::OSS_CONTENT_LENGTH] = filesize($sourcePath);
         return $this->instanceOss(true)->uploadFile($bucket, $objName, $sourcePath, $options);
     }
-
     public function setFilePublic($bucket, $objName){
         $this->instanceOss(true)->putObjectAcl($bucket, $objName, Oss::OSS_ACL_TYPE_PUBLIC_READ_WRITE);
     }
-
-
-
     public function instanceOss($inner = false){
         if(!$inner){
             if(null === self::$oss){
@@ -79,7 +93,6 @@ class OssDriver extends Model
             return self::$innerOss;
         }
     }
-
     protected function getHostName($inner=false){
         if($inner){
             return implode('.', [$this->bucket, $this->inner_endpoint]);
@@ -91,16 +104,10 @@ class OssDriver extends Model
             }
         }
     }
-
-    protected function buildFilePath($path){
-        return trim(
-            implode(DIRECTORY_SEPARATOR, [
-                $this->_base,
-                $path
-            ]),
-            DIRECTORY_SEPARATOR
-        );
+    public function buildSaveInfo($file){
+        $file->setSaveDir($this->_base);
     }
+
     public function setBase($value){
         $this->_base = rtrim($value, DIRECTORY_SEPARATOR);
     }

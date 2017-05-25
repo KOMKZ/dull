@@ -96,6 +96,7 @@ class FileController extends AdminController
 
             while (($file = readdir($dir)) !== false) {
                 $tmpfilePath = $targetDir . DIRECTORY_SEPARATOR . $file;
+        console($file);
 
                 // If temp file is current file proceed to the next
                 if ($tmpfilePath == "{$filePath}_{$chunk}.part" || $tmpfilePath == "{$filePath}_{$chunk}.parttmp") {
@@ -222,26 +223,29 @@ class FileController extends AdminController
             'fileUploadUrl' => Yii::$app->apiurl->createAbsoluteUrl(['file/upload']),
         ]);
     }
-
+    public function actionDelete($id){
+        $fileModel = new FileModel();
+        console($fileModel->deleteOneFile(['f_id' => $id]));
+    }
     public function actionSave(){
         $fileModel = new FileModel();
         $data = [
             'source_path' => '/home/kitral/Documents/requests.pdf',
             'source_path_type' => File::SP_LOCAL,
             'f_storage_type' => File::DR_OSS,
-            'f_name' => 'requests',
-            'f_prefix' => 'user/documents',
+            // 'f_name' => 'requests',
+            'f_prefix' => '',
             'f_ext' => 'pdf',
             'f_acl_type' => File::FILE_ACL_PRI,
             'f_category' => 'no_category',
-            'save_asyc' => true
+            'save_asyc' => false
         ];
 
-        $result = $fileModel->saveFile($data);
-        if(!$result){
+        $file = $fileModel->saveFile($data);
+        if(!$file){
             console($fileModel->getErrors());
         }else{
-            console('ok');
+            console($file->toArray());
         }
     }
 

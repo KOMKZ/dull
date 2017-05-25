@@ -31,30 +31,30 @@ class DiskDriver extends Model
     public function getHost(){
         return $this->_host;
     }
-
-    public function sedeleteFiletBase($value){
-        $this->_base = rtrim($value, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-    }
     public function getBase(){
         return $this->_base;
     }
     public function setBase($value){
         return $this->_base = $value;
     }
-    public function outputByPath($filePath){
-        $path = $this->getFilePath($filePath);
+
+    public function sedeleteFiletBase($value){
+        $this->_base = rtrim($value, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+    public function outputByQid($qid){
+        $path = $this->_base . DIRECTORY_SEPARATOR . FileModel::coverQidToPath($qid);
         if(!file_exists($path)){
-            throw new HttpException(404, Yii::t('app','文件不存在'));
+            Header("HTTP/1.1 404 Not Found");
+            exit();
+            // throw new HttpException(404, Yii::t('app','文件不存在'));
         }
-        $headers = Yii::$app->response->headers;
         return Yii::$app->response->sendFile($path);
     }
-    public function deleteFile($fileName){
-        $filePath = $this->getFilePath($fileName);
+    public function deleteFile($qid){
+        $filePath = $this->_base . DIRECTORY_SEPARATOR . FileModel::coverQidToPath($qid);
         if(!file_exists($filePath)){
             return true;
         }
-        // todo 这里要严格校验路径是否在base之内
         @unlink($filePath);
         return true;
     }
@@ -63,12 +63,12 @@ class DiskDriver extends Model
         $headers = Yii::$app->response->headers;
         return Yii::$app->response->sendFile($path, $file->f_depostion_name);
     }
-    public function getFileUrl($filePath, $host = ''){
+    public function getFileUrl($queryId, $host = ''){
         $frurl = Yii::$app->frurl;
         if(!empty($host)){
             $frurl->hostInfo = $host;
         }
-        return $frurl->createAbsoluteUrl(['file/read', 'name' => $filePath], 'http');
+        return $frurl->createAbsoluteUrl(['file/read', 'name' => $queryId], 'http');
     }
     public function getFilePath($name){
         // $dir = md5(dirname($name)) . DIRECTORY_SEPARATOR . basename($name);
@@ -79,24 +79,21 @@ class DiskDriver extends Model
         return $path;
     }
     public function save(File $file){
-        if($file->hasErrors()){
-            $this->addErrors($file->getErrors());
-            return false;
-        }
-        $this->prepareDir($file);
         $this->copyFile($file->source_path, $file->getFileSavePath());
         return $file;
     }
-    protected function copyFile($source, $target){
-        // todo 解决权限的问题
-        copy($source, $target);
-    }
-    protected function prepareDir($file){
+
+    public function buildSaveInfo(File $file){
         $file->setSaveDir($this->_base);
         $file->f_host = $this->_host;
         if(!is_dir($file->getSaveDir())){
             FileHelper::createDirectory($file->getSaveDir());
             chmod($file->getSaveDir(), 0777);
         }
+    }
+
+    protected function copyFile($source, $target){
+        // todo 解决权限的问题
+        copy($source, $target);
     }
 }

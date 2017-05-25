@@ -17,7 +17,7 @@ class m170219_093529_post extends Migration
             'p_title' => $this->string(50)->notNull(),
             'p_content' => $this->text()->notNull(),
             'p_thumb_img' => $this->text()->null(),
-            'p_thumb_img_id' => $this->bigInteger()->null(),
+            'p_thumb_img_id' => $this->string(255)->null(),
             'p_created_uid' => $this->integer()->notNull(),
             // markdown or html
             'p_content_type' => $this->char(10)->notNull(),
