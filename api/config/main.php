@@ -13,7 +13,10 @@ return [
     'controllerNamespace' => 'api\controllers',
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-api',
+            'csrfParam' => '_csrf-frontend',
+		    'parsers' => [
+		        'application/json' => 'yii\web\JsonParser',
+		    ]
         ],
         'log' => [
             'traceLevel' => 0,
@@ -36,7 +39,10 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'baseUrl' => '/appapi'
+            'baseUrl' => '/appapi',
+            'rules' => [
+            	'trans_notify/<type:.*?>' => 'trans/notify',
+            ],
         ],
     ],
     'params' => $params,

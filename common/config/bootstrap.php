@@ -12,6 +12,7 @@ Yii::setAlias('@api', dirname(dirname(__DIR__)) . '/api');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 Yii::setAlias('@OSS', '@common/helpers/alisdk/OSS');
 Yii::setAlias('@wxpay', '@common/helpers/wxpay/src');
+Yii::setAlias('@alipay', '@common/helpers/alipayment2');
 require_once(Yii::getAlias('@common/helpers/alipayment2/AopSdk.php'));
 
 

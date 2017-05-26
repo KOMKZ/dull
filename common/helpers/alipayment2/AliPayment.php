@@ -1,5 +1,5 @@
 <?php
-namespace alipay2;
+namespace alipay;
 
 use Yii;
 use yii\base\Object;
@@ -7,7 +7,7 @@ use yii\base\Object;
 /**
  *
  */
-class AliPayment2 extends Object
+class AliPayment extends Object
 {
     private $_instance = null;
     public $gatewayUrl;

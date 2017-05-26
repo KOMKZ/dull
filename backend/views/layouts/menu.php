@@ -17,6 +17,18 @@ return [
             ],
         ],
         [
+            'label' => '交易管理',
+            'icon' => 'fa fa-share',
+            'url' => '#',
+            'items' => [
+                [
+                    'label' => '交易列表',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/trans/list']
+                ]
+            ],
+        ],
+        [
             'label' => '商品管理',
             'icon' => 'fa fa-share',
             'url' => '#',

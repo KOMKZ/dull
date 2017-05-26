@@ -50,15 +50,23 @@ return [
             'hostInfo' => 'http://localhost:8054',
             'baseUrl' => '/appapi'
         ],
-
+        'wxpay' => [
+            'class' => 'wxpay\WxPay',
+            'appId' => '',
+            'mchId' => '',
+            'key' => '',
+            'sslcertPath' => '',
+            'sslkeyPath' => '',
+            'notifyUrl' => '',
+        ],
         'alipay' => [
             'class' => 'alipay\AliPayment',
-            'partner' => '',
-            'key' => '',
-            'sign_type' => '',
-            'seller_email' => '',
-            'return_url' => '',
-            'notify_url' => ''
-        ]
+            'gatewayUrl' => '',
+            'appId' => '',
+            'rsaPrivateKeyFilePath' => '',
+            'alipayrsaPublicKey' => '',
+            'notifyUrl' => '',
+            'returnUrl' => '',
+        ],
     ],
 ];

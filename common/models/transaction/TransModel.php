@@ -1,5 +1,5 @@
 <?php
-namespace common\models\user;
+namespace common\models\tra;
 
 use Yii;
 use common\base\Model;
