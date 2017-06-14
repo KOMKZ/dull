@@ -61,6 +61,7 @@ class UserModel extends Model
             $this->addError('', Yii::t('app', '密码错误'));
             return false;
         }
+        \common\models\log\ActionModel::log(\common\models\log\ActionModel::M_USER, $user['u_id'], 'user_login', 0);
         Yii::$app->user->login($user, $remember ? 3600 * 24 * 30 : 0);
         return true;
     }

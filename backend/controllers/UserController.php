@@ -62,6 +62,8 @@ class UserController extends AdminController
 
     public function actionLogout(){
         if(Yii::$app->request->isPost && !Yii::$app->user->isGuest){
+            $curUser = Yii::$app->user->identity->toArray();
+            \common\models\log\ActionModel::log(\common\models\log\ActionModel::M_USER, $curUser['u_id'], 'user_logout', 0);
             Yii::$app->user->logout();
             return $this->refresh();
         }
