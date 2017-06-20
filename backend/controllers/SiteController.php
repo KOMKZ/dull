@@ -11,7 +11,7 @@ class SiteController extends AdminController
 {
     public function behaviors()
     {
-        return YII_ENV != 'dev' ? [
+        return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -28,7 +28,7 @@ class SiteController extends AdminController
                     ]
                 ],
             ],
-        ] : [];
+        ];
     }
 
     // public function actions()

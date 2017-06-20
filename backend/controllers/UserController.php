@@ -16,7 +16,7 @@ class UserController extends AdminController
 
     public function behaviors()
     {
-        return YII_ENV != 'dev' ? [
+        return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -32,7 +32,7 @@ class UserController extends AdminController
                     ]
                 ],
             ],
-        ] : [];
+        ];
     }
 
 
