@@ -14,14 +14,14 @@
  */
 return [
     //用户模块
-    \common\models\log\ActionModel::M_WITH_DRAWL => [
+    \common\models\log\ActionModel::M_USER => [
         'user_login' => [
             'des' => '用户登录',
-            'tpl' => '%time% 用户(%uname%),ID为(%al_uid%) 登录 IP为(%al_ip%)'
+            'tpl' => '%al_timestr% 用户(%al_uname%),ID为(%al_uid%) 登录 IP为(%al_ip%)'
         ],
         'user_logout' => [
             'des' => '用户登出',
-            'tpl' => '%time% 用户(%uname%),ID为(%al_uid%) 登出 IP为(%al_ip%)'
+            'tpl' => '%al_timestr% 用户(%al_uname%),ID为(%al_uid%) 登出 IP为(%al_ip%)'
         ]
     ]
 ];

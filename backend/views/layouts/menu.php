@@ -240,6 +240,11 @@ return [
                     'icon' => 'fa fa-circle-o',
                     'url' => ['/log/search']
                 ],
+                [
+                    'label' => '操作查询',
+                    'icon' => 'fa fa-circle-o',
+                    'url' => ['/log/action-search']
+                ],
             ],
         ],
 

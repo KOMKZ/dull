@@ -441,6 +441,7 @@ class FileModel extends Model
         if($file->save_asyc){
             $this->sendFileDataAsyc($file);
         }
+
         return $file;
     }
 

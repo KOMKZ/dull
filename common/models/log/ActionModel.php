@@ -6,13 +6,17 @@ use common\base\Model;
 use common\models\log\tables\Action;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use common\models\user\tables\User;
 
 class ActionModel extends Model{
 
     static protected $tpls = [];
-    CONST M_USER = 1; // 提款模块
+    CONST M_USER = 1; // 用户模块
+    CONST M_FILE = 2; // 文件模块
 
-
+    protected function getArAttributes(){
+        return (new Action())->attributes();
+    }
 
     public static function getSummaryTpl($module, $actionName){
         if(empty(self::$tpls)){
@@ -106,6 +110,33 @@ class ActionModel extends Model{
         return $summarys;
     }
 
+    public function joinExtra(Array $data = []){
+        // fetch usernames
+        $uids = array_keys(ArrayHelper::index($data, 'al_uid'));
+        $users = User::find()->where(['u_id' => $uids])
+                           ->select(['u_username', 'u_id'])
+                           ->asArray()
+                           ->indexBy('u_id')
+                           ->all();
+
+        foreach ($data as $key => $action) {
+            // join username
+            $data[$key]['al_uname'] = $action['al_uname'] = $users[$action['al_uid']]['u_username'];
+
+            // join summary
+            $tpl = self::getSummaryTpl($action['al_module'], $action['al_action']);
+            $actionMap = $action;
+            $actionMap['al_timestr'] = date('Y-m-d H:i:s', $actionMap['al_created_time']);
+            foreach($actionMap as $name => $value){
+                $actionMap["%{$name}%"] = $value;
+                unset($actionMap[$name]);
+            }
+            $data[$key]['al_summary'] = strtr($tpl, $actionMap);
+        }
+        return $data;
+    }
+
+
     /**
      * 查询条件
      * @param  [type] $conditon [description]
@@ -128,7 +159,7 @@ class ActionModel extends Model{
      *
      * @return [type]           [description]
      */
-    public static function fetchActions($conditon, $sort=1, $withPage = true){
+    public static function getProvider($conditon, $sort=1, $withPage = true){
         $query = Action::find()->where($conditon)->asArray();
 
         $defaultOrder = [
@@ -151,6 +182,9 @@ class ActionModel extends Model{
         $pagination = $provider->getPagination();
         return [$provider, $pagination];
     }
+
+
+
 
 
 }

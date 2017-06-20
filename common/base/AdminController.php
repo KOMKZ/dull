@@ -16,7 +16,7 @@ class AdminController extends Controller
     {
         // todo 权限控制这样弄 不好拆卸
         // 比如哪天我就不需要安装权限控制了，这里不够灵活
-        return YII_ENV != 'dev' ?[
+        return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -27,7 +27,7 @@ class AdminController extends Controller
                     ]
                 ]
             ]
-        ] : [];
+        ];
     }
 
     public $enableCsrfValidation = false;
