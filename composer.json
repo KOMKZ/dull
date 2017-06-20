@@ -12,14 +12,12 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.6",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "dmstr/yii2-adminlte-asset": "2.3.2",
-        "samdark/yii2-webshell": "^2.0",
         "digitalnature/php-ref": "^1.2",
         "php-amqplib/php-amqplib": "^2.6",
         "workerman/workerman": "^3.3",

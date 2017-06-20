@@ -18,7 +18,7 @@ use common\models\post\PostModel;
 
 use Elasticsearch\ClientBuilder;
 use common\models\log\ActionModel;
-
+use yii\helpers\VarDumper;
 /**
  *
  */
@@ -27,9 +27,8 @@ class DemoController extends Controller
     public $enableCsrfValidation = false;
     public $c = null;
 
-    public function action22(){
+    
 
-    }
 
     public function action1(){
         console($this->c()->indices()->delete(['index' => 'multiple02']));
