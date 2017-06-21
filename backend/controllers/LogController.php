@@ -28,21 +28,27 @@ class LogController extends AdminController
     public function actionActionSearch(){
         $actionModel = new ActionModel();
         $get = Yii::$app->request->get();
-        if(!empty($get['action_time'])){
-            if(!empty($get['action_time']['start'])){
-                $get['action_time']['start'] = strtotime($get['action_time']['start']);
+        if(!empty($get['al_created_time'])){
+            if(!empty($get['al_created_time']['start'])){
+                $get['al_created_time']['start'] = strtotime($get['al_created_time']['start']);
             }
-            if(!empty($get['action_time']['end'])){
-                $get['action_time']['end'] = strtotime($get['action_time']['end']);
+            if(!empty($get['al_created_time']['end'])){
+                $get['al_created_time']['end'] = strtotime($get['al_created_time']['end']);
             }
+        }
+        if(!empty($get['al_action'])){
+            list($module, $actionName) = explode('/', $get['al_action']);
+            $get['al_action'] = $actionName;
         }
         $condition = $actionModel->parseQueryCondtion($get);
         list($provider, $pagination) = $actionModel->getProvider($condition, [], true);
         $provider->setModels($actionModel->joinExtra($provider->getModels()));
-        
+        $labels = $actionModel->getActionLabels();
+        array_unshift($labels, '没有选择');
         return $this->render('action-search', [
             'provider' => $provider,
-            'logSearchUrl' => Url::to(['log/action-search'])
+            'logSearchUrl' => Url::to(['log/action-search']),
+            'labels' => $labels,
         ]);
     }
 

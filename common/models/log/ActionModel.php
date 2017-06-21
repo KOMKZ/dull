@@ -11,6 +11,7 @@ use common\models\user\tables\User;
 class ActionModel extends Model{
 
     static protected $tpls = [];
+    static protected $labels = [];
     CONST M_USER = 1; // 用户模块
     CONST M_FILE = 2; // 文件模块
 
@@ -18,9 +19,21 @@ class ActionModel extends Model{
         return (new Action())->attributes();
     }
 
+    public static function getActionLabels(){
+        if(empty(self::$labels)){
+            $defs = require(Yii::getAlias('@common/config/action-def.php'));
+            foreach($defs as $module => $def){
+                foreach($def as $actionName => $actionItem){
+                    self::$labels[$module . '/' . $actionName ] = $actionItem['des'];
+                }
+            }
+        }
+        return self::$labels;
+    }
+
     public static function getSummaryTpl($module, $actionName){
         if(empty(self::$tpls)){
-            self::$tpls = require_once(Yii::getAlias('@common/config/action-def.php'));
+            self::$tpls = require(Yii::getAlias('@common/config/action-def.php'));
         }
         if(isset(self::$tpls[$module]) && isset(self::$tpls[$module][$actionName])){
             return self::$tpls[$module][$actionName]['tpl'];
@@ -74,14 +87,14 @@ class ActionModel extends Model{
 
     /**
      * 获取动作描述列表
-     * @param  [type]  $conditon @see fetchActions
+     * @param  [type]  $condition @see fetchActions
      * @param  [type]  $vars     填充模板的额外变量
      * @param  integer $sort     排序方式，默认降序
      * @param  [type]  $withPage 是否分页，1
      * @return [type]            [description]
      */
-    public function fetchActionsSummary($conditon, $vars = [], $sort=1, $withPage = true){
-        list($provider, $pagination) = self::fetchActions($conditon, $sort, $withPage);
+    public function fetchActionsSummary($condition, $vars = [], $sort=1, $withPage = true){
+        list($provider, $pagination) = self::fetchActions($condition, $sort, $withPage);
         $data = $provider->getModels();
         if(empty($data)){
             return $data;
@@ -139,7 +152,7 @@ class ActionModel extends Model{
 
     /**
      * 查询条件
-     * @param  [type] $conditon [description]
+     * @param  [type] $condition [description]
      * [
      * 		'al_module' => // 类型, 必须
      * 		'al_uid' => // 用户中心id， 可选
@@ -159,8 +172,9 @@ class ActionModel extends Model{
      *
      * @return [type]           [description]
      */
-    public static function getProvider($conditon, $sort=1, $withPage = true){
-        $query = Action::find()->where($conditon)->asArray();
+    public function getProvider($condition, $sort=1, $withPage = true){
+        $query = Action::find()->where($condition)->asArray();
+        $query = $this->buildQueryWithCondition($query, $condition);
 
         $defaultOrder = [
             'al_created_time' => $sort > 0 ? SORT_DESC : SORT_ASC
