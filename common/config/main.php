@@ -13,7 +13,7 @@ return [
             'port' => '6379',
             'database' => 0
         ],
-
+        "es" => \Elasticsearch\ClientBuilder::create()->setHosts(['localhost:9200'])->build(),
 
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
