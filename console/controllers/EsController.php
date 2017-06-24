@@ -10,11 +10,13 @@ class EsController extends Controller{
 
 
     public function action1($text = ' ', $type = 1){
-        $a = $type == 1 ? 'a_search_words' : "a_search_pinyin_words";
+
+        $a = $type == 1 ? 'a_search_words' : "a_ik_pinyin_words";
         $es = Yii::$app->es;
         $params = [
             'index' => 'hse2data',
             'analyzer' => $a,
+            // 'field' => 'title',
             'text' => $text
         ];
         $r = $es->indices()->analyze($params);
@@ -49,14 +51,14 @@ class EsController extends Controller{
                             'a_ik_pinyin_words' => [
                                 'type' => 'custom',
                                 'tokenizer' => 't_ik_pinyin',
-                                'filter' => ['f_pinyin_max_length', 'f_trim_empty']
+                                'filter' => ['f_trim_empty']
                             ],
 
                         ],
                         'tokenizer' => [
                             't_ik_pinyin' => [
                                 'type' => 'pinyin',
-                                "remove_duplicated_term" => true,
+                                "remove_duplicated_term" => false,
                                 "keep_first_letter" => false, // 刘德华>ldh
                                 // "keep_separate_first_letter" => false, //刘德华>l,d,h
                                 "keep_full_pinyin" => true,
@@ -72,10 +74,6 @@ class EsController extends Controller{
                             ]
                         ],
                         "filter" => [
-                            'f_pinyin_max_length' => [
-                                'type' => 'length',
-                                'max' => 30
-                            ],
                             'f_trim_empty' => [
                                 'type' => 'length',
                                 'min' => 1
@@ -160,9 +158,20 @@ class EsController extends Controller{
                 'title' => '2015年中国超越了美国成为世界第一。'
             ]
         ]);
+
+        Yii::$app->es->index([
+            'index' => 'hse2data',
+            'type' => 'discuss',
+            'id' => 3,
+            'body' =>[
+                'title' => '2015年中大部分的国家都成功晋级成为发达国家'
+            ]
+        ]);
     }
 
     public function action4($text = ' '){
+        $p = "/(?!^[a-zA-Z0-9\W\s]+$)^[\w\W]+$/u";
+        $hasCn = preg_match($p, $text);
         $params = [
             'index' => 'hse2data',
             'type' => 'discuss',
@@ -174,7 +183,7 @@ class EsController extends Controller{
                                 'match' => [
                                     'title' => [
                                         'query' => $text,
-                                        // 'minimum_should_match' => '100%'
+                                        'minimum_should_match' => '40%',
                                         'analyzer' => 'a_search_words'
                                     ]
                                 ]
@@ -183,7 +192,9 @@ class EsController extends Controller{
                                 'match' => [
                                     'title.pinyin' => [
                                         'query' => $text,
-                                        // 'minimum_should_match' => '100%'
+                                        // 'minimum_should_match' => '70%',
+                                        'type' => 'phrase',
+                                        'slop' => 10,
                                         'analyzer' => 'a_search_pinyin_words'
                                     ]
                                 ]
