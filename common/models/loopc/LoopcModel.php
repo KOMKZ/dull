@@ -8,7 +8,6 @@ use yii\data\ActiveDataProvider;
 
 
 class LoopcModel extends Model{
-    
     public function createContainer($data){
 
     }
