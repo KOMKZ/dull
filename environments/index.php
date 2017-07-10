@@ -37,6 +37,7 @@ return [
             'frontend/runtime',
             'console/runtime',
             'api/runtime',
+            'api/runtime/files',
             'frontend/web/assets',
         ],
         'setExecutable' => [

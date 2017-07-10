@@ -184,6 +184,7 @@ JS;
     }
 
     public function actionUpload(){
+        console(1);
         // 首先先上传文件
         $file = new File();
         $uploadFile = UploadedFile::getInstance($file, 'upload_file');

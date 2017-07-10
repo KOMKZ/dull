@@ -1,0 +1,12 @@
+<?php
+namespace common\models\%model_folder%;
+
+use Yii;
+use common\base\Model;
+use yii\helpers\ArrayHelper;
+use yii\data\ActiveDataProvider;
+
+
+class %model_name% extends Model{
+
+}

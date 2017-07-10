@@ -1,4 +1,5 @@
 <?php
+require('/home/master/pro/php/composer-global-dep/vendor/digitalnature/php-ref/ref.php');
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 

@@ -1,0 +1,12 @@
+<?php
+namespace common\models\%model_folder%\tables;
+
+use Yii;
+use common\base\ActiveRecord;
+
+
+class %table_name% extends ActiveRecord{
+    public static function tableName(){
+        return "{{%}}";
+    }
+}

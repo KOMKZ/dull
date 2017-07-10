@@ -21,7 +21,7 @@ return [
 
         'diskfile' => [
             'class' => 'common\models\file\DiskDriver',
-            'base' => '/home/kitral/shuguang/files',
+            'base' => '/home/master/tmp/files',
             'host' => '',
         ],
 
