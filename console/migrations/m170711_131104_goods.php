@@ -13,9 +13,8 @@ class m170711_131104_goods extends Migration
         }
         $this->createTable('{{%goods}}', [
             'goods_id' => $this->primaryKey(), //主键
-            'goods_brand_id' => $this->integer()->notNull(), // 商品的品牌id
             'goods_primary_name' => $this->string(255)->notNull(), // 商品的主名称
-            'goods_secondary_name' => $this->string(255)->notNull(),  // 商品的副名称
+            'goods_secondary_name' => $this->string(255)->null(),  // 商品的副名称
             'goods_logic_id' => $this->integer()->notNull(), // 业务主键
             'goods_des_id' => $this->integer()->notNull(), // 详细描述的id
             'goods_intro' => $this->string(255)->notNull(), // 简介
